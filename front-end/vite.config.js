@@ -23,4 +23,15 @@ export default defineConfig({
   server: {
     https: true
   },
+  module: {
+    rules: [
+      {
+        test: /\.s(c|a)ss$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ],
+      },
+    ],
+  }
 })
