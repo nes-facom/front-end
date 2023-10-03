@@ -3,22 +3,95 @@
 @import url('https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css');
 
 :root {
-  --primary-color: #16F4FA;
-  --secondary-color: #FA6D17;
-  --terciary-color: #00A9AD;
+  --primary: #00696C;
+  --on-primary: #FFFFFF;
+  --primary-container: #41F9FF;
+  --on-primary-container: #002021;
+  --primary-fixed: #41F9FF;
+  --on-primary-fixed: #002021;
+  --primary-fixed-dim: #00DCE2;
+  --on-primary-fixed-variant: #004F51;
 
-  --error-color: #FA3E17;
+  --secondary: #A14000;
+  --on-secondary: #FFFFFF;
+  --secondary-container: #FFDBCC;
+  --on-secondary-container: #351000;
+  --secondary-fixed: #FFDBCC;
+  --on-secondary-fixed: #351000;
+  --secondary-fixed-dim: #FFB694;
+  --on-secondary-fixed-variant: #7B2F00;
+
+  --terciary: #00696C;
+  --on-terciary: #FFFFFF;
+  --terciary-container: #6FF6FA;
+  --on-terciary-container: #002021;
+  --terciary-fixed: #6FF6FA;
+  --on-terciary-fixed: #002021;
+  --terciary-fixed-dim: #4CDADE;
+  --on-terciary-fixed-variant: #004F51;
+
+  --error: #B82100;
+  --on-error: #FFFFFF;
+  --error-container: #FFDAD3;
+  --on-error-container: #3E0500;
+
+  --outline: #74777F;
+
+  --background: #FDFCFF;
+  --on-background: #1A1C1E;
+
+  --surface: #FAF9FD;
+  --on-surface: #1A1C1E;
+  --surface-variant: #E1E2EC;
+  --on-surface-variant: #44474F;
+
+  --inverse-surface: #2F3033;
+  --on-inverse-surface: #F1F0F4;
+  --inverse-primary: #00DCE2;
+
+  --shadow: #000000;
+  --surface-tint: #00696C;
+  --outline-variant: #C4C6D0;
+  --scrim: #000000;
+
+  --surface-container-highest: #E3E2E6;
+  --surface-container-high: #E9E8EB;
+  --surface-container: #EEEDF1;
+  --surface-container-low: #F4F3F7;
+  --surface-container-loewst: #FFFFFF;
+  --surface-bright: #FAF9FD;
+  --surface-dim: #DAD9DD;
+
   
   --neutral-color: #E2EAFC;
   --neutral-variant-color: #B6CCFE;
-
-  --black: #000000;
-  --white: #FFFFFF;
 
   --text-font: 'Nunito', sans-serif;
   --title-font: 'Poppins', sans-serif;
 
   font-size: 62.5%; /* 1rem = 10px */
+
+  --label-small: 500 1.1rem/1.6rem var(--title-font);
+  --label-medium: 500 1.2rem/1.6rem var(--title-font);
+  --label-medium-prominent: 600 1.2rem/1.6rem var(--title-font);
+  --label-large: 500 1.4rem/2rem var(--title-font);
+  --label-large-prominent: 600 1.4rem/2rem var(--title-font);
+
+  --body-small: 400 1.2rem/1.6rem var(--text-font);
+  --body-medium: 400 1.4rem/2rem var(--text-font);
+  --body-large: 400 1.6rem/2.4rem var(--text-font);
+
+  --title-small: 500 1.4rem/2rem var(--title-font);
+  --title-medium: 500 1.6rem/2.4rem var(--title-font);
+  --title-large: 500 2.2rem/2.8rem var(--title-font);
+
+  --headline-small: 400 2.4rem/3.2rem var(--title-font);
+  --headline-medium: 400 2.8rem/3.6rem var(--title-font);
+  --headline-large: 400 3.2rem/4rem var(--title-font);
+
+  --display-small: 400 3.6rem/4.4rem var(--title-font);
+  --display-medium: 400 4.5rem/5.2rem var(--title-font);
+  --display-large: 400 5.7rem/6.4rem var(--title-font);
 }
 
 *,
@@ -27,11 +100,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-weight: normal;
 }
 
 body {
-  min-height: 100vh;
-  color: var(--black);
+  height: 100vh;
   text-rendering: optimizeLegibility;
 }
