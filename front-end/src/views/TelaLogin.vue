@@ -4,27 +4,32 @@
         <div id="wrapper">
             <v-card
                 outlined
-                height="90vh"
-                width="25vw"
-                min-width="45rem"
                 id="card"
                 >
                 <v-form
                     id="form"
+                    @submit.prevent="login"
                 >
                     <img src="@/components/icons/Logo.png" alt="Um livro fechado com o nome LibriX à esquerda.">
                     <div>
                         <v-text-field
                             label="CPF"
-                            outlined
+                            v-model="cpf"
+                            counter="11"
+                            maxlength="11"
                             prepend-inner-icon="mdi-account"
+                            outlined
+                            required
+                            :rules="[rules.counter, rules.naonumerico]"
                         ></v-text-field>
                         <v-text-field
                             prepend-inner-icon="mdi-key"
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassword ? 'text' : 'password'"
                             label="Senha"
+                            v-model="password"
                             outlined
+                            required
                             @click:append="showPassword = !showPassword"
                         ></v-text-field>
                     </div>
@@ -32,6 +37,7 @@
                         id="button"
                         rounded
                         elevation="0"
+                        type="submit"
                     >
                         Entrar
                     </v-btn>
@@ -45,13 +51,34 @@
 
 <script>
 
-
 export default {
     data() {
         return {
             showPassword: false,
+            cpf: "",
+            password: "",
+            rules: {
+                counter: value => value.length <= 11 || 'O CPF deve possuir 11 caracteres.',
+                naonumerico: value => {
+                    for (let i = 0; i < value.length; i++) {
+                        if (!/\d/.test(value[i])) {
+                            return 'Apenas caracteres númericos!';
+                        }
+                    }
+                    return true;
+                }
+            }
         }
     },
+    
+    methods: {
+        login() {
+            //Validar caso haja um ou mais campos vazios
+            if (this.cpf === '') {
+                return true
+            }
+        }
+    }
 }
 
 </script>
@@ -78,7 +105,7 @@ export default {
     
     height: 100vh;
     width: 100vw;
-    max-width: 128rem;
+    max-width: 144rem;
 
     padding-inline: 2rem;
 }
@@ -88,6 +115,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    height: 70rem;
+    width: 35vw;
+    min-width: 40rem;
+    min-height: 65rem;
+    max-height: 90rem;
 
     border-radius: 2rem;
 
@@ -142,6 +175,12 @@ a {
     font: var(--label-large);
     color: var(--primary);
     text-decoration: none;
+}
+
+@media only screen and (max-width: 768px) {
+  #wrapper {
+    justify-content: center;
+  }
 }
 
 
