@@ -8,7 +8,9 @@
                 >
                 <v-form
                     id="form"
-                    @submit.prevent="login"
+                    :disabled="formDesabilitado"
+                    ref="form"
+                    @submit.prevent="validate()"
                 >
                     <img src="@/components/icons/Logo.png" alt="Um livro fechado com o nome LibriX à esquerda.">
                     <div>
@@ -20,24 +22,30 @@
                             prepend-inner-icon="mdi-account"
                             outlined
                             required
-                            :rules="[rules.counter, rules.naonumerico]"
+                            :rules="regrasCPF"
                         ></v-text-field>
                         <v-text-field
                             prepend-inner-icon="mdi-key"
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassword ? 'text' : 'password'"
                             label="Senha"
-                            v-model="password"
+                            v-model="senha"
                             outlined
                             required
+                            :rules="regrasSenha"
                             @click:append="showPassword = !showPassword"
                         ></v-text-field>
+                    </div>
+                    <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+                    <div class="loader" v-if="this.formDesabilitado">
+                        <v-progress-circular indeterminate></v-progress-circular>
                     </div>
                     <v-btn
                         id="button"
                         rounded
                         elevation="0"
                         type="submit"
+                        :diabled="btnLogar"
                     >
                         Entrar
                     </v-btn>
@@ -50,34 +58,90 @@
 
 
 <script>
+import bcrypt from 'bcryptjs';
+import { fazerLogin } from "../service/autenticacao.js";
+import router from "@/router";
+import AlertaInfo from '../components/AlertaInfo.vue';
 
 export default {
     data() {
         return {
             showPassword: false,
             cpf: "",
-            password: "",
-            rules: {
-                counter: value => value.length <= 11 || 'O CPF deve possuir 11 caracteres.',
-                naonumerico: value => {
-                    for (let i = 0; i < value.length; i++) {
-                        if (!/\d/.test(value[i])) {
-                            return 'Apenas caracteres númericos!';
-                        }
-                    }
-                    return true;
-                }
-            }
+            senha: "",
+            regrasCPF: [
+                (v) => !!v || "Insira um cpf!",
+                (v) => !/[ ]/.test(v) || "Não insira espaços!",
+            ],
+            regrasSenha: [
+                (v) => !!v || "Insira uma senha!",
+                (v) => (v && v.length >= 8) || "Senha deve conter pelo menos 8 caracteres!",
+                (v) => !/[ ]/.test(v) || "Não insira espaços!",
+            ],
+            valid: true,
+            formDesabilitado: false,
+            btnLogar: true,
+            alerta: false,
+            mensagemAlerta: '',
         }
+    },
+
+    components: {
+        AlertaInfo,
     },
     
     methods: {
-        login() {
-            //Validar caso haja um ou mais campos vazios
-            if (this.cpf === '') {
-                return true
+        async validate() {
+                this.autenticar();
+        },
+
+        async autenticar() {
+            this.formDesabilitado = true;
+
+            const dadosLogin = {
+                cpf: this.criptografarDado(this.cpf),
+                senha: this.criptografarDado(this.senha)
             }
-        }
+            
+            const requisicao = await fazerLogin(dadosLogin);
+            if (requisicao === 200) {
+                this.formDesabilitado = false;
+                router.push("/admin");
+            } else {
+                this.tratarErroRequisicao(requisicao);
+            }
+        },
+
+        criptografarDado(dado) {
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(dado, salt);
+            return hash;
+        },
+
+        tratarErroRequisicao(requisicao) {
+            this.formDesabilitado = false;
+            this.btnLogar = true;
+
+            const status = requisicao.request.status;
+            if (status === 401) {
+                this.mensagemAlerta = "Usuário/Senha inválido!"
+            } else if (status === 500) {
+                this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!"
+            }
+            else {
+                this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
+                console.log(status);
+            }
+
+            this.alerta = true;
+            setTimeout(() => {
+                this.fecharAlerta();
+            }, 5000);
+        },
+
+        fecharAlerta() {
+            this.alerta = false;
+        },
     }
 }
 
