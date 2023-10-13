@@ -5,9 +5,9 @@
             <v-card
                 outlined
                 id="card"
-                >
+            >
                 <v-form
-                    id="form"
+                    id="formulario"
                     :disabled="formDesabilitado"
                     ref="form"
                     @submit.prevent="validate()"
@@ -36,19 +36,18 @@
                             @click:append="showPassword = !showPassword"
                         ></v-text-field>
                     </div>
-                    <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                    <div class="loader" v-if="this.formDesabilitado">
-                        <v-progress-circular indeterminate></v-progress-circular>
+                    <div id="alerta-wrapper">
+                        <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+                        <v-btn
+                            id="botaoEntrar"
+                            rounded
+                            elevation="0"
+                            @click="validate"
+                            :loading="isLoading"
+                            >
+                            Entrar
+                        </v-btn>
                     </div>
-                    <v-btn
-                        id="button"
-                        rounded
-                        elevation="0"
-                        type="submit"
-                        :diabled="btnLogar"
-                    >
-                        Entrar
-                    </v-btn>
                 </v-form>
                 <a href="#">Cadastrar bibliotecário</a>
             </v-card>
@@ -58,8 +57,8 @@
 
 
 <script>
-import bcrypt from 'bcryptjs';
-import { fazerLogin } from "../service/autenticacao.js";
+import sjcl from 'sjcl';
+import { fazerLogin, validarTokenAcesso } from "../service/autenticacao.js";
 import router from "@/router";
 import AlertaInfo from '../components/AlertaInfo.vue';
 
@@ -72,6 +71,8 @@ export default {
             regrasCPF: [
                 (v) => !!v || "Insira um cpf!",
                 (v) => !/[ ]/.test(v) || "Não insira espaços!",
+                (v) => !/^[0-9]*$/.test(v) ? "Digite apenas números!" : true,
+                (v) => (v && v.length === 11) || "Deve ter exatamente 11 dígitos",
             ],
             regrasSenha: [
                 (v) => !!v || "Insira uma senha!",
@@ -80,10 +81,18 @@ export default {
             ],
             valid: true,
             formDesabilitado: false,
-            btnLogar: true,
+            isLoading: false,
             alerta: false,
             mensagemAlerta: '',
         }
+    },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+            if (token) {
+                router.push('/emprestimos');
+            }
+        })
     },
 
     components: {
@@ -92,11 +101,15 @@ export default {
     
     methods: {
         async validate() {
-                this.autenticar();
+            const valid = await this.$refs.form.validate()
+            if (valid) {
+                this.autenticar() 
+            }
         },
 
         async autenticar() {
             this.formDesabilitado = true;
+            this.isLoading =true;
 
             const dadosLogin = {
                 cpf: this.criptografarDado(this.cpf),
@@ -104,36 +117,37 @@ export default {
             }
             
             const requisicao = await fazerLogin(dadosLogin);
+
             if (requisicao === 200) {
                 this.formDesabilitado = false;
-                router.push("/admin");
+                router.push("/emprestimos");
             } else {
                 this.tratarErroRequisicao(requisicao);
             }
         },
 
         criptografarDado(dado) {
-            const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync(dado, salt);
+            const bitArray = sjcl.hash.sha256.hash(dado);
+            const hash = sjcl.codec.hex.fromBits(bitArray);
             return hash;
         },
 
         tratarErroRequisicao(requisicao) {
             this.formDesabilitado = false;
-            this.btnLogar = true;
+            this.isLoading = false;
 
             const status = requisicao.request.status;
             if (status === 401) {
-                this.mensagemAlerta = "Usuário/Senha inválido!"
+                this.mensagemAlerta = "Usuário/Senha inválido!";
             } else if (status === 500) {
-                this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!"
+                this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!";
             }
             else {
                 this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
-                console.log(status);
             }
 
             this.alerta = true;
+
             setTimeout(() => {
                 this.fecharAlerta();
             }, 5000);
@@ -191,7 +205,7 @@ export default {
     gap: 2rem;
 }
 
-#form {
+#formulario {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -199,37 +213,46 @@ export default {
 
     gap: 8rem;
 
-    ::v-deep .v-input__slot {
+    >>> .v-input__slot {
         gap: 1.5rem;
     }
 
-    ::v-deep .v-label {
+    >>> .v-label {
         font: var(--body-large);
         color: var(--on-surface-variant);
     }
 
-    ::v-deep .v-icon {
+    >>> .v-icon {
         color: var(--primary);
     }
 
-    ::v-deep .v-input--is-focused:first-child legend {
+    >>> .v-input--is-focused:first-child legend {
         width: 7.5rem !important;
     }
 
-    ::v-deep .v-input--is-label-active:first-child legend {
+    >>> .v-input--is-label-active:first-child legend {
         width: 7.5rem !important;
     }
 
-    ::v-deep .v-input--is-focused:last-child legend {
+    >>> .v-input--is-focused:last-child legend {
         width: 8.5rem !important;
     }
 
-    ::v-deep .v-input--is-label-active:last-child legend {
+    >>> .v-input--is-label-active:last-child legend {
         width: 8.5rem !important;
     }
 }
 
-#button {
+#alerta-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 1.5rem;
+}
+
+#botaoEntrar {
     background-color: var(--primary);
     color: var(--on-primary);
     width: fit-content; 

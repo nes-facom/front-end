@@ -1,8 +1,17 @@
 <template>
-    <div class="alerta" :style="{ backgroundColor: bgColor, color: textColor, width: widthAlerta }">
-        <div class="mensagem" v-html="mensagem"></div>
-        <button style="font-size: 1.4rem;" @click="fechar">
-            <v-icon icon="mdi-window-close"></v-icon>
+    <div
+        data-cy="componente-alerta"
+        id="alerta"
+    >
+        <span> {{ mensagem }} </span>
+        <button
+            @click="fechar"
+            id="botao-fechar"
+            data-cy="botao-fechar-alerta"
+        >
+            <v-icon
+            color="var(--inverse-on-surface)"
+            >mdi-close</v-icon>
         </button>
     </div>
 </template>
@@ -16,38 +25,33 @@
                 type: String,
                 required: true
             },
-            bgColor: {
-                type: String,
-            },
-            textColor: {
-                type: String,
-            },
-            widthAlerta: {
-                type: String,
-            },
             fechar: Function
         },
     }
 </script>
 
 <style scoped>
-.alerta {
+
+#alerta {
     display: flex;
-    width: 35rem;
-    padding: 0.8rem;
-    background-color: #F6E0E4;
-    border-radius: 0.5rem;
-    font-size: 1.6rem;
-    color: #B00020;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    max-width: 34.4rem;
+
+    padding-block: 1rem;
+    padding-inline: 1.5rem;
+
+    background-color: var(--inverse-surface);
+
+    border-radius: 0.4rem;
+
+    font: var(--body-medium);
+    color: var(--inverse-on-surface);
+
+    gap: 1.5rem;
 }
 
-.alerta .mensagem {
-    width: 90%;
-    padding-left: 1rem;
-}
 
-.alerta > button {
-    width: 10%;
-    text-align: center;
-}
 </style>
