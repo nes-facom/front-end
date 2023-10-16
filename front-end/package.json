@@ -13,12 +13,16 @@
   },
   "dependencies": {
     "axios": "^1.5.1",
+    "jwt-decode": "^3.1.2",
+    "sjcl": "^1.0.8",
     "vite-plugin-mkcert": "^1.16.0",
     "vue": "^2.7.7",
     "vue-router": "^3.5.4",
-    "vuetify": "^2.7.1"
+    "vuetify": "^2.7.1",
+    "vuex": "^0.8.0"
   },
   "devDependencies": {
+    "@types/sjcl": "^1.0.31",
     "@vitejs/plugin-legacy": "^2.0.0",
     "@vitejs/plugin-vue2": "^1.1.2",
     "cypress": "^10.11.0",

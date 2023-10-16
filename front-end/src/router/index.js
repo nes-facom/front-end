@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import TelaLogin from '@/views/TelaLogin.vue'
+import TelaEmprestimos from '@/views/TelaEmprestimos.vue'
 
 Vue.use(VueRouter)
 
@@ -16,6 +17,11 @@ const router = new VueRouter({
       path: '/login',
       name: 'Login',
       component: TelaLogin,
+    },
+    {
+      path: '/emprestimos',
+      name: 'Emprestimos',
+      component: TelaEmprestimos,
     }
   ]
 })

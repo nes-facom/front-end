@@ -5,10 +5,12 @@
             <v-card
                 outlined
                 id="card"
-                >
+            >
                 <v-form
-                    id="form"
-                    @submit.prevent="login"
+                    id="formulario"
+                    :disabled="formDesabilitado"
+                    ref="form"
+                    @submit.prevent="validate()"
                 >
                     <img src="@/components/icons/Logo.png" alt="Um livro fechado com o nome LibriX à esquerda.">
                     <div>
@@ -20,27 +22,32 @@
                             prepend-inner-icon="mdi-account"
                             outlined
                             required
-                            :rules="[rules.counter, rules.naonumerico]"
+                            :rules="regrasCPF"
                         ></v-text-field>
                         <v-text-field
                             prepend-inner-icon="mdi-key"
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassword ? 'text' : 'password'"
                             label="Senha"
-                            v-model="password"
+                            v-model="senha"
                             outlined
                             required
+                            :rules="regrasSenha"
                             @click:append="showPassword = !showPassword"
                         ></v-text-field>
                     </div>
-                    <v-btn
-                        id="button"
-                        rounded
-                        elevation="0"
-                        type="submit"
-                    >
-                        Entrar
-                    </v-btn>
+                    <div id="alerta-wrapper">
+                        <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+                        <v-btn
+                            id="botaoEntrar"
+                            rounded
+                            elevation="0"
+                            @click="validate"
+                            :loading="isLoading"
+                            >
+                            Entrar
+                        </v-btn>
+                    </div>
                 </v-form>
                 <a href="#">Cadastrar bibliotecário</a>
             </v-card>
@@ -50,34 +57,105 @@
 
 
 <script>
+import sjcl from 'sjcl';
+import { fazerLogin, validarTokenAcesso } from "../service/autenticacao.js";
+import router from "@/router";
+import AlertaInfo from '../components/AlertaInfo.vue';
 
 export default {
     data() {
         return {
             showPassword: false,
             cpf: "",
-            password: "",
-            rules: {
-                counter: value => value.length <= 11 || 'O CPF deve possuir 11 caracteres.',
-                naonumerico: value => {
-                    for (let i = 0; i < value.length; i++) {
-                        if (!/\d/.test(value[i])) {
-                            return 'Apenas caracteres númericos!';
-                        }
-                    }
-                    return true;
-                }
-            }
+            senha: "",
+            regrasCPF: [
+                (v) => !!v || "Insira um cpf!",
+                (v) => !/[ ]/.test(v) || "Não insira espaços!",
+                (v) => !/^[0-9]*$/.test(v) ? "Digite apenas números!" : true,
+                (v) => (v && v.length === 11) || "Deve ter exatamente 11 dígitos",
+            ],
+            regrasSenha: [
+                (v) => !!v || "Insira uma senha!",
+                (v) => (v && v.length >= 8) || "Senha deve conter pelo menos 8 caracteres!",
+                (v) => !/[ ]/.test(v) || "Não insira espaços!",
+            ],
+            valid: true,
+            formDesabilitado: false,
+            isLoading: false,
+            alerta: false,
+            mensagemAlerta: '',
         }
+    },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+            if (token) {
+                router.push('/emprestimos');
+            }
+        })
+    },
+
+    components: {
+        AlertaInfo,
     },
     
     methods: {
-        login() {
-            //Validar caso haja um ou mais campos vazios
-            if (this.cpf === '') {
-                return true
+        async validate() {
+            const valid = await this.$refs.form.validate()
+            if (valid) {
+                this.autenticar() 
             }
-        }
+        },
+
+        async autenticar() {
+            this.formDesabilitado = true;
+            this.isLoading =true;
+
+            const dadosLogin = {
+                cpf: this.criptografarDado(this.cpf),
+                senha: this.criptografarDado(this.senha)
+            }
+            
+            const requisicao = await fazerLogin(dadosLogin);
+
+            if (requisicao === 200) {
+                this.formDesabilitado = false;
+                router.push("/emprestimos");
+            } else {
+                this.tratarErroRequisicao(requisicao);
+            }
+        },
+
+        criptografarDado(dado) {
+            const bitArray = sjcl.hash.sha256.hash(dado);
+            const hash = sjcl.codec.hex.fromBits(bitArray);
+            return hash;
+        },
+
+        tratarErroRequisicao(requisicao) {
+            this.formDesabilitado = false;
+            this.isLoading = false;
+
+            const status = requisicao.request.status;
+            if (status === 401) {
+                this.mensagemAlerta = "Usuário/Senha inválido!";
+            } else if (status === 500) {
+                this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!";
+            }
+            else {
+                this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
+            }
+
+            this.alerta = true;
+
+            setTimeout(() => {
+                this.fecharAlerta();
+            }, 5000);
+        },
+
+        fecharAlerta() {
+            this.alerta = false;
+        },
     }
 }
 
@@ -127,7 +205,7 @@ export default {
     gap: 2rem;
 }
 
-#form {
+#formulario {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -135,37 +213,46 @@ export default {
 
     gap: 8rem;
 
-    ::v-deep .v-input__slot {
+    >>> .v-input__slot {
         gap: 1.5rem;
     }
 
-    ::v-deep .v-label {
+    >>> .v-label {
         font: var(--body-large);
         color: var(--on-surface-variant);
     }
 
-    ::v-deep .v-icon {
+    >>> .v-icon {
         color: var(--primary);
     }
 
-    ::v-deep .v-input--is-focused:first-child legend {
+    >>> .v-input--is-focused:first-child legend {
         width: 7.5rem !important;
     }
 
-    ::v-deep .v-input--is-label-active:first-child legend {
+    >>> .v-input--is-label-active:first-child legend {
         width: 7.5rem !important;
     }
 
-    ::v-deep .v-input--is-focused:last-child legend {
+    >>> .v-input--is-focused:last-child legend {
         width: 8.5rem !important;
     }
 
-    ::v-deep .v-input--is-label-active:last-child legend {
+    >>> .v-input--is-label-active:last-child legend {
         width: 8.5rem !important;
     }
 }
 
-#button {
+#alerta-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 1.5rem;
+}
+
+#botaoEntrar {
     background-color: var(--primary);
     color: var(--on-primary);
     width: fit-content; 
