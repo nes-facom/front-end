@@ -1,74 +1,108 @@
-/* color palette from <https://github.com/vuejs/theme> */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css');
+
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  --primary: #00696C;
+  --on-primary: #FFFFFF;
+  --primary-container: #41F9FF;
+  --on-primary-container: #002021;
+  --primary-fixed: #41F9FF;
+  --on-primary-fixed: #002021;
+  --primary-fixed-dim: #00DCE2;
+  --on-primary-fixed-variant: #004F51;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  --secondary: #A14000;
+  --on-secondary: #FFFFFF;
+  --secondary-container: #FFDBCC;
+  --on-secondary-container: #351000;
+  --secondary-fixed: #FFDBCC;
+  --on-secondary-fixed: #351000;
+  --secondary-fixed-dim: #FFB694;
+  --on-secondary-fixed-variant: #7B2F00;
 
-  --vt-c-indigo: #2c3e50;
+  --terciary: #00696C;
+  --on-terciary: #FFFFFF;
+  --terciary-container: #6FF6FA;
+  --on-terciary-container: #002021;
+  --terciary-fixed: #6FF6FA;
+  --on-terciary-fixed: #002021;
+  --terciary-fixed-dim: #4CDADE;
+  --on-terciary-fixed-variant: #004F51;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dadarkrk-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  --error: #B82100;
+  --on-error: #FFFFFF;
+  --error-container: #FFDAD3;
+  --on-error-container: #3E0500;
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
-}
+  --outline: #74777F;
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+  --background: #FDFCFF;
+  --on-background: #1A1C1E;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --surface: #FAF9FD;
+  --on-surface: #1A1C1E;
+  --surface-variant: #E1E2EC;
+  --on-surface-variant: #44474F;
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --inverse-surface: #2F3033;
+  --inverse-on-surface: #F1F0F4;
+  --inverse-primary: #00DCE2;
 
-  --section-gap: 160px;
-}
+  --shadow: #000000;
+  --surface-tint: #00696C;
+  --outline-variant: #C4C6D0;
+  --scrim: #000000;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+  --surface-container-highest: #E3E2E6;
+  --surface-container-high: #E9E8EB;
+  --surface-container: #EEEDF1;
+  --surface-container-low: #F4F3F7;
+  --surface-container-loewst: #FFFFFF;
+  --surface-bright: #FAF9FD;
+  --surface-dim: #DAD9DD;
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+  
+  --neutral-color: #E2EAFC;
+  --neutral-variant-color: #B6CCFE;
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
+  --text-font: 'Nunito', sans-serif;
+  --title-font: 'Poppins', sans-serif;
+
+  font-size: 62.5%; /* 1rem = 10px */
+
+  --label-small: 500 1.1rem/1.6rem var(--title-font);
+  --label-medium: 500 1.2rem/1.6rem var(--title-font);
+  --label-medium-prominent: 600 1.2rem/1.6rem var(--title-font);
+  --label-large: 500 1.4rem/2rem var(--title-font);
+  --label-large-prominent: 600 1.4rem/2rem var(--title-font);
+
+  --body-small: 400 1.2rem/1.6rem var(--text-font);
+  --body-medium: 400 1.4rem/2rem var(--text-font);
+  --body-large: 400 1.6rem/2.4rem var(--text-font);
+
+  --title-small: 500 1.4rem/2rem var(--title-font);
+  --title-medium: 500 1.6rem/2.4rem var(--title-font);
+  --title-large: 500 2.2rem/2.8rem var(--title-font);
+
+  --headline-small: 400 2.4rem/3.2rem var(--title-font);
+  --headline-medium: 400 2.8rem/3.6rem var(--title-font);
+  --headline-large: 400 3.2rem/4rem var(--title-font);
+
+  --display-small: 400 3.6rem/4.4rem var(--title-font);
+  --display-medium: 400 4.5rem/5.2rem var(--title-font);
+  --display-large: 400 5.7rem/6.4rem var(--title-font);
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
   margin: 0;
-  position: relative;
-  font-weight: normal;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition: color 0.5s, background-color 0.5s;
-  line-height: 1.6;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
-    Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-size: 15px;
+  height: 100vh;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
