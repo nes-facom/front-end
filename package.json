@@ -12,9 +12,14 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@prisma/client": "5.4.2",
     "axios": "^1.5.1",
+    "danfojs": "^1.1.2",
+    "danfojs-node": "^1.1.2",
     "jwt-decode": "^3.1.2",
+    "prisma": "^5.4.2",
     "sjcl": "^1.0.8",
+    "sqlite3": "^5.1.6",
     "vite-plugin-mkcert": "^1.16.0",
     "vue": "^2.7.7",
     "vue-router": "^3.5.4",

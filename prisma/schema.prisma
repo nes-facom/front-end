@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+
+model Livros {
+  id          Int           @id @default(autoincrement())
+  titulo      String
+  tipo        String?
+  autor       String?
+  tipologia   String?
+  num_paginas Int?
+  situacao    String?       @default("ativo")
+  Emprestimo  Emprestimos[]
+  Exemplares  Exemplares[]
+}
+
+model Exemplares {
+  id            Int     @id @default(autoincrement())
+  livro_id      Int
+  tombo         String
+  prateleira_id Int?
+  situacao      String? @default("ativo")
+  livro         Livros  @relation(fields: [livro_id], references: [id])
+}
+
+model Prateleiras {
+  id            Int    @id @default(autoincrement())
+  identificador String
+}
+
+model Leitores {
+  id          Int           @id @default(autoincrement())
+  nome        String
+  foto        String?
+  discente    Discentes[]
+  docente     Docentes[]
+  emprestimos Emprestimos[]
+  estado      Estados[]
+}
+
+model Discentes {
+  id        Int      @id @default(autoincrement())
+  leitor_id Int
+  rga       String
+  turma     String?
+  serie     Int?
+  leitor    Leitores @relation(fields: [leitor_id], references: [id])
+}
+
+model Docentes {
+  id         Int      @id @default(autoincrement())
+  leitor_id  Int
+  registro   String
+  turno      String?
+  disciplina String?
+  leitor     Leitores @relation(fields: [leitor_id], references: [id])
+}
+
+model Emprestimos {
+  id              Int      @id @default(autoincrement())
+  leitor_id       Int
+  livro_id        Int
+  foto            String?
+  data_emprestimo DateTime
+  data_devolucao  DateTime
+  situacao        String   @default("ativo")
+  livro           Livros   @relation(fields: [livro_id], references: [id])
+  leitor          Leitores @relation(fields: [leitor_id], references: [id])
+}
+
+model Estados {
+  id           Int       @id @default(autoincrement())
+  leitor_id    Int
+  situacao     Boolean
+  data_entrada DateTime
+  data_saida   DateTime?
+  leitor       Leitores  @relation(fields: [leitor_id], references: [id])
+}
+
+model Bibliotecarios {
+  id    Int    @id @default(autoincrement())
+  nome  String
+  cpf   String @unique
+  senha String
+}
