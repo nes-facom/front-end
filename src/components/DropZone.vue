@@ -29,6 +29,7 @@
             return {
                 descricao: '',
                 info: false,
+                arquivoImportado: false,
             }
         },
 
@@ -71,6 +72,7 @@
                         this.descricao = arquivo.name;
                         this.$store.commit("nomeArquivoSenhaBibliotecario", arquivo.name);
                         this.$store.commit("salvarArquivoSenhaBibliotecario", arquivo);
+                        this.arquivoImportado = true;
                     } else {
                         this.descricao = "Insira um arquivo válido!";
                     }

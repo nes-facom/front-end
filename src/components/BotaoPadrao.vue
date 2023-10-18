@@ -3,6 +3,7 @@
         <v-btn
             id="button-default"
             class="button"
+            :disabled="this.isDisabled"
             data-cy="botao-padrao"
             rounded
             elevation="0"
@@ -38,6 +39,7 @@ export default {
             type: String,
             required: true
         },
+        isDisabled: false,
         outlined: Boolean,
     },
 }

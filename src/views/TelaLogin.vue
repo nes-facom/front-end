@@ -38,7 +38,7 @@
                     </div>
                     <div id="alerta-wrapper">
                         <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                        <BotaoPadrao conteudo="Entrar"></BotaoPadrao>
+                        <BotaoPadrao conteudo="Entrar" type="submit"></BotaoPadrao>
                     </div>
                 </v-form>
                 <router-link to="/bibliotecario">
