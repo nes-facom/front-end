@@ -6,7 +6,7 @@
             data-cy="botao-padrao"
             rounded
             elevation="0"
-            type="submit"
+            :type="type"
             v-if="!outlined"
         >
             {{ conteudo }}
@@ -18,7 +18,7 @@
             rounded
             elevation="0"
             outlined
-            type="submit"
+            :type="type"
             v-if="outlined"
         >
             {{ conteudo }}
@@ -31,6 +31,10 @@
 export default {
     props: {
         conteudo: {
+            type: String,
+            required: true
+        },
+        type: {
             type: String,
             required: true
         },
