@@ -9,6 +9,8 @@
             </div>
 
             <v-form
+                :disabled="formDesabilitado"
+                data-cy="formulario"
                 id="formulario"
                 ref="form"
                 @submit.prevent="validate()"
@@ -17,7 +19,7 @@
                     <span>Cadastrar bibliotecário</span>
                     <div id="inputs">
                         <v-text-field
-                            class="nome"
+                            data-cy="input-nome"
                             label="Nome"
                             v-model="nome"
                             outlined
@@ -25,6 +27,7 @@
                             :rules="regrasNome"
                         ></v-text-field>
                         <v-text-field
+                            data-cy="input-cpf"
                             label="CPF"
                             v-model="cpf"
                             counter="11"
@@ -34,6 +37,7 @@
                             :rules="regrasCPF"
                         ></v-text-field>
                         <v-text-field
+                            data-cy="input-senha"
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassword ? 'text' : 'password'"
                             label="Senha"
@@ -44,6 +48,7 @@
                             @click:append="showPassword = !showPassword"
                         ></v-text-field>
                         <v-text-field
+                            data-cy="input-confirmeSenha"
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassword ? 'text' : 'password'"
                             label="Confirme sua senha"
@@ -60,10 +65,13 @@
                     <span>Insira a senha do administrador</span>
                     <DropZone
                     extensaoDoArquivo=".txt"
+                    :isDisabled="isLoading"
                     ></DropZone>
                 </section>
                 
-                <section id="wrapper-botoes">
+                <section
+                id="wrapper-botoes"
+                v-if="!isLoading">
                     <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
                     <router-link to="/login">
                         <BotaoPadrao
@@ -75,6 +83,11 @@
                     conteudo="Continuar"
                     type="submit"
                     :isDisabled="arquivoSenhaBibliotecario === null"></BotaoPadrao>
+                </section>
+                <section
+                id="wrapper-loader"
+                v-if="isLoading">
+                    <v-progress-circular indeterminate></v-progress-circular>
                 </section>
             </v-form>
         </div>
@@ -140,6 +153,8 @@ export default {
             mensagemAlerta: '',
             conteudoArquivo: null,
             isBibliotecarioCadastrado: false,
+            formDesabilitado: false,
+            isLoading: false,
         }
     },
 
@@ -174,6 +189,10 @@ export default {
         },
 
         async autenticar() {
+                this.formDesabilitado = true;
+                this.isLoading = true;
+                this.alerta = false;
+
                 const dadosCadastrarBibliotecario = {
                     nome: this.criptografarDado(this.nome),
                     cpf: this.criptografarDado(this.cpf),
@@ -184,6 +203,8 @@ export default {
                 const requisicao = await cadastrarBibliotecario(dadosCadastrarBibliotecario);
     
                 if (requisicao === 200) {
+                    this.formDesabilitado = false;
+                    this.isLoading = false;
                     this.bibliotecarioCadastrado()
                 } else {
                     this.tratarErroRequisicao(requisicao);
@@ -224,6 +245,8 @@ export default {
         },
 
         tratarErroRequisicao(requisicao) {
+            this.formDesabilitado = false;
+            this.isLoading = false;
             const status = requisicao.request.status;
             if (status === 401) {
                 this.mensagemAlerta = "Senha do Administrador inválida!"

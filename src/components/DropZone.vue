@@ -10,9 +10,9 @@
         class="dropzone">
             <div class="divLabels">
                 <label for="dropzoneFile"><img src="@/components/icons/DragAndDropIcon.png" alt="Nuvem com uma seta apontada pera ela, simbolizando a importação de arquivos."></label>
-                <label id="primeira-label" for="dropzoneFile">Arraste e solte</label>
+                <label :class="{'estilo-desabilitado': isDisabled}" id="primeira-label" for="dropzoneFile">Arraste e solte</label>
                 <label id="segunda-label" for="dropzoneFile">Somente arquivos {{extensaoDoArquivo }} serão aceitos</label>
-                <input ref="entradaArquivo" id="dropzoneFile" type="file" @change="submissaoInput" :accept="extensaoDoArquivo"/>
+                <input data-cy="input-dropzone" :disabled="isDisabled" ref="entradaArquivo" id="dropzoneFile" type="file" @change="submissaoInput" :accept="extensaoDoArquivo"/>
             </div>
             <div class="descricao" v-if="info">
                 <span>{{ descricao }}</span>
@@ -38,6 +38,9 @@
                 type: String,
                 required: true
             },
+            isDisabled: {
+                type: Boolean
+            }
         },
 
         setup() {
@@ -127,4 +130,13 @@
     border: 0.2rem solid var(--inverse-surface);
     transition: 0.3s ease all;
 }
+
+#primeira-label.estilo-desabilitado {
+    color: var(--outline);
+}
+
+#segunda-label.estilo-desabilitado {
+    color: var(--outline);
+}
+
 </style>
