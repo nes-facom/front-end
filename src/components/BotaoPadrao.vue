@@ -3,7 +3,7 @@
         <v-btn
             id="button-default"
             class="button"
-            :disabled="this.isDisabled"
+            :disabled="disabled"
             data-cy="botao-padrao"
             rounded
             elevation="0"
@@ -30,6 +30,11 @@
 <script>
 
 export default {
+    data() {
+        return {
+            disabled: this.isDisabled,
+        }
+    },
     props: {
         conteudo: {
             type: String,
@@ -42,6 +47,12 @@ export default {
         isDisabled: false,
         outlined: Boolean,
     },
+
+    watch: {
+        isDisabled: function(newValue, oldValue) {
+            this.disabled = newValue
+        }
+    }
 }
 
 </script>

@@ -60,8 +60,9 @@
                     extensaoDoArquivo="text/plain"
                     ></DropZone>
                 </section>
-
+                
                 <section id="wrapper-botoes">
+                    <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
                     <router-link to="/login">
                         <BotaoPadrao
                         conteudo="Cancelar"
@@ -70,7 +71,8 @@
                     </router-link>
                     <BotaoPadrao
                     conteudo="Continuar"
-                    type="submit"></BotaoPadrao>
+                    type="submit"
+                    :isDisabled="arquivoSenhaBibliotecario === null"></BotaoPadrao>
                 </section>
             </v-form>
         </div>
@@ -81,6 +83,7 @@
 import sjcl from 'sjcl';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import DropZone from '@/components/DropZone.vue'
+import AlertaInfo from '@/components/AlertaInfo.vue'
 
 export default {
 
@@ -113,8 +116,6 @@ export default {
                 (v) => (v && v.length >= 8) || "Senha deve conter pelo menos 8 caracteres!",
                 (v) => !/[ ]/.test(v) || "Não insira espaços!",
             ],
-            valid: true,
-            formDesabilitado: false,
             alerta: false,
             mensagemAlerta: '',
         }
@@ -123,38 +124,61 @@ export default {
     components: {
         BotaoPadrao,
         DropZone,
+        AlertaInfo,
     },
 
     methods: {
         async validate() {
             const valid = await this.$refs.form.validate()
             if (valid) {
-                this.autenticar() 
+                const passwordValid = this.senha === this.confirmeSenha
+                if(passwordValid) {
+                    this.autenticar() 
+                } else {
+                    this.confirmeSenha = ''
+                    this.mensagemAlerta = "Senha inválida. Confirme a senha novamente!";
+                    this.alerta = true;
+
+                    setTimeout(() => {
+                        this.fecharAlerta();
+                    }, 5000);
+                }
             }
         },
+        
+        fecharAlerta() {
+            this.alerta = false;
+        },
 
-        async autenticar() {
-            const dadosLogin = {
-                cpf: this.criptografarDado(this.cpf),
-                senha: this.criptografarDado(this.senha)
-            }
+        // async autenticar() {
+        //     const dadosLogin = {
+        //         cpf: this.criptografarDado(this.cpf),
+        //         senha: this.criptografarDado(this.senha)
+        //     }
             
-            const requisicao = await fazerLogin(dadosLogin);
+        //     const requisicao = await fazerLogin(dadosLogin);
 
-            if (requisicao === 200) {
-                this.formDesabilitado = false;
-                router.push("/emprestimos");
-            } else {
-                this.tratarErroRequisicao(requisicao);
-            }
-        },
+        //     if (requisicao === 200) {
+        //         this.formDesabilitado = false;
+        //         router.push("/emprestimos");
+        //     } else {
+        //         this.tratarErroRequisicao(requisicao);
+        //     }
+        // },
 
-        criptografarDado(dado) {
-            const bitArray = sjcl.hash.sha256.hash(dado);
-            const hash = sjcl.codec.hex.fromBits(bitArray);
-            return hash;
-        },
+        // criptografarDado(dado) {
+        //     const bitArray = sjcl.hash.sha256.hash(dado);
+        //     const hash = sjcl.codec.hex.fromBits(bitArray);
+        //     return hash;
+        // },
+
     },
+
+    computed: {
+        arquivoSenhaBibliotecario() {
+            return this.$store.state.arquivoSenhaBibliotecario;
+        }
+  }
 }
 
 </script>

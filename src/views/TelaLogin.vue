@@ -54,7 +54,7 @@
 import sjcl from 'sjcl';
 import { fazerLogin, validarTokenAcesso } from "../service/autenticacao.js";
 import router from "@/router";
-import AlertaInfo from '../components/AlertaInfo.vue';
+import AlertaInfo from '@/components/AlertaInfo.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 
 export default {
@@ -74,7 +74,6 @@ export default {
                 (v) => (v && v.length >= 8) || "Senha deve conter pelo menos 8 caracteres!",
                 (v) => !/[ ]/.test(v) || "Não insira espaços!",
             ],
-            valid: true,
             formDesabilitado: false,
             isLoading: false,
             alerta: false,
