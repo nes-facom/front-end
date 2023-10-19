@@ -11,8 +11,8 @@
             <div class="divLabels">
                 <label for="dropzoneFile"><img src="@/components/icons/DragAndDropIcon.png" alt="Nuvem com uma seta apontada pera ela, simbolizando a importação de arquivos."></label>
                 <label id="primeira-label" for="dropzoneFile">Arraste e solte</label>
-                <label id="segunda-label" for="dropzoneFile">Somente arquivos {{ retornarExtensao }} serão aceitos</label>
-                <input ref="entradaArquivo" id="dropzoneFile" type="file" @change="submissaoInput"/>
+                <label id="segunda-label" for="dropzoneFile">Somente arquivos {{extensaoDoArquivo }} serão aceitos</label>
+                <input ref="entradaArquivo" id="dropzoneFile" type="file" @change="submissaoInput" :accept="extensaoDoArquivo"/>
             </div>
             <div class="descricao" v-if="info">
                 <span>{{ descricao }}</span>
@@ -68,27 +68,13 @@
             validarArquivo(arquivo) {
                 if (arquivo) {
                     this.info = true;
-                    if (arquivo.type === this.extensaoDoArquivo) {
                         this.descricao = arquivo.name;
                         this.$store.commit("nomeArquivoSenhaBibliotecario", arquivo.name);
                         this.$store.commit("salvarArquivoSenhaBibliotecario", arquivo);
                         this.arquivoImportado = true;
-                    } else {
-                        this.descricao = "Insira um arquivo válido!";
-                    }
                 }
             }
         },
-
-        computed: {
-            retornarExtensao() {
-                if(this.extensaoDoArquivo === 'text/plain') {
-                    return '.txt'
-                } else if (this.extensaoDoArquivo === 'text/csv') {
-                    return '.csv'
-                }
-            }
-        }
     }
 </script>
 

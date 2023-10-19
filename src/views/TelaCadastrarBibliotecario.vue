@@ -1,6 +1,8 @@
 <template>
     <div id="background">
-        <div id="wrapper">
+        <div 
+        id="wrapper"
+        v-if="!isBibliotecarioCadastrado">
 
             <div>
                 <img src="@/components/icons/Logo.png" alt="Um livro fechado com o nome LibriX à esquerda.">
@@ -57,7 +59,7 @@
                 <section id="senhaAdmin">
                     <span>Insira a senha do administrador</span>
                     <DropZone
-                    extensaoDoArquivo="text/plain"
+                    extensaoDoArquivo=".txt"
                     ></DropZone>
                 </section>
                 
@@ -76,6 +78,23 @@
                 </section>
             </v-form>
         </div>
+        <div
+        id="wrapper-cadastro-sucesso"
+        v-if="isBibliotecarioCadastrado">
+            <div>
+                <img src="@/components/icons/Logo.png" alt="Um livro fechado com o nome LibriX à esquerda.">
+            </div>
+
+            <span>Bibliotecário cadastrado com sucesso!</span>
+
+            <section id="wrapper-botoes">
+                <router-link to="/login">
+                    <BotaoPadrao
+                    conteudo="Fazer login"
+                    type="button"></BotaoPadrao>
+                </router-link>
+            </section>
+        </div>
     </div>
 </template>
 
@@ -84,6 +103,7 @@ import sjcl from 'sjcl';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import DropZone from '@/components/DropZone.vue'
 import AlertaInfo from '@/components/AlertaInfo.vue'
+import { cadastrarBibliotecario } from "../service/requisicao.js";
 
 export default {
 
@@ -118,6 +138,8 @@ export default {
             ],
             alerta: false,
             mensagemAlerta: '',
+            conteudoArquivo: null,
+            isBibliotecarioCadastrado: false,
         }
     },
 
@@ -133,7 +155,8 @@ export default {
             if (valid) {
                 const passwordValid = this.senha === this.confirmeSenha
                 if(passwordValid) {
-                    this.autenticar() 
+                    await this.formatarSenhaAdmin()
+                        this.autenticar()
                 } else {
                     this.confirmeSenha = ''
                     this.mensagemAlerta = "Senha inválida. Confirme a senha novamente!";
@@ -150,35 +173,87 @@ export default {
             this.alerta = false;
         },
 
-        // async autenticar() {
-        //     const dadosLogin = {
-        //         cpf: this.criptografarDado(this.cpf),
-        //         senha: this.criptografarDado(this.senha)
-        //     }
-            
-        //     const requisicao = await fazerLogin(dadosLogin);
+        async autenticar() {
+                const dadosCadastrarBibliotecario = {
+                    nome: this.criptografarDado(this.nome),
+                    cpf: this.criptografarDado(this.cpf),
+                    senha: this.criptografarDado(this.senha),
+                    senhaAdmin: this.criptografarDado(this.conteudoArquivo)
+                }
+                
+                const requisicao = await cadastrarBibliotecario(dadosCadastrarBibliotecario);
+    
+                if (requisicao === 200) {
+                    this.bibliotecarioCadastrado()
+                } else {
+                    this.tratarErroRequisicao(requisicao);
+                }
+        },
 
-        //     if (requisicao === 200) {
-        //         this.formDesabilitado = false;
-        //         router.push("/emprestimos");
-        //     } else {
-        //         this.tratarErroRequisicao(requisicao);
-        //     }
-        // },
+        async formatarSenhaAdmin() {
+            return new Promise((resolve, reject) => {
+                const arquivo = this.arquivoSenhaBibliotecario;
 
-        // criptografarDado(dado) {
-        //     const bitArray = sjcl.hash.sha256.hash(dado);
-        //     const hash = sjcl.codec.hex.fromBits(bitArray);
-        //     return hash;
-        // },
+                if (arquivo) {
+                const reader = new FileReader();
 
+                reader.onload = (e) => {
+                    this.conteudoArquivo = e.target.result;
+                    resolve();
+                };
+
+                reader.onerror = (error) => {
+                    reject(error);
+                };
+
+                reader.readAsText(arquivo);
+                } else {
+                reject("Nenhum arquivo fornecido.");
+                }
+            });
+        },
+
+        criptografarDado(dado) {
+            const bitArray = sjcl.hash.sha256.hash(dado);
+            const hash = sjcl.codec.hex.fromBits(bitArray);
+            return hash;
+        },
+
+        bibliotecarioCadastrado() {
+            this.isBibliotecarioCadastrado = true
+        },
+
+        tratarErroRequisicao(requisicao) {
+            const status = requisicao.request.status;
+            if (status === 401) {
+                this.mensagemAlerta = "Senha do Administrador inválida!"
+            } else if (status === 500) {
+                this.mensagemAlerta = "CPF já cadastrado! Por favor cadastre um novo CPF."
+            } else {
+                this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
+            }
+
+            this.alerta = true;
+            setTimeout(() => {
+                this.fecharAlerta();
+            }, 5000);
+        },
     },
 
     computed: {
         arquivoSenhaBibliotecario() {
             return this.$store.state.arquivoSenhaBibliotecario;
-        }
-  }
+        },
+        senhaAdmin() {
+            return this.$store.getters.senhaAdmin;
+        },
+    },
+
+    beforeRouteLeave(to, from, next) {
+        this.$store.commit("limparNomeArquivoSenhaBibliotecario");
+        this.$store.commit("limparSalvarArquivoSenhaBibliotecario");
+        next();
+  },
 }
 
 </script>
@@ -273,5 +348,19 @@ span {
     gap: 4.8rem;
 }
 
+#wrapper-cadastro-sucesso {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100vw;
+    height: 95vh;
+}
+
+#wrapper-cadastro-sucesso img{
+    width: 25rem;
+    height: 8rem;
+}
     
 </style>
