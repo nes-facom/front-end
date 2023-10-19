@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import vuetify from '@/plugins/vuetify'
+import store from '@/store/index.js'
 
 import App from './App.vue'
 import router from './router'
@@ -7,7 +8,9 @@ import router from './router'
 import './assets/main.css'
 
 new Vue({
-  router,
+  el: '#app',
   vuetify,
-  render: (h) => h(App)
+  router,
+  store,
+  render: h => h(App),
 }).$mount('#app')

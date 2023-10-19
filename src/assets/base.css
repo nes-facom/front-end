@@ -3,6 +3,9 @@
 @import url('https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css');
 
 :root {
+  --black: #000000;
+  --white: #FFFFFF;
+
   --primary: #00696C;
   --on-primary: #FFFFFF;
   --primary-container: #41F9FF;
