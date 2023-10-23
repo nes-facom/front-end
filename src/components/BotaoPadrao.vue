@@ -71,16 +71,20 @@ export default {
     width: fit-content;
 
     text-transform: none;
+
 }
 
 #button-default {
     color: var(--on-primary);
     background-color: var(--primary);
+
+    height: 4rem;
 }
 
 #button-outlined {
     color: var(--primary);
     border-color: var(--primary);
+    height: 4rem;
 }
 
 </style>
