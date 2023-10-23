@@ -2,15 +2,15 @@
   <div id="componente-navegacao">
 
     <div id="logo">
-      <img id="logo-icon" src="./icons/Logo.png"/>
+      <img id="icone-logo" src="./icons/Logo.png"/>
     </div>
 
     <div id="menu">
-      <ul>
-      <li id="menu-item"><a href="#">Empréstimos</a></li>
-      <li id="menu-item"><a href="#">Livros</a></li>
-      <li id="menu-item"><a href="#">Leitores</a></li>
-    </ul>
+    <v-tabs slider-color="#00696C">
+      <v-tab id="item-menu">Empréstimos</v-tab>
+      <v-tab id="item-menu">Livros</v-tab>
+      <v-tab id="item-menu">Leitores</v-tab>
+    </v-tabs>
     </div>
 
     <div id="logout">
@@ -33,7 +33,6 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos específicos do componente, se necessário */
 #componente-navegacao {
   width: 100%;
   display: flex;
@@ -43,17 +42,12 @@ export default {
   justify-content: space-evenly;
 }
 
-#logo-icon {
+#icone-logo {
   width: 15rem;
   height: 5rem;
 }
 
-#menu-item {
-  display: inline;
-  padding: 2rem;
-}
-
-#menu-item a {
+#item-menu {
   font: var(--label-large);
   color: var(---on-primary-container);
   text-decoration: none;
