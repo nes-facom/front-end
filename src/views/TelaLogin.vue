@@ -38,18 +38,12 @@
                     </div>
                     <div id="alerta-wrapper">
                         <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                        <v-btn
-                            id="botaoEntrar"
-                            rounded
-                            elevation="0"
-                            @click="validate"
-                            :loading="isLoading"
-                            >
-                            Entrar
-                        </v-btn>
+                        <BotaoPadrao conteudo="Entrar" type="submit"></BotaoPadrao>
                     </div>
                 </v-form>
-                <a href="#">Cadastrar bibliotecário</a>
+                <router-link to="/bibliotecario">
+                    Cadastrar bibliotecário
+                </router-link>
             </v-card>
         </div>
     </div>
@@ -60,7 +54,8 @@
 import sjcl from 'sjcl';
 import { fazerLogin, validarTokenAcesso } from "../service/autenticacao.js";
 import router from "@/router";
-import AlertaInfo from '../components/AlertaInfo.vue';
+import AlertaInfo from '@/components/AlertaInfo.vue';
+import BotaoPadrao from '@/components/BotaoPadrao.vue';
 
 export default {
     data() {
@@ -79,7 +74,6 @@ export default {
                 (v) => (v && v.length >= 8) || "Senha deve conter pelo menos 8 caracteres!",
                 (v) => !/[ ]/.test(v) || "Não insira espaços!",
             ],
-            valid: true,
             formDesabilitado: false,
             isLoading: false,
             alerta: false,
@@ -97,6 +91,7 @@ export default {
 
     components: {
         AlertaInfo,
+        BotaoPadrao
     },
     
     methods: {
