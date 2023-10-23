@@ -1,5 +1,5 @@
-<template>
-    <div id="wrapper-seletor">
+<template lang="">
+    <div data-app>
         <v-select
             data-cy="filtro-seletor"
             dense
@@ -14,28 +14,17 @@
         ></v-select>
     </div>
 </template>
-
 <script>
-
 export default {
     data() {
         return {
             opcoes: ['discente', 'docente']
         }
     },
-
-    props: {
-        // opcoes: {
-        //     type: Array,
-        //     required: true
-        // }
-    }
 }
-
 </script>
-
 <style scoped>
-    
+
 #wrapper-seletor {
     >>> label {
         color: var(--primary);
@@ -50,5 +39,5 @@ export default {
         border-color: var(--outline);
     }
 }
-
+    
 </style>
