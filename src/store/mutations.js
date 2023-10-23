@@ -14,6 +14,10 @@ let mutations = {
     limparSalvarArquivoSenhaBibliotecario(state, arquivo) {
         state.arquivoSenhaBibliotecario = null;
     },
+
+    setLogado(state, logado) {
+        state.usuarioLogado = logado;
+    },
 }
 
 export default mutations;

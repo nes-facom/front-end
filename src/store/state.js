@@ -1,7 +1,7 @@
 let state = {
     nomeArquivoSenhaBibliotecario: '',
     arquivoSenhaBibliotecario: null,
-    logado: true,
+    usuarioLogado: true,
 }
 
 export default state;
