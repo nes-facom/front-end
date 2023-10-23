@@ -1,10 +1,12 @@
 <template>
-    <div id="wrapper">
+    <div id="wrapper-barra-de-busca">
         <v-text-field
             append-icon="mdi-magnify"
+            data-cy="barra-de-busca"
+            dense
+            flat
             hide-details
             id="barra-de-busca"
-            flat
             rounded
             outlined
             v-model="stringBusca"
@@ -41,7 +43,7 @@ export default {
 
 <style scoped>
 
-#wrapper {
+#wrapper-barra-de-busca {
     display: flex;
     justify-content: center;
     align-items: center;
