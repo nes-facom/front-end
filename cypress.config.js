@@ -11,5 +11,7 @@ module.exports = defineConfig({
       framework: 'vue',
       bundler: 'vite'
     }
-  }
+  },
+  viewportWidth: 1280,
+  viewportHeight: 720,
 })
