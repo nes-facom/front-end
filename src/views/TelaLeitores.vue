@@ -9,19 +9,21 @@
                 ></BarraDeBusca>
 
                 <div id="botoes-direita">
-                    <FiltroSelect
+                    <FiltroLeitor
                         :opcoes="filtrosLeitores"
-                    ></FiltroSelect>
-                    <BotaoPadrao
-                        conteudo="Cadastrar leitor"
-                        type="button"
-                        icon="mdi-plus"
-                    >
-                    </BotaoPadrao>
+                    ></FiltroLeitor>
+                    <router-link to="/leitores/cadastrar">
+                        <BotaoPadrao
+                            conteudo="Cadastrar leitor"
+                            type="button"
+                            icon="mdi-plus"
+                        >
+                        </BotaoPadrao>
+                    </router-link>
                 </div>
 
             </section>
-            <!-- Componente de Listagem de Leitores -->
+            <ListaDeLeitores></ListaDeLeitores>
         </div>
     </div>
 </template>
@@ -29,8 +31,9 @@
 <script>
 
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
-import FiltroSelect from '@/components/FiltroSelect.vue';
+import FiltroLeitor from '@/components/FiltroLeitor.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
+import ListaDeLeitores from '@/components/ListaDeLeitores.vue';
 
 export default {
     data() {
@@ -40,10 +43,11 @@ export default {
     },
 
     components: {
-        BarraDeBusca,
-        BotaoPadrao,
-        FiltroSelect
-    },
+    BarraDeBusca,
+    BotaoPadrao,
+    FiltroLeitor,
+    ListaDeLeitores
+},
 
     methods: {
         realizarBusca(query) {
