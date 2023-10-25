@@ -73,7 +73,7 @@ export default {
 #wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 
     width: 80%;
@@ -96,6 +96,8 @@ export default {
     align-items: center;
     
     width: 100%;
+
+    gap: 5rem;
 }
 
 </style>
