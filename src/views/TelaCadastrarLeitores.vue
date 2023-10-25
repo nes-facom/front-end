@@ -143,7 +143,7 @@ import AlertaInfo from '@/components/AlertaInfo.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
 import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
-// import { validarTokenAcesso } from "@/service/autenticacao.js";
+import { validarTokenAcesso } from "@/service/autenticacao.js";
 
 export default {
   data() {
@@ -209,13 +209,13 @@ export default {
     DropZone,
   },
 
-  // mounted() {
-  //   validarTokenAcesso().then((token) => {
-  //     if (!token) {
-  //       router.push('/login');
-  //     }
-  //   })
-  // },
+  mounted() {
+    validarTokenAcesso().then((token) => {
+      if (!token) {
+        router.push('/login');
+      }
+    })
+  },
 
   methods: {
     async validate() {

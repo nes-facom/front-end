@@ -33,6 +33,7 @@
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroLeitor from '@/components/FiltroLeitor.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
+import { validarTokenAcesso } from '../service/autenticacao';
 import ListaDeLeitores from '@/components/ListaDeLeitores.vue';
 
 export default {
@@ -54,7 +55,15 @@ export default {
             // Lógica de pesquisa com o "query" recebido
             // Atualize os resultados da pesquisa aqui
         }
-    }
+    },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+        if (!token) {
+            router.push('/login');
+        }
+        })
+    },
 }
 
 </script>
