@@ -1,5 +1,5 @@
 <script>
-import BarraDeNavegacao from './components/BarraDeNavegacao.vue';
+import BarraDeNavegacao from "./components/BarraDeNavegacao.vue";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
 
 export default {

@@ -22,17 +22,18 @@
 
 <script>
 import { deslogar } from "@/service/autenticacao.js";
-import store from "@/store/index.js";
-import router from "@/router";
+import { mapActions } from "vuex";
+ 
 
 export default {
   methods: {
+    ...mapActions(["atualizarUsuarioLogado"]), 
     sair() {
       const sair = deslogar();
       console.log("aqui");
       if (sair) {
-        store.dispatch("atualizarUsuarioLogado", false);
-        router.push("/login");
+        this.atualizarUsuarioLogado(false); 
+        this.$router.push("/login"); 
       }
     },
   },
