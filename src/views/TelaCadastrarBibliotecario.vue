@@ -194,11 +194,11 @@ export default {
                 this.alerta = false;
 
                 const dadosCadastrarBibliotecario = {
-                    nome: this.criptografarDado(this.nome),
+                    nome: this.nome,
                     cpf: this.criptografarDado(this.cpf),
                     senha: this.criptografarDado(this.senha),
-                    senhaAdmin: this.criptografarDado(this.conteudoArquivo)
-                }
+                    senhaAdmin: this.conteudoArquivo
+                } 
                 
                 const requisicao = await cadastrarBibliotecario(dadosCadastrarBibliotecario);
     
