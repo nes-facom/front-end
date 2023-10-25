@@ -15,6 +15,7 @@
                     <img src="@/components/icons/Logo.png" alt="Um livro fechado com o nome LibriX à esquerda.">
                     <div>
                         <v-text-field
+                            data-cy="input-cpf"
                             label="CPF"
                             v-model="cpf"
                             counter="11"
@@ -25,6 +26,7 @@
                             :rules="regrasCPF"
                         ></v-text-field>
                         <v-text-field
+                            data-cy="input-senha"
                             prepend-inner-icon="mdi-key"
                             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassword ? 'text' : 'password'"
@@ -37,8 +39,8 @@
                         ></v-text-field>
                     </div>
                     <div id="alerta-wrapper">
-                        <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                        <BotaoPadrao conteudo="Entrar" type="submit"></BotaoPadrao>
+                        <AlertaInfo data-cy="alerta" v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+                        <BotaoPadrao conteudo="Entrar" data-cy="botao-login" type="submit"></BotaoPadrao>
                     </div>
                 </v-form>
                 <router-link to="/bibliotecario">
