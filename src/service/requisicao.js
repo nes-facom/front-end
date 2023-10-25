@@ -11,7 +11,7 @@ export async function cadastrarBibliotecario(jsonBibliotecario) {
   };
   try {
     const requisicao = await axios.post(
-      BASE_URL + "/cadastrarBibliotecario",
+      BASE_URL + "/bibliotecarios",
       jsonBibliotecario,
       configHeader
     );
