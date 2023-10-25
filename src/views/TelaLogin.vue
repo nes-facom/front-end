@@ -191,11 +191,8 @@ export default {
     justify-content: center;
     align-items: center;
 
-    height: 70rem;
-    width: 35vw;
-    min-width: 40rem;
-    min-height: 65rem;
-    max-height: 90rem;
+    height: 68rem;
+    width: 45rem;
 
     border-radius: 2rem;
 
@@ -262,6 +259,12 @@ a {
 }
 
 @media only screen and (max-width: 768px) {
+  #wrapper {
+    justify-content: center;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
   #wrapper {
     justify-content: center;
   }
