@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import TelaLogin from '@/views/TelaLogin.vue'
 import TelaEmprestimos from '@/views/TelaEmprestimos.vue'
 import TelaCadastrarBibliotecario from '@/views/TelaCadastrarBibliotecario.vue'
+import WebcamTest from '@/views/WebcamTest.vue'
 
 Vue.use(VueRouter)
 
@@ -29,6 +30,11 @@ const router = new VueRouter({
       name: 'Bibliotecario',
       component: TelaCadastrarBibliotecario,
     },
+    {
+      path: '/webcamtest',
+      name: 'WebcamTest',
+      component: WebcamTest
+    }
   ]
 })
 

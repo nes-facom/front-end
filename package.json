@@ -12,13 +12,17 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@mdi/font": "^7.3.67",
     "axios": "^1.5.1",
+    "image-size": "^1.0.2",
     "jwt-decode": "^3.1.2",
     "sjcl": "^1.0.8",
     "vite-plugin-mkcert": "^1.16.0",
     "vue": "^2.7.7",
+    "vue-cam-vision": "^0.0.8",
+    "vue-cropperjs": "^4.2.0",
     "vue-router": "^3.5.4",
-    "vuetify": "^2.7.1",
+    "vuetify": "2.7.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -29,6 +33,7 @@
     "eslint": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.0.0",
+    "internal-ip": "^8.0.0",
     "start-server-and-test": "^1.14.0",
     "terser": "^5.14.2",
     "vite": "^3.0.2"
