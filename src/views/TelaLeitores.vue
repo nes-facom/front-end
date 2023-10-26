@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+<template lang="">
+    <div>
+        Leitores
+    </div>
+</template>
+<script>
+export default {
+    
+}
+</script>
+<style lang="">
+    
+=======
 <template>
     <div id="background">
         <div id="wrapper">
@@ -100,4 +114,5 @@ export default {
     gap: 5rem;
 }
 
+>>>>>>> develop
 </style>
