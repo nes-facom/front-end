@@ -450,7 +450,7 @@ span:first-child {
 
 #window {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 
   gap: 10rem;

@@ -1,6 +1,6 @@
 <template lang="">
     <div data-app>
-        <v-select
+        <!-- <v-select
             data-cy="filtro-seletor"
             dense
             hide-details
@@ -11,16 +11,30 @@
             rounded
             v-model="filtros"
             :items="opcoes"
-        ></v-select>
+        ></v-select> -->
+        <BotaoPadrao
+            conteudo="Filtros"
+            type="button"
+            icon="mdi-filter-outline"
+            outlined
+        >
+        </BotaoPadrao>
     </div>
 </template>
 <script>
+import BotaoPadrao from '@/components/BotaoPadrao.vue'
+
 export default {
     data() {
         return {
+            filtros: [],
             opcoes: ['discente', 'docente']
         }
     },
+
+    components: {
+        BotaoPadrao
+    }
 }
 </script>
 <style scoped>

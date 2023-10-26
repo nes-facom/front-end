@@ -1,35 +1,36 @@
 <template>
     <div id="background">
         <div id="wrapper">
-            <!-- Header -->
-            <section id="acoes">
-                <BarraDeBusca
-                    conteudo="Busque por um leitor"
-                    @busca="realizarBusca"
-                ></BarraDeBusca>
-
-                <div id="botoes-direita">
-                    <FiltroLeitor
-                        :opcoes="filtrosLeitores"
-                    ></FiltroLeitor>
-                    <router-link to="/leitores/cadastrar">
-                        <BotaoPadrao
-                            conteudo="Cadastrar leitor"
-                            type="button"
-                            icon="mdi-plus"
-                        >
-                        </BotaoPadrao>
-                    </router-link>
-                </div>
-
-            </section>
-            <ListaDeLeitores></ListaDeLeitores>
+            <div id="wrapper-cabecalho">
+                <BarraDeNavegacao></BarraDeNavegacao>
+                <section id="acoes">
+                    <BarraDeBusca
+                        class="acoes-item1"
+                        conteudo="Busque por um leitor"
+                        @busca="salvarQueryDeBusca"
+                    ></BarraDeBusca>
+                    <div class="acoes-item2">
+                        <FiltroLeitor
+                        ></FiltroLeitor>
+                        <router-link to="/leitores/cadastrar">
+                            <BotaoPadrao
+                                conteudo="Cadastrar leitor"
+                                type="button"
+                                icon="mdi-plus"
+                            >
+                            </BotaoPadrao>
+                        </router-link>
+                    </div>
+                </section>
+            </div>
+            <ListaDeLeitores :busca="this.queryDeBusca"></ListaDeLeitores>
         </div>
     </div>
 </template>
 
 <script>
 
+import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroLeitor from '@/components/FiltroLeitor.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
@@ -39,21 +40,21 @@ import ListaDeLeitores from '@/components/ListaDeLeitores.vue';
 export default {
     data() {
         return {
-            filtrosLeitores: ['discente', 'docente']
+            queryDeBusca: '',
         }
     },
 
     components: {
-    BarraDeBusca,
-    BotaoPadrao,
-    FiltroLeitor,
-    ListaDeLeitores
-},
+        BarraDeNavegacao,
+        BarraDeBusca,
+        BotaoPadrao,
+        FiltroLeitor,
+        ListaDeLeitores
+    },
 
     methods: {
-        realizarBusca(query) {
-            // Lógica de pesquisa com o "query" recebido
-            // Atualize os resultados da pesquisa aqui
+        salvarQueryDeBusca(query) {
+            this.queryDeBusca = query;
         }
     },
 
@@ -82,29 +83,45 @@ export default {
 #wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
 
     width: 80%;
     max-width: 144rem;
 
     height: 100%;
+
+    gap: 4.4rem;
+}
+
+#wrapper-cabecalho {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 4rem;
+
+    width: 100%;
 }
 
 #acoes {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     
     width: 100%;
+    max-width: 100.8rem;
 }
 
-#botoes-direita {
+.acoes-item1 {
     display: flex;
-    justify-content: end;
+    justify-content: flex-start;
     align-items: center;
-    
-    width: 100%;
+}
+
+.acoes-item2 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 
     gap: 5rem;
 }
