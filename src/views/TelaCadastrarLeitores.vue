@@ -2,6 +2,7 @@
   <div id="background" data-app>
     <div 
     id="wrapper">
+      <BarraDeNavegacao></BarraDeNavegacao>
       <span>Cadastrar leitor</span>
       <v-tabs
       data-cy="tabs"
@@ -140,6 +141,7 @@
 
 import router from "@/router";
 import AlertaInfo from '@/components/AlertaInfo.vue'
+import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
 import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
@@ -172,8 +174,7 @@ export default {
       'Filosofia',
       'Outra'],
       turnos: ['Matutino',
-      'Vespertino',
-      'Noturno'],
+      'Vespertino'],
       series: ['Grupo 4',
       'Grupo 5',
       '1°',
@@ -205,6 +206,7 @@ export default {
 
   components: {
     BotaoPadrao,
+    BarraDeNavegacao,
     AlertaInfo,
     DropZone,
   },
@@ -371,8 +373,6 @@ export default {
   max-width: 144rem;
 
   height: 100%;
-
-  padding-bottom: 4rem;
 
   gap: 4.8rem;
 

@@ -60,9 +60,9 @@ export default {
 
     mounted() {
         validarTokenAcesso().then((token) => {
-        if (!token) {
-            router.push('/login');
-        }
+            if (!token) {
+                router.push('/login');
+            }
         })
     },
 }

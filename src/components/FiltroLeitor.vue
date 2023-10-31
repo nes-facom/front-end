@@ -1,24 +1,40 @@
 <template lang="">
     <div data-app>
-        <!-- <v-select
-            data-cy="filtro-seletor"
-            dense
-            hide-details
-            id="filtro-seletor"
-            label="Filtros"
-            outlined
-            prepend-inner-icon="mdi-filter-outline"
-            rounded
-            v-model="filtros"
-            :items="opcoes"
-        ></v-select> -->
-        <BotaoPadrao
-            conteudo="Filtros"
-            type="button"
-            icon="mdi-filter-outline"
-            outlined
-        >
-        </BotaoPadrao>
+        <v-menu
+        rounded
+        offset-y>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    class="button-outlined"
+                    data-cy="botao-filtro-outlined"
+                    elevation="0"
+                    rounded
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    <v-icon
+                        left
+                    >
+                        mdi-filter-outline
+                    </v-icon>
+                    Filtros
+                </v-btn>
+            </template>
+            <v-list>
+                <v-list-item-group
+                v-model="filtroSelecionado">
+                    <v-list-item
+                    v-for="(item, index) in items"
+                    :key="index"
+                    >
+                        <v-list-item-content>
+                            <v-list-item-title>{{ item }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-list>
+        </v-menu>
     </div>
 </template>
 <script>
@@ -27,31 +43,49 @@ import BotaoPadrao from '@/components/BotaoPadrao.vue'
 export default {
     data() {
         return {
-            filtros: [],
-            opcoes: ['discente', 'docente']
+            items: [ 'Discente', 'Docente', 'Todos' ],
+            filtroSelecionado: 2,
         }
     },
 
     components: {
         BotaoPadrao
+    },
+
+    methods: {
+        openMenu() {
+            this.menu = true;
+        },
+        selectOption(option) {
+            this.selectedOption = option;
+            this.menu = false;
+        },
+    },
+
+    watch: {
+        filtroSelecionado(newValue) {
+            if (newValue === undefined) {
+                this.filtroSelecionado = 2
+            }
+        }
     }
 }
 </script>
 <style scoped>
 
-#wrapper-seletor {
-    >>> label {
-        color: var(--primary);
-        font: var(--label-large);
-    }
+.button-outlined {
+    color: var(--primary);
+    border-color: var(--primary);
 
-    >>> .v-icon {
-        color: var(--primary);
-    }
+    height: 4rem;
 
-    >>> fieldset {
-        border-color: var(--outline);
+    font: var(--label-large);
+    width: fit-content;
+
+    text-transform: none;
+
+    >>> .v-btn:not(.v-btn--round).v-size--default {
+        height: 4rem;
     }
 }
-    
 </style>

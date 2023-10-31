@@ -78,7 +78,6 @@ export default {
     width: fit-content;
 
     text-transform: none;
-
 }
 
 #button-default {
