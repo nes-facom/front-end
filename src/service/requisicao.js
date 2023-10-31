@@ -58,3 +58,16 @@ export async function cadastrarDiscente(jsonDiscente) {
     return erro;
   }
 }
+
+export async function getLeitores(query) {
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/" + query
+    );
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}

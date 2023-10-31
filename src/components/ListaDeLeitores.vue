@@ -25,13 +25,12 @@
 <script>
 
 import CardLeitor from '@/components/CardLeitor.vue';
+import { getLeitores } from '@/service/requisicao.js';
 
 export default {
     data() {
         return {
-            arrayRequest: [
-                
-            ]
+            arrayRequest: []
         }
     },
 
@@ -41,6 +40,29 @@ export default {
 
     components: {
         CardLeitor,
+    },
+
+    watch: {
+        async busca(newValue) {
+            const requisicao = await getLeitores(newValue)
+            
+            if (requisicao === 200) {
+                this.arrayRequest = requisicao
+            } else {
+                this.tratarErroRequisicao(requisicao);
+            }
+        }
+    },
+
+    methods: {
+        tratarErroRequisicao(requisicao) {
+            const status = requisicao.request.status;
+            if (status === 401) {
+                console.log(status)
+            }  else {
+                console.log(status)
+            }
+        },
     }
 }
 
