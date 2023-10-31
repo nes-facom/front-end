@@ -54,7 +54,7 @@
 
 <script>
 import sjcl from 'sjcl';
-import { fazerLogin, validarTokenAcesso } from "../service/autenticacao.js";
+import { fazerLogin, validarTokenAcesso } from "@/service/autenticacao.js";
 import router from "@/router";
 import AlertaInfo from '@/components/AlertaInfo.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';

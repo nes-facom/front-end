@@ -11,6 +11,7 @@
                     ></BarraDeBusca>
                     <div class="acoes-item2">
                         <FiltroLeitor
+                            @filtragem="salvarTipoDeFiltragem"
                         ></FiltroLeitor>
                         <router-link to="/leitores/cadastrar">
                             <BotaoPadrao
@@ -23,7 +24,7 @@
                     </div>
                 </section>
             </div>
-            <ListaDeLeitores :busca="this.queryDeBusca"></ListaDeLeitores>
+            <ListaDeLeitores :leitores="this.arrayResponse"></ListaDeLeitores>
         </div>
     </div>
 </template>
@@ -33,14 +34,18 @@
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroLeitor from '@/components/FiltroLeitor.vue';
+import router from '@/router'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
-import { validarTokenAcesso } from '../service/autenticacao';
+import { validarTokenAcesso } from '@/service/autenticacao';
 import ListaDeLeitores from '@/components/ListaDeLeitores.vue';
+import { getLeitores } from '@/service/requisicao.js';
 
 export default {
     data() {
         return {
             queryDeBusca: '',
+            filtroSelecionado: null,
+            arrayResponse: []
         }
     },
 
@@ -55,7 +60,11 @@ export default {
     methods: {
         salvarQueryDeBusca(query) {
             this.queryDeBusca = query;
-        }
+        },
+
+        salvarTipoDeFiltragem(filtro) {
+            this.filtroSelecionado = filtro;
+        },
     },
 
     mounted() {
@@ -64,6 +73,19 @@ export default {
                 router.push('/login');
             }
         })
+    },
+
+    watch: {
+        async queryDeBusca() {
+            const requisicao = await getLeitores()
+            
+            if (requisicao.status === 200) {
+                console.log(requisicao.data)
+                this.arrayResponse = requisicao.data
+            } else {
+                console.log(requisicao.status)
+            }
+        }
     },
 }
 

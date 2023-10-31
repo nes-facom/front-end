@@ -59,10 +59,18 @@ export async function cadastrarDiscente(jsonDiscente) {
   }
 }
 
-export async function getLeitores(query) {
+export async function getLeitores(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/leitores/" + query
+      BASE_URL + "/leitores/",
+      jsonDeBusca,
+      configHeader
     );
     if (requisicao.status === 200) {
       return requisicao;

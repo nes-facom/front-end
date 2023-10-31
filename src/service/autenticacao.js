@@ -21,6 +21,7 @@ export async function validarTokenAcesso() {
     
     if (token_acesso) {
         const decodificarToken = jwt_decode(token_acesso);
+        console.log(decodificarToken)
         const tempoExpiracao = decodificarToken.exp * 1000;
 
 

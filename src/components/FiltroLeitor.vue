@@ -27,9 +27,10 @@
                     <v-list-item
                     v-for="(item, index) in items"
                     :key="index"
+                    :value="item.value"
                     >
                         <v-list-item-content>
-                            <v-list-item-title>{{ item }}</v-list-item-title>
+                            <v-list-item-title>{{ item.nome }}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-item-group>
@@ -43,8 +44,12 @@ import BotaoPadrao from '@/components/BotaoPadrao.vue'
 export default {
     data() {
         return {
-            items: [ 'Discente', 'Docente', 'Todos' ],
-            filtroSelecionado: 2,
+            items: [
+                {nome: 'Discente', value: 'Discente'},
+                {nome: 'Docente', value: 'Docente'},
+                {nome: 'Todos', value: null}
+            ],
+            filtroSelecionado: null,
         }
     },
 
@@ -52,21 +57,13 @@ export default {
         BotaoPadrao
     },
 
-    methods: {
-        openMenu() {
-            this.menu = true;
-        },
-        selectOption(option) {
-            this.selectedOption = option;
-            this.menu = false;
-        },
-    },
-
     watch: {
         filtroSelecionado(newValue) {
             if (newValue === undefined) {
-                this.filtroSelecionado = 2
+                this.filtroSelecionado = null
             }
+
+            this.$emit('filtragem', this.filtroSelecionado);
         }
     }
 }

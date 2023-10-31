@@ -1,9 +1,9 @@
 <template>
     <div class="card-leitor">
-        <span class="span1"> {{ conteudo.nome }} </span>
-        <span class="span2" v-if="conteudo.serie"> {{ conteudo.serie }} </span>
-        <span class="span2" v-if="conteudo.disciplina"> {{ conteudo.disciplina }} </span>
-        <span class="span3"> {{ conteudo.tipo }} </span>
+        <span class="span1"> {{ leitor.nome }} </span>
+        <span class="span2" v-if="leitor.serie"> {{ leitor.serie }} </span>
+        <span class="span2" v-if="leitor.disciplina"> {{ leitor.disciplina }} </span>
+        <span class="span3"> {{ leitor.tipo }} </span>
     </div>
 </template>
 
@@ -11,7 +11,7 @@
 
 export default {
     props: {
-        conteudo: {
+        leitor: {
             type: Object,
             required: true
         }
