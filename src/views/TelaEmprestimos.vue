@@ -1,17 +1,24 @@
 <template>
     <div>
-        <BarraDeNavegacao title="TESTE"/>
+        <BarraDeNavegacao />
     </div>
 </template>
 
 <script>
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 
+
+
 export default {
     components: {
-        BarraDeNavegacao,
+    BarraDeNavegacao
+},
+    data() {
+        return {
+            isLogado: true,
+        };
     },
-}
+};
 
 </script>
 

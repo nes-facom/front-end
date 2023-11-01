@@ -36,3 +36,12 @@ export async function validarTokenAcesso() {
         return false;
     }
 }
+
+export async function deslogar() {
+    const token = validarTokenAcesso();
+      if (token) {
+        localStorage.removeItem("token_acesso");
+        store.dispatch("atualizarUsuarioLogado", false);
+      }
+    return true;
+  }
