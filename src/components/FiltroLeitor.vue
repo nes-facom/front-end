@@ -1,43 +1,88 @@
 <template lang="">
     <div data-app>
-        <v-select
-            data-cy="filtro-seletor"
-            dense
-            hide-details
-            id="filtro-seletor"
-            label="Filtros"
-            outlined
-            prepend-inner-icon="mdi-filter-outline"
-            rounded
-            v-model="filtros"
-            :items="opcoes"
-        ></v-select>
+        <v-menu
+        rounded
+        offset-y>
+            <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    class="button-outlined"
+                    data-cy="botao-filtro-outlined"
+                    elevation="0"
+                    rounded
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                >
+                    <v-icon
+                        left
+                    >
+                        mdi-filter-outline
+                    </v-icon>
+                    Filtros
+                </v-btn>
+            </template>
+            <v-list>
+                <v-list-item-group
+                v-model="filtroSelecionado">
+                    <v-list-item
+                    v-for="(item, index) in items"
+                    :key="index"
+                    :value="item.value"
+                    >
+                        <v-list-item-content>
+                            <v-list-item-title>{{ item.nome }}</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-list>
+        </v-menu>
     </div>
 </template>
 <script>
+import BotaoPadrao from '@/components/BotaoPadrao.vue'
+
 export default {
     data() {
         return {
-            opcoes: ['discente', 'docente']
+            items: [
+                {nome: 'Discente', value: 'Discente'},
+                {nome: 'Docente', value: 'Docente'},
+                {nome: 'Todos', value: null}
+            ],
+            filtroSelecionado: null,
         }
     },
+
+    components: {
+        BotaoPadrao
+    },
+
+    watch: {
+        filtroSelecionado(newValue) {
+            if (newValue === undefined) {
+                this.filtroSelecionado = null
+            }
+
+            this.$emit('filtragem', this.filtroSelecionado);
+        }
+    }
 }
 </script>
 <style scoped>
 
-#wrapper-seletor {
-    >>> label {
-        color: var(--primary);
-        font: var(--label-large);
-    }
+.button-outlined {
+    color: var(--primary);
+    border-color: var(--primary);
 
-    >>> .v-icon {
-        color: var(--primary);
-    }
+    height: 4rem;
 
-    >>> fieldset {
-        border-color: var(--outline);
+    font: var(--label-large);
+    width: fit-content;
+
+    text-transform: none;
+
+    >>> .v-btn:not(.v-btn--round).v-size--default {
+        height: 4rem;
     }
 }
-    
 </style>

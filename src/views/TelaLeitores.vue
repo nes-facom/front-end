@@ -15,60 +15,92 @@ export default {
 <template>
     <div id="background">
         <div id="wrapper">
-            <!-- Header -->
-            <section id="acoes">
-                <BarraDeBusca
-                    conteudo="Busque por um leitor"
-                    @busca="realizarBusca"
-                ></BarraDeBusca>
-
-                <div id="botoes-direita">
-                    <FiltroLeitor
-                        :opcoes="filtrosLeitores"
-                    ></FiltroLeitor>
-                    <router-link to="/leitores/cadastrar">
-                        <BotaoPadrao
-                            conteudo="Cadastrar leitor"
-                            type="button"
-                            icon="mdi-plus"
-                        >
-                        </BotaoPadrao>
-                    </router-link>
-                </div>
-
-            </section>
-            <ListaDeLeitores></ListaDeLeitores>
+            <div id="wrapper-cabecalho">
+                <BarraDeNavegacao></BarraDeNavegacao>
+                <section id="acoes">
+                    <BarraDeBusca
+                        class="acoes-item1"
+                        conteudo="Busque por um leitor"
+                        @busca="salvarQueryDeBusca"
+                    ></BarraDeBusca>
+                    <div class="acoes-item2">
+                        <FiltroLeitor
+                            @filtragem="salvarTipoDeFiltragem"
+                        ></FiltroLeitor>
+                        <router-link to="/leitores/cadastrar">
+                            <BotaoPadrao
+                                conteudo="Cadastrar leitor"
+                                type="button"
+                                icon="mdi-plus"
+                            >
+                            </BotaoPadrao>
+                        </router-link>
+                    </div>
+                </section>
+            </div>
+            <ListaDeLeitores :leitores="this.arrayResponse"></ListaDeLeitores>
         </div>
     </div>
 </template>
 
 <script>
 
+import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroLeitor from '@/components/FiltroLeitor.vue';
+import router from '@/router'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
+import { validarTokenAcesso } from '@/service/autenticacao';
 import ListaDeLeitores from '@/components/ListaDeLeitores.vue';
+import { getLeitores } from '@/service/requisicao.js';
 
 export default {
     data() {
         return {
-            filtrosLeitores: ['discente', 'docente']
+            queryDeBusca: '',
+            filtroSelecionado: null,
+            arrayResponse: []
         }
     },
 
     components: {
-    BarraDeBusca,
-    BotaoPadrao,
-    FiltroLeitor,
-    ListaDeLeitores
-},
+        BarraDeNavegacao,
+        BarraDeBusca,
+        BotaoPadrao,
+        FiltroLeitor,
+        ListaDeLeitores
+    },
 
     methods: {
-        realizarBusca(query) {
-            // Lógica de pesquisa com o "query" recebido
-            // Atualize os resultados da pesquisa aqui
+        salvarQueryDeBusca(query) {
+            this.queryDeBusca = query;
+        },
+
+        salvarTipoDeFiltragem(filtro) {
+            this.filtroSelecionado = filtro;
+        },
+    },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+            if (!token) {
+                router.push('/login');
+            }
+        })
+    },
+
+    watch: {
+        async queryDeBusca() {
+            const requisicao = await getLeitores()
+            
+            if (requisicao.status === 200) {
+                console.log(requisicao.data)
+                this.arrayResponse = requisicao.data
+            } else {
+                console.log(requisicao.status)
+            }
         }
-    }
+    },
 }
 
 </script>
@@ -87,29 +119,45 @@ export default {
 #wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
 
     width: 80%;
     max-width: 144rem;
 
     height: 100%;
+
+    gap: 4.4rem;
+}
+
+#wrapper-cabecalho {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 4rem;
+
+    width: 100%;
 }
 
 #acoes {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     
     width: 100%;
+    max-width: 100.8rem;
 }
 
-#botoes-direita {
+.acoes-item1 {
     display: flex;
-    justify-content: end;
+    justify-content: flex-start;
     align-items: center;
-    
-    width: 100%;
+}
+
+.acoes-item2 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 
     gap: 5rem;
 }

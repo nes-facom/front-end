@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import BarraDeNavegacao from '../components/BarraDeNavegacao.vue';
+import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 
 
 

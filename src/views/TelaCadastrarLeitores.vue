@@ -2,7 +2,8 @@
   <div id="background" data-app>
     <div 
     id="wrapper">
-      <span>Cadastrar leitor</span>
+      <BarraDeNavegacao></BarraDeNavegacao>
+      <span id="title-cadastrar-leitor">Cadastrar leitor</span>
       <v-tabs
       data-cy="tabs"
       v-model="tabSelecionado">
@@ -15,123 +16,124 @@
           value="CSV"
         >CSV</v-tab>
       </v-tabs>
-        <v-window v-model="tabSelecionado">
-          <v-window-item :value="0">
-            <v-form
-              :disabled="formDesabilitado"
-              data-cy="formulario"
-              class="formulario"
-              ref="form"
-              @submit.prevent="validate()"
-            >
-              <section id="credenciais">
-                  <v-text-field
-                      data-cy="input-nome"
-                      label="Nome"
-                      v-model="nome"
+      <v-window
+        id="upper-window"
+        v-model="tabSelecionado">
+        <v-window-item :value="0">
+          <v-form
+            :disabled="formDesabilitado"
+            data-cy="formulario"
+            class="formulario"
+            ref="form"
+            @submit.prevent="validate()"
+          >
+            <section id="credenciais">
+                <v-text-field
+                    data-cy="input-nome"
+                    label="Nome"
+                    v-model="nome"
+                    outlined
+                    required
+                    :rules="regrasNome"
+                ></v-text-field>
+                <!-- Tipo de leitor -->
+                <span>Tipo de leitor</span>
+                <v-radio-group v-model="radioGroup" id="radioGroup">
+                  <v-radio
+                    label="Docente"
+                    value="Docente"
+                  ></v-radio>
+                  <v-radio
+                    label="Discente"
+                    value="Discente"
+                  ></v-radio>
+                </v-radio-group>
+                <v-window v-model="radioGroup">
+                  <v-window-item value="Docente" id="window">
+                    <v-select
+                      data-cy="select-disciplina"
+                      dense
+                      label="Disciplina"
                       outlined
-                      required
-                      :rules="regrasNome"
-                  ></v-text-field>
-                  <!-- Tipo de leitor -->
-                  <span>Tipo de leitor</span>
-                  <v-radio-group v-model="radioGroup" id="radioGroup">
-                    <v-radio
-                      label="Docente"
-                      value="Docente"
-                    ></v-radio>
-                    <v-radio
-                      label="Discente"
-                      value="Discente"
-                    ></v-radio>
-                  </v-radio-group>
-                  <!-- Disciplina e Turno -->
-                  <v-window v-model="radioGroup">
-                    <v-window-item value="Docente" id="window">
-                      <v-select
-                        data-cy="select-disciplina"
-                        dense
-                        label="Disciplina"
-                        outlined
-                        v-model="disciplinaEscolhida"
-                        :items="disciplinas"
-                      ></v-select>
-                      <v-select
-                        data-cy="select-turno"
-                        dense
-                        label="Turno"
-                        outlined
-                        v-model="turnoEsolhido"
-                        :items="turnos"
-                      ></v-select>
-                    </v-window-item>
-                    <v-window-item value="Discente" id="window">
-                      <v-select
-                        data-cy="select-serie"
-                        dense
-                        label="Série"
-                        outlined
-                        v-model="serieEscolhida"
-                        :items="series"
-                      ></v-select>
-                      <v-select
-                        data-cy="select-turma"
-                        dense
-                        label="Turma"
-                        outlined
-                        v-model="turmaEscolhida"
-                        :items="turmas"
-                      ></v-select>
-                    </v-window-item>
-                  </v-window>
-              </section>
-              <section
-              id="wrapper-botoes"
-              v-if="!isLoading">
-                <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                <router-link to="/leitores">
-                    <BotaoPadrao
-                    conteudo="Cancelar"
-                    :outlined="true"
-                    type="button"></BotaoPadrao>
-                </router-link>
-                <BotaoPadrao
-                conteudo="Cadastrar"
-                type="submit"
-                ></BotaoPadrao>
-              </section>
-              <section
-              id="wrapper-loader"
-              v-if="isLoading">
-                  <v-progress-circular indeterminate></v-progress-circular>
-              </section>
-            </v-form>
-          </v-window-item>
-          <v-window-item :value="1" id="csv">
-            <DropZone extensaoDoArquivo=".csv"></DropZone>
+                      v-model="disciplinaEscolhida"
+                      :items="disciplinas"
+                    ></v-select>
+                    <v-select
+                      data-cy="select-turno"
+                      dense
+                      label="Turno"
+                      outlined
+                      v-model="turnoEsolhido"
+                      :items="turnos"
+                    ></v-select>
+                  </v-window-item>
+                  <v-window-item value="Discente" id="window">
+                    <v-select
+                      data-cy="select-serie"
+                      dense
+                      label="Série"
+                      outlined
+                      v-model="serieEscolhida"
+                      :items="series"
+                    ></v-select>
+                    <v-select
+                      data-cy="select-turma"
+                      dense
+                      label="Turma"
+                      outlined
+                      v-model="turmaEscolhida"
+                      :items="turmas"
+                    ></v-select>
+                  </v-window-item>
+                </v-window>
+            </section>
             <section
-              id="wrapper-botoes"
-              v-if="!isLoading">
-                <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                <router-link to="/leitores">
-                    <BotaoPadrao
-                    conteudo="Cancelar"
-                    :outlined="true"
-                    type="button"></BotaoPadrao>
-                </router-link>
-                <BotaoPadrao
-                conteudo="Importar"
-                type="button"
-                @click="importarCSV"
-                ></BotaoPadrao>
-              </section>
-              <section
-              id="wrapper-loader"
-              v-if="isLoading">
-                  <v-progress-circular indeterminate></v-progress-circular>
-              </section>
-          </v-window-item>
-        </v-window>
+            id="wrapper-botoes"
+            v-if="!isLoading">
+              <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+              <router-link to="/leitores">
+                  <BotaoPadrao
+                  conteudo="Cancelar"
+                  :outlined="true"
+                  type="button"></BotaoPadrao>
+              </router-link>
+              <BotaoPadrao
+              conteudo="Cadastrar"
+              type="submit"
+              ></BotaoPadrao>
+            </section>
+            <section
+            id="wrapper-loader"
+            v-if="isLoading">
+                <v-progress-circular indeterminate></v-progress-circular>
+            </section>
+          </v-form>
+        </v-window-item>
+        <v-window-item :value="1" id="csv">
+          <DropZone extensaoDoArquivo=".csv"></DropZone>
+          <section
+            id="wrapper-botoes"
+            v-if="!isLoading">
+              <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+              <router-link to="/leitores">
+                  <BotaoPadrao
+                  conteudo="Cancelar"
+                  :outlined="true"
+                  type="button"></BotaoPadrao>
+              </router-link>
+              <BotaoPadrao
+              conteudo="Importar"
+              type="button"
+              @click="importarCSV"
+              ></BotaoPadrao>
+            </section>
+            <section
+            id="wrapper-loader"
+            v-if="isLoading">
+                <v-progress-circular indeterminate></v-progress-circular>
+            </section>
+        </v-window-item>
+      </v-window>
     </div>
   </div>
 </template>
@@ -140,10 +142,11 @@
 
 import router from "@/router";
 import AlertaInfo from '@/components/AlertaInfo.vue'
+import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
 import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
-// import { validarTokenAcesso } from "@/service/autenticacao.js";
+import { validarTokenAcesso } from "@/service/autenticacao.js";
 
 export default {
   data() {
@@ -172,8 +175,7 @@ export default {
       'Filosofia',
       'Outra'],
       turnos: ['Matutino',
-      'Vespertino',
-      'Noturno'],
+      'Vespertino'],
       series: ['Grupo 4',
       'Grupo 5',
       '1°',
@@ -205,17 +207,18 @@ export default {
 
   components: {
     BotaoPadrao,
+    BarraDeNavegacao,
     AlertaInfo,
     DropZone,
   },
 
-  // mounted() {
-  //   validarTokenAcesso().then((token) => {
-  //     if (!token) {
-  //       router.push('/login');
-  //     }
-  //   })
-  // },
+  mounted() {
+    validarTokenAcesso().then((token) => {
+      if (!token) {
+        router.push('/login');
+      }
+    })
+  },
 
   methods: {
     async validate() {
@@ -358,13 +361,13 @@ export default {
   justify-content: center;
   align-items: center;
 
+  width: 100%;
   height: 100%;
 }
 
 #wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 
   width: 80%;
@@ -372,9 +375,7 @@ export default {
 
   height: 100%;
 
-  padding-bottom: 4rem;
-
-  gap: 4.8rem;
+  gap: 4.4rem;
 
   >>> .v-slide-group__content {
     justify-content: end;
@@ -393,6 +394,10 @@ export default {
   width: 100%;
 }
 
+#upper-window {
+  width: 102.4rem;
+}
+
 .formulario {
   display: flex;
   flex-direction: column;
@@ -404,7 +409,7 @@ export default {
   gap: 4.8rem;
 
   >>> .v-input__slot {
-    width: 90vw;
+    width: 100%;
     max-width: 80rem;
     
     gap: 1.5rem;
@@ -435,6 +440,9 @@ export default {
   flex-direction: column;
   justify-content: space-around;
 
+  width: 100%;
+  max-width: 80rem;
+
   gap: 3rem;
 }
 
@@ -443,14 +451,15 @@ span {
   color: var(--primary);
 }
 
-span:first-child {
+#title-cadastrar-leitor {
   font: var(--display-small);
-  color: var(--black);
+  color: var(--primary);
 }
+
 
 #window {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
 
   gap: 10rem;
@@ -466,10 +475,9 @@ span:first-child {
 #csv {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 
-  gap: 10rem;
+  gap: 8rem;
 }
 
 #wrapper-botoes {

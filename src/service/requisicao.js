@@ -58,3 +58,24 @@ export async function cadastrarDiscente(jsonDiscente) {
     return erro;
   }
 }
+
+export async function getLeitores(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/",
+      jsonDeBusca,
+      configHeader
+    );
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
