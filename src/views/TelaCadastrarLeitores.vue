@@ -63,7 +63,7 @@
                       dense
                       label="Turno"
                       outlined
-                      v-model="turnoEsolhido"
+                      v-model="turnoEscolhido"
                       :items="turnos"
                     ></v-select>
                   </v-window-item>
@@ -199,7 +199,7 @@ export default {
       nome: '',
       radioGroup: 'Docente',
       disciplinaEscolhida: '',
-      turnoEsolhido: '',
+      turnoEscolhido: '',
       serieEscolhida: '',
       turmaEscolhida: '',
     }
@@ -232,7 +232,7 @@ export default {
             setTimeout(() => {
               this.fecharAlerta();
             }, 5000);
-          } else if (this.turnoEsolhido === '') {
+          } else if (this.turnoEscolhido === '') {
             this.mensagemAlerta = "Selecione um turno!";
             this.alerta = true;
 

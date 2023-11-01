@@ -27,12 +27,6 @@
 import CardLeitor from '@/components/CardLeitor.vue';
 
 export default {
-    data() {
-        return {
-            
-        }
-    },
-
     props: {
         leitores: {
             type: Array,
