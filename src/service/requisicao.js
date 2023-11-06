@@ -66,12 +66,13 @@ export async function getLeitores(jsonDeBusca) {
         "content-type": "application/json"
     }
   };
+
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/leitores/",
-      jsonDeBusca,
+      BASE_URL + "/leitores?nome="+ jsonDeBusca.nome + "&tipo=" + jsonDeBusca.tipo, 
       configHeader
     );
+
     if (requisicao.status === 200) {
       return requisicao;
     }
