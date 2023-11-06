@@ -43,11 +43,12 @@ export default {
 <style scoped>
 #componente-navegacao {
   width: 100%;
+  max-width: 100.8rem;
   display: flex;
   flex-direction: row;
   background-color: #fff;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 #icone-logo {

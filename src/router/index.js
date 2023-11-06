@@ -7,6 +7,7 @@ import TelaLeitores from '@/views/TelaLeitores.vue'
 import TelaLivros from '@/views/TelaLivros.vue'
 import TelaCadastrarLeitores from '@/views/TelaCadastrarLeitores.vue'
 import TelaDetalhesLeitor from '@/views/TelaDetalhesLeitor.vue'
+import TelaEditarLeitor from '@/views/TelaEditarLeitor.vue'
 
 Vue.use(VueRouter)
 
