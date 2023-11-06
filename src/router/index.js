@@ -52,6 +52,12 @@ const router = new VueRouter({
       path: '/leitores/detalhes',
       name: 'DetalhesLeitor',
       component: TelaDetalhesLeitor,
+    },
+    {
+      path: '/leitores/editar/:id',
+      name: 'EditarLeitor',
+      component: TelaEditarLeitor,
+      props: true
     }
   ]
 })
