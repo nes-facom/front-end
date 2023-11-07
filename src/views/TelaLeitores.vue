@@ -109,8 +109,6 @@ export default {
             }
 
             const requisicao = await getLeitores(json)
-            
-            const requisicao = await getLeitores(jsonLeitores)
 
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
