@@ -28,7 +28,7 @@ const router = new VueRouter({
       path: '/bibliotecario',
       name: 'Bibliotecario',
       component: TelaCadastrarBibliotecario,
-    },
+    }
   ]
 })
 

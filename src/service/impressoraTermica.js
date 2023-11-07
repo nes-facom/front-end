@@ -1,3 +1,6 @@
+// import escpos from 'escpos';
+// import escposUSB from 'escpos-usb';
+
 class ImpressoraTermica {
     constructor() {
         this.escpos = require('escpos')
@@ -55,4 +58,6 @@ class ImpressoraTermica {
 }
 
 const impressoratermica = new ImpressoraTermica()
-export default impressoratermica
+
+impressoratermica.imprimirEtiqueta('12345678')
+// export default impressoratermica
