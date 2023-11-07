@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-<template lang="">
-    <div>
-        Leitores
-    </div>
-</template>
-<script>
-export default {
-    
-}
-</script>
-<style lang="">
-    
-=======
 <template>
     <div id="background">
         <div id="wrapper">
@@ -116,10 +102,13 @@ export default {
 
     watch: {
         async queryDeBusca(newValue) {
-            const jsonLeitores = {
+
+            const json = {
                 nome: newValue,
                 tipo: this.filtroSelecionado
             }
+
+            const requisicao = await getLeitores(json)
             
             const requisicao = await getLeitores(jsonLeitores)
 
@@ -137,6 +126,22 @@ export default {
             }
 
             const requisicao = await getLeitores(jsonLeitores)
+
+            if (requisicao.status === 200) {
+                this.arrayResponse = requisicao.data
+            } else {
+                console.log(requisicao.status)
+            }
+        },
+
+        async filtroSelecionado(newValue) {
+
+            const json = {
+                nome: this.queryDeBusca,
+                tipo: newValue
+            }
+
+            const requisicao = await getLeitores(json)
 
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
@@ -206,5 +211,4 @@ export default {
     gap: 5rem;
 }
 
->>>>>>> develop
 </style>
