@@ -275,6 +275,7 @@ export default {
 
       const dadosCadastrarDocente = {
         nome: this.nome,
+        tipo: this.radioGroup,
         disciplina: this.disciplinaEscolhida,
         turno: this.turnoEscolhido,
       }
@@ -305,8 +306,9 @@ export default {
 
       const dadosCadastrarDiscente = {
         nome: this.nome,
-        disciplina: this.serieEscolhida,
-        turno: this.turmaEscolhida,
+        tipo: this.radioGroup,
+        serie: this.serieEscolhida,
+        turma: this.turmaEscolhida,
       }
       
       const requisicao = await cadastrarDiscente(dadosCadastrarDiscente);
