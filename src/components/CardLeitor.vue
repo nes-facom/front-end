@@ -1,9 +1,10 @@
 <template>
-    <div class="card-leitor">
+    <div class="card-leitor" @click="toDetails(leitor.id)">
         <span class="span1"> {{ leitor.nome }} </span>
-        <span class="span2" v-if="leitor.serie"> {{ leitor.serie }} </span>
-        <span class="span2" v-if="leitor.disciplina"> {{ leitor.disciplina }} </span>
-        <span class="span3"> {{ leitor.tipo }} </span>
+        <span class="span2" v-if="leitor.discente.length === 1"> {{ leitor.discente[0].serie + ' ' + leitor.discente[0].turma }} </span>
+        <span class="span2" v-if="leitor.docente.length === 1"> {{ leitor.docente[0].disciplina }} </span>
+        <span class="span3" v-if="leitor.discente.length === 1"> Discente </span>
+        <span class="span3" v-if="leitor.docente.length === 1"> Docente </span>
     </div>
 </template>
 
@@ -14,6 +15,13 @@ export default {
         leitor: {
             type: Object,
             required: true
+        }
+    },
+
+    methods: {
+        toDetails(id) {
+            const idLeitor = id;
+            this.$router.push({ path: `leitores/detalhes/${idLeitor}`})
         }
     }
 }
@@ -38,6 +46,18 @@ span {
     background-color: var(--surface);
     border-radius: 1.2rem;
     border: 0.1rem solid var(--outline-variant);
+
+    transition: background-color 0.1s;
+}
+
+.card-leitor:hover {
+    cursor: pointer;
+    background-color: var(--surface-variant);
+}
+
+.card-leitor:active {
+    cursor: pointer;
+    background-color: var(--surface-dim);
 }
 
 .span1 {

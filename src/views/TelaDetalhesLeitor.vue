@@ -181,7 +181,6 @@ export default {
     }
 }
 
-
 </script>
 
 <style scoped>
@@ -325,5 +324,4 @@ export default {
 
     width: 100%;
 }
-
 </style>

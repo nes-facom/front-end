@@ -25,31 +25,36 @@
                 </section>
             </div>
             <ListaDeLeitores :leitores="this.arrayResponse"></ListaDeLeitores>
+            <AlertaInfo data-cy="alerta" v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
         </div>
     </div>
 </template>
 
 <script>
 
+import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroLeitor from '@/components/FiltroLeitor.vue';
-import router from '@/router'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
-import { validarTokenAcesso } from '@/service/autenticacao';
 import ListaDeLeitores from '@/components/ListaDeLeitores.vue';
+import { validarTokenAcesso } from '@/service/autenticacao';
 import { getLeitores } from '@/service/requisicao.js';
+import router from '@/router'
 
 export default {
     data() {
         return {
             queryDeBusca: '',
             filtroSelecionado: null,
-            arrayResponse: []
+            arrayResponse: [],
+            alerta: false,
+            mensagemAlerta: '',
         }
     },
 
     components: {
+        AlertaInfo,
         BarraDeNavegacao,
         BarraDeBusca,
         BotaoPadrao,
@@ -64,6 +69,26 @@ export default {
 
         salvarTipoDeFiltragem(filtro) {
             this.filtroSelecionado = filtro;
+        },
+
+        tratarErroRequisicao(requisicao) {
+            const status = requisicao.request.status;
+            if (status === 500) {
+                this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!";
+            }
+            else {
+                this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
+            }
+
+            this.alerta = true;
+
+            setTimeout(() => {
+                this.fecharAlerta();
+            }, 5000);
+        },
+
+        fecharAlerta() {
+            this.alerta = false;
         },
     },
 
@@ -85,6 +110,23 @@ export default {
 
             const requisicao = await getLeitores(json)
             
+            const requisicao = await getLeitores(jsonLeitores)
+
+            if (requisicao.status === 200) {
+                this.arrayResponse = requisicao.data
+            } else {
+                this.tratarErroRequisicao(requisicao)
+            }
+        },
+
+        async filtroSelecionado(newValue) {
+            const jsonLeitores = {
+                nome: this.queryDeBusca,
+                tipo: newValue
+            }
+
+            const requisicao = await getLeitores(jsonLeitores)
+
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
             } else {
@@ -104,7 +146,7 @@ export default {
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
             } else {
-                console.log(requisicao.status)
+                this.tratarErroRequisicao(requisicao)
             }
         }
     },
