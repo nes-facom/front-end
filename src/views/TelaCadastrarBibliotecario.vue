@@ -116,7 +116,7 @@ import sjcl from 'sjcl';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import DropZone from '@/components/DropZone.vue'
 import AlertaInfo from '@/components/AlertaInfo.vue'
-import { cadastrarBibliotecario } from "../service/requisicao.js";
+import { cadastrarBibliotecario } from "@/service/requisicao.js";
 
 export default {
 
@@ -194,11 +194,11 @@ export default {
                 this.alerta = false;
 
                 const dadosCadastrarBibliotecario = {
-                    nome: this.criptografarDado(this.nome),
+                    nome: this.nome,
                     cpf: this.criptografarDado(this.cpf),
                     senha: this.criptografarDado(this.senha),
-                    senhaAdmin: this.criptografarDado(this.conteudoArquivo)
-                }
+                    senhaAdmin: this.conteudoArquivo
+                } 
                 
                 const requisicao = await cadastrarBibliotecario(dadosCadastrarBibliotecario);
     

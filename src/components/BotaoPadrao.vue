@@ -10,6 +10,13 @@
             :type="type"
             v-if="!outlined"
         >
+            <v-icon
+                v-if="icon"
+                dark
+                left
+            >
+                {{ icon }}
+            </v-icon>
             {{ conteudo }}
         </v-btn>
         <v-btn
@@ -22,6 +29,13 @@
             :type="type"
             v-if="outlined"
         >
+            <v-icon
+                v-if="icon"
+                dark
+                left
+            >
+                {{ icon }}
+            </v-icon>
             {{ conteudo }}
         </v-btn>
     </div>
@@ -44,10 +58,10 @@ export default {
             type: String,
             required: true
         },
+        icon: String,
         isDisabled: false,
         outlined: Boolean,
     },
-
     watch: {
         isDisabled: function(newValue, oldValue) {
             this.disabled = newValue
@@ -69,11 +83,14 @@ export default {
 #button-default {
     color: var(--on-primary);
     background-color: var(--primary);
+
+    height: 4rem;
 }
 
 #button-outlined {
     color: var(--primary);
     border-color: var(--primary);
+    height: 4rem;
 }
 
 </style>
