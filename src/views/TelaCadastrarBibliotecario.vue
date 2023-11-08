@@ -64,6 +64,7 @@
                 <section id="senhaAdmin">
                     <span>Insira a senha do administrador</span>
                     <DropZone
+                    data-cy="dropzone-senhaAdmin"
                     extensaoDoArquivo=".txt"
                     :isDisabled="isLoading"
                     ></DropZone>
@@ -75,11 +76,13 @@
                     <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
                     <router-link to="/login">
                         <BotaoPadrao
+                        data-cy="botao-cancelar"
                         conteudo="Cancelar"
                         :outlined="true"
                         type="button"></BotaoPadrao>
                     </router-link>
                     <BotaoPadrao
+                    data-cy="botao-continuar"
                     conteudo="Continuar"
                     type="submit"
                     :isDisabled="arquivoSenhaBibliotecario === null"></BotaoPadrao>
@@ -103,6 +106,7 @@
             <section id="wrapper-botoes">
                 <router-link to="/login">
                     <BotaoPadrao
+                    data-cy="botao-fazerLogin"
                     conteudo="Fazer login"
                     type="button"></BotaoPadrao>
                 </router-link>
