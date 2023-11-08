@@ -29,8 +29,6 @@ export async function cadastrarDocente(jsonDocente) {
     }
   };
 
-  console.log(jsonDocente)
-
   try {
     const requisicao = await axios.post(
       BASE_URL + "/leitores",
@@ -50,8 +48,6 @@ export async function cadastrarDiscente(jsonDiscente) {
         "content-type": "application/json"
     }
   };
-
-  console.log(jsonDiscente)
 
   try {
     const requisicao = await axios.post(
