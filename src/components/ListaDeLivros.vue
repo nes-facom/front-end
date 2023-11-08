@@ -13,10 +13,10 @@
         <div
         id="lista-card-wrapper"
         v-if="livros.length > 0">
-            <CardLeitor 
+            <!-- <CardLeitor 
             v-for="(livro, index) in livros"
             :key="index"
-            :livro="livro"></CardLeitor>
+            :livro="livro"></CardLeitor> -->
         </div>
         <img v-if="false"
             src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um fantasma com diversos morcegos em volta dele, ambos voando numa noite iluminada por uma lua. Com o texto abaixo deles escrito `Nenhum resultado encontrado`. ">

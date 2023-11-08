@@ -3,72 +3,86 @@
     <div id="wrapper">
       <BarraDeNavegacao></BarraDeNavegacao>
       <span id="title-cadastrar-livro">Cadastrar novo livro</span>
-      <v-window id="upper-window" v-model="tabSelecionado">
-        <v-window-item :value="0">
-          <v-form
-            :disabled="formDesabilitado"
-            data-cy="formulario"
-            class="formulario"
-            ref="form"
-            @submit.prevent="validate()"
-          >
-            <section id="credenciais">
-              <v-text-field
-                data-cy="input-nome"
-                label="Nome"
-                v-model="nome"
-                outlined
-                required
-                :rules="regrasNome"
-              >
-              </v-text-field>
-            </section>
-            <section id="wrapper-botoes" v-if="!isLoading">
-              <AlertaInfo
-                v-if="alerta"
-                :mensagem="mensagemAlerta"
-                :fechar="fecharAlerta"
-              ></AlertaInfo>
-              <router-link to="/leitores">
-                <BotaoPadrao
-                  conteudo="Cancelar"
-                  :outlined="true"
-                  type="button"
-                ></BotaoPadrao>
-              </router-link>
-              <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
-            </section>
-            <section id="wrapper-loader" v-if="isLoading">
-              <v-progress-circular indeterminate></v-progress-circular>
-            </section>
-          </v-form>
-        </v-window-item>
-        <v-window-item :value="1" id="csv">
-          <DropZone extensaoDoArquivo=".csv"></DropZone>
-          <section id="wrapper-botoes" v-if="!isLoading">
-            <AlertaInfo
-              v-if="alerta"
-              :mensagem="mensagemAlerta"
-              :fechar="fecharAlerta"
-            ></AlertaInfo>
-            <router-link to="/leitores">
-              <BotaoPadrao
-                conteudo="Cancelar"
-                :outlined="true"
-                type="button"
-              ></BotaoPadrao>
-            </router-link>
-            <BotaoPadrao
-              conteudo="Importar"
-              type="button"
-              @click="importarCSV"
-            ></BotaoPadrao>
-          </section>
-          <section id="wrapper-loader" v-if="isLoading">
-            <v-progress-circular indeterminate></v-progress-circular>
-          </section>
-        </v-window-item>
-      </v-window>
+      <div id="upper-window">
+        <v-form
+              :disabled="formDesabilitado"
+              data-cy="formulario"
+              class="formulario"
+              ref="form"
+              @submit.prevent="validate()"
+            >
+              <div id="wrapper-conteudo">
+                <div id="credenciais">
+                <v-text-field
+                  data-cy="input-titulo"
+                  label="Título"
+                  v-model="titulo"
+                  outlined
+                  required
+                  :rules="regrasNome"
+                >
+                </v-text-field>
+                <v-text-field
+                  data-cy="input-autor"
+                  label="Autor(a)"
+                  v-model="autor"
+                  outlined
+                  required
+                  :rules="regrasNome"
+                >
+                </v-text-field>
+                <v-text-field
+                  data-cy="input-tipologia"
+                  label="Tipologia textual"
+                  v-model="tipologia"
+                  outlined
+                  required
+                  :rules="regrasNome"
+                >
+                </v-text-field>
+                <v-text-field
+                  data-cy="input-quantidade"
+                  label="Quantidade"
+                  v-model="quantidade"
+                  outlined
+                  required
+                  :rules="regrasNome"
+                >
+                </v-text-field>
+                <v-text-field
+                  data-cy="input-prateleira"
+                  label="Prateleira"
+                  v-model="prateleira"
+                  outlined
+                  required
+                  :rules="regrasNome"
+                >
+                </v-text-field>
+              </div>
+              <div id="area-foto">
+                <img src="../assets/images/area-foto.png" />
+              </div>
+              </div>
+              <section id="wrapper-botoes" v-if="!isLoading">
+                <AlertaInfo
+                  v-if="alerta"
+                  :mensagem="mensagemAlerta"
+                  :fechar="fecharAlerta"
+                ></AlertaInfo>
+                <router-link to="/livros">
+                  <BotaoPadrao
+                    conteudo="Cancelar"
+                    :outlined="true"
+                    type="button"
+                  ></BotaoPadrao>
+                </router-link>
+                <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
+              </section>
+              <section id="wrapper-loader" v-if="isLoading">
+                <v-progress-circular indeterminate></v-progress-circular>
+              </section>
+            </v-form>
+      </div>
     </div>
   </div>
 </template>
@@ -78,8 +92,7 @@ import router from "@/router";
 import AlertaInfo from "@/components/AlertaInfo.vue";
 import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
-import DropZone from "@/components/DropZone.vue";
-import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js";
+import { cadastrarDocente } from "@/service/requisicao.js";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
 
 export default {
@@ -173,7 +186,6 @@ export default {
     BotaoPadrao,
     BarraDeNavegacao,
     AlertaInfo,
-    DropZone,
   },
 
   mounted() {
@@ -262,36 +274,6 @@ export default {
       }, 5000);
     },
 
-    async autenticarDiscente() {
-      this.formDesabilitado = true;
-      this.isLoading = true;
-      this.alerta = false;
-
-      const dadosCadastrarDiscente = {
-        nome: this.nome,
-        disciplina: this.serieEscolhida,
-        turno: this.turmaEscolhida,
-      };
-
-      const requisicao = await cadastrarDiscente(dadosCadastrarDiscente);
-
-      if (requisicao === 200) {
-        this.formDesabilitado = false;
-        this.isLoading = false;
-        this.tratarSucessoDiscente();
-      } else {
-        this.tratarErroRequisicao(requisicao);
-      }
-    },
-
-    tratarSucessoDiscente() {
-      this.mensagemAlerta = "Discente cadastrado com sucesso!";
-      this.alerta = true;
-      setTimeout(() => {
-        this.fecharAlerta();
-      }, 5000);
-    },
-
     tratarErroRequisicao(requisicao) {
       this.formDesabilitado = false;
       this.isLoading = false;
@@ -372,10 +354,18 @@ export default {
   gap: 4.8rem;
 
   >>> .v-input__slot {
-    width: 100%;
-    max-width: 80rem;
+    width: 50%;
 
-    gap: 1.5rem;
+    gap: 0.7rem;
+  }
+
+  #wrapper-conteudo {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    width: 85%;
   }
 
   >>> .v-label {
@@ -405,8 +395,6 @@ export default {
 
   width: 100%;
   max-width: 80rem;
-
-  gap: 3rem;
 }
 
 span {
@@ -450,5 +438,15 @@ span {
 
   justify-content: end;
   gap: 4.8rem;
+}
+
+#area-foto {
+  display: flex;
+  justify-content: flex-start;
+}
+
+img {
+  height: 22rem;
+  width: 22rem;
 }
 </style>
