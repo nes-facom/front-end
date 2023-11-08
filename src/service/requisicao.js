@@ -31,7 +31,7 @@ export async function cadastrarDocente(jsonDocente) {
 
   try {
     const requisicao = await axios.post(
-      BASE_URL + "/docente",
+      BASE_URL + "/leitores",
       jsonDocente,
       configHeader
     );
@@ -51,7 +51,7 @@ export async function cadastrarDiscente(jsonDiscente) {
 
   try {
     const requisicao = await axios.post(
-      BASE_URL + "/discente",
+      BASE_URL + "/leitores",
       jsonDiscente,
       configHeader
     );

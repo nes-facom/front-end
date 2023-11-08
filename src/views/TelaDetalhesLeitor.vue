@@ -6,7 +6,7 @@
                 <section id="acoes">
                     <router-link to="/leitores">
                         <v-icon
-                            x-large
+                            medium
                             class="icon"
                         >
                             mdi-arrow-left
@@ -14,7 +14,7 @@
                     </router-link>
                     <span id="title-detalhes-leitor">Informações do leitor</span>
                         <v-icon
-                            x-large
+                            medium
                             class="icon"
                             @click="irParaEditar"
                         >
