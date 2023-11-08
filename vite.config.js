@@ -4,6 +4,21 @@ import { defineConfig } from 'vite'
 import legacy from '@vitejs/plugin-legacy'
 import vue2 from '@vitejs/plugin-vue2'
 import mkcert from'vite-plugin-mkcert'
+import os from 'os'
+
+
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const key in interfaces) {
+    for (const iface of interfaces[key]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+}
+
+const localIp = getLocalIP();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -21,6 +36,7 @@ export default defineConfig({
     }
   },
   server: {
+    host: localIp,
     https: true
   },
   module: {
