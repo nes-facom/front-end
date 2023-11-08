@@ -120,7 +120,7 @@ import sjcl from 'sjcl';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import DropZone from '@/components/DropZone.vue'
 import AlertaInfo from '@/components/AlertaInfo.vue'
-import { cadastrarBibliotecario } from "../service/requisicao.js";
+import { cadastrarBibliotecario } from "@/service/requisicao.js";
 
 export default {
 

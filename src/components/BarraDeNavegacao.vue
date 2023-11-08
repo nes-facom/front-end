@@ -1,32 +1,40 @@
 <template>
   <div id="componente-navegacao">
-
     <div id="logo">
-      <img id="icone-logo" src="./icons/Logo.png"/>
+      <img id="icone-logo" src="./icons/Logo.png" />
     </div>
 
     <div id="menu">
-    <v-tabs slider-color="#00696C">
-      <v-tab id="item-menu">Empréstimos</v-tab>
-      <v-tab id="item-menu">Livros</v-tab>
-      <v-tab id="item-menu">Leitores</v-tab>
-    </v-tabs>
+      <v-tabs slider-color="#00696C">
+        <v-tab class="item-menu" href="/emprestimos">Empréstimos</v-tab>
+        <v-tab class="item-menu" href="/livros">Livros</v-tab>
+        <v-tab class="item-menu" href="/leitores">Leitores</v-tab>
+      </v-tabs>
     </div>
 
     <div id="logout">
       <v-btn icon color="pink">
-        <v-icon>mdi-logout</v-icon>
+        <v-icon @click="sair">mdi-logout</v-icon>
       </v-btn>
     </div>
-
   </div>
 </template>
 
 <script>
+import { deslogar } from "@/service/autenticacao.js";
+import { mapActions } from "vuex";
+ 
+
 export default {
   methods: {
-    fazerLogoff() {
-      // Adicione aqui a lógica para fazer logoff do usuário
+    ...mapActions(["atualizarUsuarioLogado"]), 
+    sair() {
+      const sair = deslogar();
+      console.log("aqui");
+      if (sair) {
+        this.atualizarUsuarioLogado(false); 
+        this.$router.push("/login"); 
+      }
     },
   },
 };
@@ -35,11 +43,12 @@ export default {
 <style scoped>
 #componente-navegacao {
   width: 100%;
+  max-width: 100.8rem;
   display: flex;
   flex-direction: row;
-  background-color: #FFF;
+  background-color: #fff;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 #icone-logo {
@@ -47,9 +56,9 @@ export default {
   height: 5rem;
 }
 
-#item-menu {
+.item-menu {
   font: var(--label-large);
   color: var(---on-primary-container);
-  text-decoration: none;
+  text-transform: none;
 }
 </style>

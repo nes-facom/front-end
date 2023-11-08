@@ -4,7 +4,11 @@ import TelaLogin from '@/views/TelaLogin.vue'
 import TelaEmprestimos from '@/views/TelaEmprestimos.vue'
 import TelaCadastrarBibliotecario from '@/views/TelaCadastrarBibliotecario.vue'
 import TelaLeitores from '@/views/TelaLeitores.vue'
+import TelaLivros from '@/views/TelaLivros.vue'
 import TelaCadastrarLeitores from '@/views/TelaCadastrarLeitores.vue'
+import TelaDetalhesLeitor from '@/views/TelaDetalhesLeitor.vue'
+import TelaEditarLeitor from '@/views/TelaEditarLeitor.vue'
+
 
 Vue.use(VueRouter)
 
@@ -37,10 +41,27 @@ const router = new VueRouter({
       component: TelaLeitores,
     },
     {
+      path: '/livros',
+      name: 'Livros',
+      component: TelaLivros,
+    },
+    {
       path: '/leitores/cadastrar',
       name: 'CadastrarLeitores',
       component: TelaCadastrarLeitores,
     },
+    {
+      path: '/leitores/editar/:id',
+      name: 'EditarLeitor',
+      component: TelaEditarLeitor,
+      props: true
+    },
+    {
+      path: '/leitores/detalhes',
+      name: 'DetalhesLeitor',
+      component: TelaDetalhesLeitor,
+    },
+
   ]
 })
 

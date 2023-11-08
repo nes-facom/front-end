@@ -28,6 +28,7 @@ export async function cadastrarDocente(jsonDocente) {
         "content-type": "application/json"
     }
   };
+
   try {
     const requisicao = await axios.post(
       BASE_URL + "/docente",
@@ -47,6 +48,7 @@ export async function cadastrarDiscente(jsonDiscente) {
         "content-type": "application/json"
     }
   };
+
   try {
     const requisicao = await axios.post(
       BASE_URL + "/discente",
@@ -54,6 +56,28 @@ export async function cadastrarDiscente(jsonDiscente) {
       configHeader
     );
     return requisicao.status;
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLeitores(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores?nome="+ jsonDeBusca.nome + "&tipo=" + jsonDeBusca.tipo, 
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
   } catch (erro) {
     return erro;
   }
