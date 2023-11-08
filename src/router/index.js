@@ -40,6 +40,7 @@ const router = new VueRouter({
       name: 'WebcamTest',
       component: WebcamTest
     },
+    {
       path: '/leitores',
       name: 'Leitores',
       component: TelaLeitores,
