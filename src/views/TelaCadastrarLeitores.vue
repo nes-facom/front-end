@@ -155,7 +155,7 @@ export default {
         (v) => !!v || "Insira um nome!",
         (v) => (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
         (v) => /^[A-Za-z\s]+$/.test(v)|| "O nome deve conter apenas letras",
-        (v) => /^[A-Za-z]+\s[A-Za-z]+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
+        (v) => /^[A-Za-z]+(\s[A-Za-z]+)+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
       ],
       disciplinas: ['Língua Portuguesa',
       'Matemática', 
