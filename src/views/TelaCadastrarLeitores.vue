@@ -36,7 +36,6 @@
                     required
                     :rules="regrasNome"
                 ></v-text-field>
-                <!-- Tipo de leitor -->
                 <span>Tipo de leitor</span>
                 <v-radio-group v-model="radioGroup" id="radioGroup">
                   <v-radio
@@ -467,7 +466,7 @@ span {
   gap: 10rem;
 
   >>> .v-input__slot {
-    width: 90vw;
+    width: 100%;
     max-width: 35rem;
     
     gap: 1.5rem;
