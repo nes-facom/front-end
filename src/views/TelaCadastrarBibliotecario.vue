@@ -49,14 +49,14 @@
                         ></v-text-field>
                         <v-text-field
                             data-cy="input-confirmeSenha"
-                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                            :type="showPassword ? 'text' : 'password'"
+                            :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="showConfirmPassword ? 'text' : 'password'"
                             label="Confirme sua senha"
                             v-model="confirmeSenha"
                             outlined
                             required
                             :rules="regrasConfirmeSenha"
-                            @click:append="showPassword = !showPassword"
+                            @click:append="showConfirmPassword = !showConfirmPassword"
                         ></v-text-field>
                     </div>
                 </section>
@@ -123,6 +123,7 @@ export default {
     data() {
         return {
             showPassword: false,
+            showConfirmPassword: false,
             nome: "",
             cpf: "",
             senha: "",
