@@ -24,8 +24,19 @@
                     </div>
                 </section>
             </div>
-            <ListaDeLeitores :leitores="this.arrayResponse"></ListaDeLeitores>
-            <AlertaInfo data-cy="alerta" v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+            <ListaDeLeitores
+                :pesquisa="this.queryDeBusca"
+                :filtro="this.filtroSelecionado"
+                :leitores="this.arrayResponse"
+            >
+            </ListaDeLeitores>
+            <AlertaInfo
+                data-cy="alerta"
+                v-if="alerta"
+                :mensagem="mensagemAlerta"
+                :fechar="fecharAlerta"
+            >
+            </AlertaInfo>
         </div>
     </div>
 </template>
@@ -102,34 +113,41 @@ export default {
 
     watch: {
         async queryDeBusca(newValue) {
-
-            const json = {
-                nome: newValue,
-                tipo: this.filtroSelecionado
-            }
-
-            const requisicao = await getLeitores(json)
-
-            if (requisicao.status === 200) {
-                this.arrayResponse = requisicao.data
+            if(newValue === '' && this.filtroSelecionado === null) {
+                return
             } else {
-                this.tratarErroRequisicao(requisicao)
+                const json = {
+                    nome: newValue,
+                    tipo: this.filtroSelecionado
+                }
+    
+                const requisicao = await getLeitores(json)
+    
+                if (requisicao.status === 200) {
+                    this.arrayResponse = requisicao.data
+                } else {
+                    this.tratarErroRequisicao(requisicao)
+                }
             }
         },
 
         async filtroSelecionado(newValue) {
 
-            const json = {
-                nome: this.queryDeBusca,
-                tipo: newValue
-            }
-
-            const requisicao = await getLeitores(json)
-
-            if (requisicao.status === 200) {
-                this.arrayResponse = requisicao.data
+            if(this.queryDeBusca === '' && newValue === null) {
+                return
             } else {
-                this.tratarErroRequisicao(requisicao)
+                const json = {
+                    nome: this.queryDeBusca,
+                    tipo: newValue
+                }
+    
+                const requisicao = await getLeitores(json)
+    
+                if (requisicao.status === 200) {
+                    this.arrayResponse = requisicao.data
+                } else {
+                    this.tratarErroRequisicao(requisicao)
+                }
             }
         }
     },
