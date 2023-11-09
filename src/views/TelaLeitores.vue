@@ -118,21 +118,6 @@ export default {
         },
 
         async filtroSelecionado(newValue) {
-            const jsonLeitores = {
-                nome: this.queryDeBusca,
-                tipo: newValue
-            }
-
-            const requisicao = await getLeitores(jsonLeitores)
-
-            if (requisicao.status === 200) {
-                this.arrayResponse = requisicao.data
-            } else {
-                console.log(requisicao.status)
-            }
-        },
-
-        async filtroSelecionado(newValue) {
 
             const json = {
                 nome: this.queryDeBusca,
