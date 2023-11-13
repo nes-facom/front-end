@@ -1,9 +1,9 @@
 <template>
     <div class="item">
-        <span>{{ emprestimo.titulo }}</span>
-        <span>{{ emprestimo.dataEmprestimo }}</span>
-        <span>{{ emprestimo.dataDevolucao }}</span>
-        <span>{{ emprestimo.situacao }}</span>
+        <span>{{ emprestimo.livro.titulo }}</span>
+        <span>{{ dataEmprestimo }}</span>
+        <span>{{ dataDevolucao }}</span>
+        <span>{{ situacaoCapitalized }}</span>
     </div>
 </template>
 <script>
@@ -13,6 +13,23 @@ export default {
         emprestimo: {
             type: Object,
             required: true
+        }
+    },
+
+    computed: {
+        dataDevolucao(){
+            const dataString = this.emprestimo.data_devolucao
+            const dataArr = dataString.split("T")[0].split("-");
+            return`${dataArr[2]}/${dataArr[1]}/${dataArr[0]}`;
+        },
+        dataEmprestimo(){
+            const dataString = this.emprestimo.data_emprestimo
+            const dataArr = dataString.split("T")[0].split("-");
+            return`${dataArr[2]}/${dataArr[1]}/${dataArr[0]}`;
+        },
+        situacaoCapitalized(){
+            const str = this.emprestimo.situacao
+            return str.charAt(0).toUpperCase() + str.slice(1);
         }
     }
 }
