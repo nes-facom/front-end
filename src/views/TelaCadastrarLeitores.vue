@@ -154,8 +154,8 @@ export default {
       regrasNome: [
         (v) => !!v || "Insira um nome!",
         (v) => (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-záàâãéèêíïóôõöúçñ\s]+$/.test(v)|| "O nome deve conter apenas letras",
-        (v) => /^[A-Za-záàâãéèêíïóôõöúçñ]+\s[A-Za-záàâãéèêíïóôõöúçñ]+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
+        (v) => /^[A-Za-zÀ-ú\s]+$/.test(v)|| "O nome deve conter apenas letras e espaços",
+        (v) => (v.trim().includes(' ')) || "Informe um nome completo (Nome Sobrenome)"
       ],
       disciplinas: ['Língua Portuguesa',
       'Matemática', 
