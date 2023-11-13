@@ -74,12 +74,14 @@
                 id="wrapper-botoes"
                 v-if="!isLoading">
                 <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                <router-link to="/leitores/detalhes">
-                    <BotaoPadrao
-                    conteudo="Cancelar"
-                    :outlined="true"
-                    type="button"></BotaoPadrao>
-                </router-link>
+                <div
+                @click="irParaDetalhes">
+                  <BotaoPadrao
+                  conteudo="Cancelar"
+                  :outlined="true"
+                  type="button"
+                  ></BotaoPadrao>
+                </div>
                 <BotaoPadrao
                 conteudo="Cadastrar"
                 type="submit"
@@ -99,6 +101,7 @@
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import { getLeitor } from '@/service/requisicao.js'
 
 export default {
     props: ['id'],
@@ -113,26 +116,18 @@ export default {
       regrasNome: [
         (v) => !!v || "Insira um nome!",
         (v) => (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-z\s]+$/.test(v)|| "O nome deve conter apenas letras",
-        (v) => /^[A-Za-z]+\s[A-Za-z]+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
+        (v) => /^[A-Za-zÀ-ú\s]+$/.test(v)|| "O nome deve conter apenas letras e espaços",
+        (v) => (v.trim().includes(' ')) || "Informe um nome completo (Nome Sobrenome)"
       ],
-      disciplinas: ['Língua Portuguesa',
-      'Matemática', 
-      'Física',
-      'Química',
-      'Biologia',
-      'História',
-      'Geografia',
-      'Filosofia',
-      'Sociologia',
-      'Inglês',
-      'Espanhol',
-      'Educação Física',
-      'Artes',
-      'Ensino Religioso',
-      'Sociologia',
-      'Filosofia',
-      'Outra'],
+      disciplinas: ["Arte",
+      "Ciências Naturais",
+      "Educação Física",
+      "Geografia",
+      "História",
+      "Inglês",
+      "Matemática",
+      "Português",
+      "Regente"],
       turnos: ['Matutino',
       'Vespertino'],
       series: ['Grupo 4',
@@ -164,6 +159,25 @@ export default {
     }
   },
 
+  methods: {
+    irParaDetalhes() {
+      this.$router.push({ path: `/leitores/detalhes/${this.$route.params.id}`});
+    },
+    async buscarInfoLeitor(id) {
+      const requisicao = await getLeitor(id)
+      const leitor = requisicao.data
+      this.nome = leitor.nome
+      this.radioGroup = leitor.tipo
+      if (leitor.tipo === "Docente") {
+        this.disciplinaEscolhida = leitor.disciplina
+        this.turnoEscolhido = leitor.turno
+      } else {
+        this.serieEscolhida = leitor.serieEscolhida
+        this.turmaEscolhida = leitor.turma
+      }
+    },
+  },
+
   mounted() {
     validarTokenAcesso().then((token) => {
       if (!token) {
@@ -171,6 +185,10 @@ export default {
       }
     })
   },
+
+  created() {
+    this.buscarInfoLeitor(this.$route.params.id)
+  }
 }
 
 </script>

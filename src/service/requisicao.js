@@ -82,3 +82,69 @@ export async function getLeitores(jsonDeBusca) {
     return erro;
   }
 }
+
+export async function getLeitor(idLeitor) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/detalhes/" + idLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getHistoricoEmprestimo(idLeitor) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos/historico/" + idLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function updateLeitor(idLeitor) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.put(
+      BASE_URL + "/leitores/" + idLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
