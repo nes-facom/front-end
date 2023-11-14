@@ -36,7 +36,6 @@
                     required
                     :rules="regrasNome"
                 ></v-text-field>
-                <!-- Tipo de leitor -->
                 <span>Tipo de leitor</span>
                 <v-radio-group v-model="radioGroup" id="radioGroup">
                   <v-radio
@@ -154,26 +153,18 @@ export default {
       regrasNome: [
         (v) => !!v || "Insira um nome!",
         (v) => (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-z\s]+$/.test(v)|| "O nome deve conter apenas letras",
-        (v) => /^[A-Za-z]+\s[A-Za-z]+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
+        (v) => /^[A-Za-zÀ-ú\s]+$/.test(v)|| "O nome deve conter apenas letras e espaços",
+        (v) => (v.trim().includes(' ')) || "Informe um nome completo (Nome Sobrenome)"
       ],
-      disciplinas: ['Língua Portuguesa',
-      'Matemática', 
-      'Física',
-      'Química',
-      'Biologia',
-      'História',
-      'Geografia',
-      'Filosofia',
-      'Sociologia',
-      'Inglês',
-      'Espanhol',
-      'Educação Física',
-      'Artes',
-      'Ensino Religioso',
-      'Sociologia',
-      'Filosofia',
-      'Outra'],
+      disciplinas: ["Arte",
+      "Ciências Naturais",
+      "Educação Física",
+      "Geografia",
+      "História",
+      "Inglês",
+      "Matemática",
+      "Português",
+      "Regente"],
       turnos: ['Matutino',
       'Vespertino'],
       series: ['Grupo 4',
@@ -275,6 +266,7 @@ export default {
 
       const dadosCadastrarDocente = {
         nome: this.nome,
+        tipo: this.radioGroup,
         disciplina: this.disciplinaEscolhida,
         turno: this.turnoEscolhido,
       }
@@ -305,8 +297,9 @@ export default {
 
       const dadosCadastrarDiscente = {
         nome: this.nome,
-        disciplina: this.serieEscolhida,
-        turno: this.turmaEscolhida,
+        tipo: this.radioGroup,
+        serie: this.serieEscolhida,
+        turma: this.turmaEscolhida,
       }
       
       const requisicao = await cadastrarDiscente(dadosCadastrarDiscente);
@@ -465,7 +458,7 @@ span {
   gap: 10rem;
 
   >>> .v-input__slot {
-    width: 90vw;
+    width: 100%;
     max-width: 35rem;
     
     gap: 1.5rem;

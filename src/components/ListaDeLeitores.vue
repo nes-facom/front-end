@@ -1,24 +1,29 @@
 <template>
     <div id="lista-leitores-wrapper">
-        <img v-if="leitores.length === 0"
+        <img v-if="pesquisa === '' && filtro === null"
             src="@/assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
-        <div
-            id="head-wrapper"
-        v-if="leitores.length > 0">
-            <span class="span1"> Nome </span>
-            <span class="span2"> Série/Disciplina </span>
-            <span class="span3"> Tipo </span>
+        <img v-else-if="leitores.length === 0 && (pesquisa !== '' || filtro !== null)"
+            src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
+        <div 
+            id="wrapper-lista"
+            v-else
+        >
+            <div
+                id="head-wrapper"
+            >
+                <span class="span1"> Nome </span>
+                <span class="span2"> Série/Disciplina </span>
+                <span class="span3"> Tipo </span>
+            </div>
+            <div
+                id="lista-card-wrapper"
+            >
+                <CardLeitor
+                v-for="(leitor, index) in leitores"
+                :key="index"
+                :leitor="leitor"></CardLeitor>
+            </div>
         </div>
-        <div
-        id="lista-card-wrapper"
-        v-if="leitores.length > 0">
-            <CardLeitor 
-            v-for="(leitor, index) in leitores"
-            :key="index"
-            :leitor="leitor"></CardLeitor>
-        </div>
-        <img v-if="false"
-            src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um fantasma com diversos morcegos em volta dele, ambos voando numa noite iluminada por uma lua. Com o texto abaixo deles escrito `Nenhum resultado encontrado`. ">
     </div>
 </template>
 
@@ -27,15 +32,22 @@
 import CardLeitor from '@/components/CardLeitor.vue';
 
 export default {
+    components: {
+        CardLeitor,
+    },
+
     props: {
         leitores: {
             type: Array,
             required: true
         },
-    },
-
-    components: {
-        CardLeitor,
+        pesquisa: {
+            type: String,
+            required: true
+        },
+        filtro: {
+            required: true
+        }
     },
 }
 
@@ -50,8 +62,6 @@ export default {
     justify-content: center;
     align-items: center;
 
-    gap: 3rem;
-
     width: 100%;
     max-width: 100.8rem;
 }
@@ -59,6 +69,16 @@ export default {
 span {
     font: var(--title-medium);
     color: var(--black);
+}
+
+#wrapper-lista {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    gap: 3rem;
 }
 
 #head-wrapper {

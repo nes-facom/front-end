@@ -49,14 +49,14 @@
                         ></v-text-field>
                         <v-text-field
                             data-cy="input-confirmeSenha"
-                            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                            :type="showPassword ? 'text' : 'password'"
+                            :append-icon="showConfirmPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="showConfirmPassword ? 'text' : 'password'"
                             label="Confirme sua senha"
                             v-model="confirmeSenha"
                             outlined
                             required
                             :rules="regrasConfirmeSenha"
-                            @click:append="showPassword = !showPassword"
+                            @click:append="showConfirmPassword = !showConfirmPassword"
                         ></v-text-field>
                     </div>
                 </section>
@@ -123,6 +123,7 @@ export default {
     data() {
         return {
             showPassword: false,
+            showConfirmPassword: false,
             nome: "",
             cpf: "",
             senha: "",
@@ -130,8 +131,8 @@ export default {
             regrasNome: [
                 (v) => !!v || "Insira um nome!",
                 (v) => (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
-                (v) => /^[A-Za-z\s]+$/.test(v)|| "O nome deve conter apenas letras",
-                (v) => /^[A-Za-z]+\s[A-Za-z]+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
+                (v) => /^[A-Za-zÀ-ú\s]+$/.test(v)|| "O nome deve conter apenas letras e espaços",
+                (v) => (v.trim().includes(' ')) || "Informe um nome completo (Nome Sobrenome)"
             ],
             regrasCPF: [
                 (v) => !!v || "Insira um cpf!",

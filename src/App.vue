@@ -17,7 +17,8 @@ export default {
 </script>
 
 <template>
-  <div id="app">
+  <div id="app"
+       data-app>
     <router-view />
     <BarraDeNavegacao v-if="isLogado"/>
   </div>
