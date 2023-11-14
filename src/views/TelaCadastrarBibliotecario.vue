@@ -266,18 +266,15 @@ export default {
 
     computed: {
         arquivoSenhaBibliotecario() {
-            return this.$store.state.arquivoSenhaBibliotecario;
-        },
-        senhaAdmin() {
-            return this.$store.getters.senhaAdmin;
+            return this.$store.state.arquivo;
         },
     },
 
     beforeRouteLeave(to, from, next) {
-        this.$store.commit("limparNomeArquivoSenhaBibliotecario");
-        this.$store.commit("limparSalvarArquivoSenhaBibliotecario");
+        this.$store.commit("limparNomeArquivo");
+        this.$store.commit("limparArquivo");
         next();
-  },
+    },
 }
 
 </script>

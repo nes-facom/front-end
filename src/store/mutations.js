@@ -1,18 +1,18 @@
 let mutations = {
-    nomeArquivoSenhaBibliotecario(state, nome) {
-        state.nomeArquivoSenhaBibliotecario = nome;
+    setNomeArquivo(state, nome) {
+        state.nomeArquivo = nome;
     },
 
-    salvarArquivoSenhaBibliotecario(state, arquivo) {
-        state.arquivoSenhaBibliotecario = arquivo;
+    setArquivo(state, arquivo) {
+        state.arquivo = arquivo;
     },
 
-    limparNomeArquivoSenhaBibliotecario(state) {
-        state.nomeArquivoSenhaBibliotecario = '';
+    limparNomeArquivo(state) {
+        state.nomeArquivo = '';
     },
 
-    limparSalvarArquivoSenhaBibliotecario(state, arquivo) {
-        state.arquivoSenhaBibliotecario = null;
+    limparArquivo(state) {
+        state.arquivo = null;
     },
 
     setLogado(state, logado) {
