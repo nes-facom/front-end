@@ -109,7 +109,11 @@
           </v-form>
         </v-window-item>
         <v-window-item :value="1" id="csv">
-          <DropZone extensaoDoArquivo=".csv"></DropZone>
+          <DropZone
+            extensaoDoArquivo=".csv"
+            :isDisabled="isLoading"
+          >
+          </DropZone>
           <section
             id="wrapper-botoes"
             v-if="!isLoading">
@@ -120,11 +124,15 @@
                   :outlined="true"
                   type="button"></BotaoPadrao>
               </router-link>
-              <BotaoPadrao
-              conteudo="Importar"
-              type="button"
-              @click="importarCSV"
-              ></BotaoPadrao>
+              <div 
+                @click="processarArquivoCSV"
+              >
+                <BotaoPadrao
+                  conteudo="Importar"
+                  type="button"
+                >
+                </BotaoPadrao>
+              </div>
             </section>
             <section
             id="wrapper-loader"
@@ -146,6 +154,7 @@ import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
 import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import Papa from 'papaparse';
 
 export default {
   data() {
@@ -339,9 +348,25 @@ export default {
       }, 5000);
     },
 
-    importarCSV(){
-      console.log('importando...')
-    }
+    processarArquivoCSV() {
+      const arquivo = this.$store.state.arquivo;
+
+      Papa.parse(arquivo, {
+        header: true,
+        dynamicTyping: true,
+        complete: (result) => {
+          const jsonData = result.data.map((row) => {
+            const numalu = row.numalu;
+            const nomalu = row.nomalu;
+            const sigcla = row.sigcla;
+
+            return { numalu, nomalu, sigcla };
+          });
+
+          console.log(jsonData)
+        },
+      });
+    },
   }
 }
 
