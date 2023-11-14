@@ -14,8 +14,8 @@
   "dependencies": {
     "@mdi/font": "^7.3.67",
     "axios": "^1.5.1",
-    "image-size": "^1.0.2",
     "escpos": "^3.0.0-alpha.6",
+    "image-size": "^1.0.2",
     "jwt-decode": "^3.1.2",
     "sjcl": "^1.0.8",
     "vite-plugin-mkcert": "^1.16.0",
@@ -37,6 +37,6 @@
     "internal-ip": "^8.0.0",
     "start-server-and-test": "^1.14.0",
     "terser": "^5.14.2",
-    "vite": "^3.0.2"
+    "vite": "^4.5.0"
   }
 }
