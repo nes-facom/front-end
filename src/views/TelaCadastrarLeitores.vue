@@ -353,6 +353,7 @@ export default {
 
       Papa.parse(arquivo, {
         header: true,
+        encoding: "ascii",
         dynamicTyping: true,
         complete: (result) => {
           const jsonData = result.data.map((row) => {
