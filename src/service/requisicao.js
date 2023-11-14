@@ -21,6 +21,25 @@ export async function cadastrarBibliotecario(jsonBibliotecario) {
   }
 }
 
+export async function cadastrarLivro(jsonLivro) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "/docente",
+      jsonDocente,
+      configHeader
+    );
+    return requisicao.status;
+  } catch (erro) {
+    return erro;
+  }
+}
+
 export async function cadastrarDocente(jsonDocente) {
   const configHeader = {
     headers: {

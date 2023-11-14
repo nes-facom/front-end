@@ -5,83 +5,90 @@
       <span id="title-cadastrar-livro">Cadastrar novo livro</span>
       <div id="upper-window">
         <v-form
-              :disabled="formDesabilitado"
-              data-cy="formulario"
-              class="formulario"
-              ref="form"
-              @submit.prevent="validate()"
-            >
-              <div id="wrapper-conteudo">
-                <div id="credenciais">
-                <v-text-field
-                  data-cy="input-titulo"
-                  label="Título"
-                  v-model="titulo"
-                  outlined
-                  required
-                  :rules="regrasNome"
-                >
-                </v-text-field>
-                <v-text-field
-                  data-cy="input-autor"
-                  label="Autor(a)"
-                  v-model="autor"
-                  outlined
-                  required
-                  :rules="regrasNome"
-                >
-                </v-text-field>
-                <v-text-field
-                  data-cy="input-tipologia"
-                  label="Tipologia textual"
-                  v-model="tipologia"
-                  outlined
-                  required
-                  :rules="regrasNome"
-                >
-                </v-text-field>
-                <v-text-field
-                  data-cy="input-quantidade"
-                  label="Quantidade"
-                  v-model="quantidade"
-                  outlined
-                  required
-                  :rules="regrasNome"
-                >
-                </v-text-field>
-                <v-text-field
-                  data-cy="input-prateleira"
-                  label="Prateleira"
-                  v-model="prateleira"
-                  outlined
-                  required
-                  :rules="regrasNome"
-                >
-                </v-text-field>
+          :disabled="formDesabilitado"
+          data-cy="formulario"
+          class="formulario"
+          ref="form"
+          @submit.prevent="validate()"
+        >
+          <div id="wrapper-conteudo">
+            <div id="credenciais">
+              <v-text-field
+                data-cy="input-titulo"
+                label="Título"
+                v-model="titulo"
+                outlined
+                required
+                :rules="regrasTitulo"
+              >
+              </v-text-field>
+              <v-text-field
+                data-cy="input-autor"
+                label="Autor(a)"
+                v-model="autor"
+                outlined
+                required
+                :rules="regrasAutor"
+              >
+              </v-text-field>
+              <v-text-field
+                data-cy="input-tipologia"
+                label="Tipologia textual"
+                v-model="tipologia"
+                outlined
+                required
+                :rules="regrasTipologiaTextual"
+              >
+              </v-text-field>
+              <v-text-field
+                data-cy="input-quantidade"
+                label="Quantidade"
+                v-model="quantidade"
+                outlined
+                required
+                :rules="regrasQuantidade"
+              >
+              </v-text-field>
+              <v-text-field
+                data-cy="input-prateleira"
+                label="Prateleira"
+                v-model="prateleira"
+                outlined
+                required
+                :rules="regrasPrateleira"
+              >
+              </v-text-field>
+            </div>
+            <div id="area-foto">
+              <img src="../assets/images/area-foto.png" />
+              <div class="botoes-camera">
+                <span class="link">Repetir</span>
+                <span class="link">
+                  <v-icon>mdi-camera</v-icon>
+                  Tirar Foto
+                </span>
               </div>
-              <div id="area-foto">
-                <img src="../assets/images/area-foto.png" />
-              </div>
-              </div>
-              <section id="wrapper-botoes" v-if="!isLoading">
-                <AlertaInfo
-                  v-if="alerta"
-                  :mensagem="mensagemAlerta"
-                  :fechar="fecharAlerta"
-                ></AlertaInfo>
-                <router-link to="/livros">
-                  <BotaoPadrao
-                    conteudo="Cancelar"
-                    :outlined="true"
-                    type="button"
-                  ></BotaoPadrao>
-                </router-link>
-                <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
-              </section>
-              <section id="wrapper-loader" v-if="isLoading">
-                <v-progress-circular indeterminate></v-progress-circular>
-              </section>
-            </v-form>
+            </div>
+          </div>
+          <section id="wrapper-botoes" v-if="!isLoading">
+            <AlertaInfo
+              v-if="alerta"
+              :mensagem="mensagemAlerta"
+              :fechar="fecharAlerta"
+            ></AlertaInfo>
+            <router-link to="/livros">
+              <BotaoPadrao
+                conteudo="Cancelar"
+                :outlined="true"
+                type="button"
+              ></BotaoPadrao>
+            </router-link>
+            <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
+          </section>
+          <section id="wrapper-loader" v-if="isLoading">
+            <v-progress-circular indeterminate></v-progress-circular>
+          </section>
+        </v-form>
       </div>
     </div>
   </div>
@@ -92,14 +99,14 @@ import router from "@/router";
 import AlertaInfo from "@/components/AlertaInfo.vue";
 import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
-import { cadastrarDocente } from "@/service/requisicao.js";
+import { cadastrarLivro } from "@/service/requisicao.js";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
 
 export default {
   data() {
     return {
-      regrasNome: [
-        (v) => !!v || "Insira um nome!",
+      regrasTitulo: [
+        (v) => !!v || "Insira um título!",
         (v) =>
           (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
         (v) => /^[A-Za-z\s]+$/.test(v) || "O nome deve conter apenas letras",
@@ -107,78 +114,40 @@ export default {
           /^[A-Za-z]+\s[A-Za-z]+$/.test(v) ||
           "Informe um nome completo (Nome Sobrenome)",
       ],
-      disciplinas: [
-        "Língua Portuguesa",
-        "Matemática",
-        "Física",
-        "Química",
-        "Biologia",
-        "História",
-        "Geografia",
-        "Filosofia",
-        "Sociologia",
-        "Inglês",
-        "Espanhol",
-        "Educação Física",
-        "Artes",
-        "Ensino Religioso",
-        "Sociologia",
-        "Filosofia",
-        "Outra",
+      regrasAutor: [
+        (v) => !!v || "Insira um autor(a)!",
+        (v) =>
+          (v && v.length >= 3) || "O nome do autor(a) deve ter pelo menos 3 caracteres",
+        (v) => /^[A-Za-z\s]+$/.test(v) || "O nome do autor(a) deve conter apenas letras",
+        (v) =>
+          /^[A-Za-z]+\s[A-Za-z]+$/.test(v) ||
+          "Informe um nome completo (Nome Sobrenome)",
       ],
-      turnos: ["Matutino", "Vespertino"],
-      series: [
-        "Grupo 4",
-        "Grupo 5",
-        "1°",
-        "2°",
-        "3°",
-        "4°",
-        "5°",
-        "6°",
-        "7°",
-        "8°",
-        "9°",
+      regrasTipologiaTextual: [
+        (v) => !!v || "Insira uma tipologia textual!",
+        (v) =>
+          (v && v.length >= 3) || "A tipologia textual deve ter pelo menos 3 caracteres",
+        (v) => /^[A-Za-z\s]+$/.test(v) || "A tipologia textual deve conter apenas letras",
       ],
-      turmas: [
-        "A",
-        "B",
-        "C",
-        "D",
-        "E",
-        "F",
-        "G",
-        "H",
-        "I",
-        "J",
-        "K",
-        "L",
-        "M",
-        "N",
-        "O",
-        "P",
-        "Q",
-        "R",
-        "S",
-        "T",
-        "U",
-        "V",
-        "W",
-        "X",
-        "Y",
-        "Z",
+      regrasQuantidade: [
+        (v) => !!v || "Insira uma quantidade!",
+        (v) => /^[0-9]+$/.test(v) || "A quantidade deve conter apenas números"
       ],
+      regrasPrateleira: [
+        (v) => !!v || "Insira uma prateleira!",
+        (v) => /^[A-D]-([1-9]|1[0-2])$/.test(v) || "Formato inválido de identificador de prateleira"
+      ],
+      
       formDesabilitado: false,
       alerta: false,
       isLoading: false,
       mensagemAlerta: "",
       tabSelecionado: "Manual",
-      nome: "",
-      radioGroup: "Docente",
-      disciplinaEscolhida: "",
-      turnoEscolhido: "",
-      serieEscolhida: "",
-      turmaEscolhida: "",
+      titulo: "",
+      autor: "",
+      tipologiaTextual: "",
+      quantidade: "",
+      prateleira: "",
     };
   },
 
@@ -244,30 +213,32 @@ export default {
       this.alerta = false;
     },
 
-    async autenticarDocente() {
+    async autenticarLivro() {
       this.formDesabilitado = true;
       this.isLoading = true;
       this.alerta = false;
 
-      const dadosCadastrarDocente = {
-        nome: this.nome,
-        disciplina: this.disciplinaEscolhida,
-        turno: this.turnoEscolhido,
+      const dadosCadastrarLivro = {
+        titulo: this.titulo,
+        autor: this.autor,
+        tipologiaTextual: this.tipologiaTextual,
+        quantidade: this.quantidade,
+        prateleira: this.prateleira,
       };
 
-      const requisicao = await cadastrarDocente(dadosCadastrarDocente);
+      const requisicao = await cadastrarLivro(dadosCadastrarLivro);
 
       if (requisicao === 200) {
         this.formDesabilitado = false;
         this.isLoading = false;
-        this.tratarSucessoDocente();
+        this.tratarSucessoLivro();
       } else {
         this.tratarErroRequisicao(requisicao);
       }
     },
 
-    tratarSucessoDocente() {
-      this.mensagemAlerta = "Docente cadastrado com sucesso!";
+    tratarSucessoLivro() {
+      this.mensagemAlerta = "Livro cadastrado com sucesso!";
       this.alerta = true;
       setTimeout(() => {
         this.fecharAlerta();
@@ -291,10 +262,6 @@ export default {
       setTimeout(() => {
         this.fecharAlerta();
       }, 5000);
-    },
-
-    importarCSV() {
-      console.log("importando...");
     },
   },
 };
@@ -354,7 +321,7 @@ export default {
   gap: 4.8rem;
 
   >>> .v-input__slot {
-    width: 50%;
+    width: 95%;
 
     gap: 0.7rem;
   }
@@ -362,9 +329,6 @@ export default {
   #wrapper-conteudo {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
     width: 85%;
   }
 
@@ -442,7 +406,21 @@ span {
 
 #area-foto {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+
+  width: 100%;
+  max-width: 80rem;
+}
+
+.botoes-camera {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-top: 2.5rem;
+
+  width: 48%;
 }
 
 img {

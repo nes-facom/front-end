@@ -1,10 +1,10 @@
 <template>
     <div id="lista-livros-wrapper">
         <img v-if="livros.length === 0"
-            src="@/assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
+            src="../assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
         <div
             id="head-wrapper"
-        v-if="livros.length > 0">
+        >
             <span class="span1"> Livro </span>
             <span class="span2"> Quantidade disponível </span>
             <span class="span3"> Quantidade total </span>
