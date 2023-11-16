@@ -21,7 +21,7 @@
                     Filtros
                 </v-btn>
             </template>
-            <v-list>
+            <v-list class="overflow-y-auto" style="max-height: 300px;">
                 <v-list-item-group
                 v-model="filtroSelecionado">
                     <v-list-item
@@ -45,11 +45,30 @@ export default {
     data() {
         return {
             items: [
-                {nome: 'Gênero 1', value: 'Discente'},
-                {nome: 'Gênero 2', value: 'Docente'},
-                {nome: 'Gênero 3', value: 'Docente'},
-                {nome: 'Gênero 4', value: 'Docente'},
-                {nome: 'Gênero 5', value: 'Docente'},
+                {nome: 'Ação', value: 'açao'},
+                {nome: 'Aventura', value: 'aventura'},
+                {nome: 'Arte', value: 'arte'},
+                {nome: 'Atlas', value: 'atlas'},
+                {nome: 'Comédia', value: 'comedia'},
+                {nome: 'Conto', value: 'conto'},
+                {nome: 'Cordel', value: 'cordel'},
+                {nome: 'Crônica', value: 'cronica'},
+                {nome: 'Drama', value: 'drama'},
+                {nome: 'Epopeia', value: 'epopeia'},
+                {nome: 'Fábula', value: 'fabula'},
+                {nome: 'Fantasia', value: 'fantasia'},
+                {nome: 'Ficção científica', value: 'ficcao'},
+                {nome: 'Gibi/História em quadrinhos', value: 'gibi'},
+                {nome: 'História geral', value: 'historia'},
+                {nome: 'Leitura para iniciantes(letra bastão)', value: 'leituraIniciantes'},
+                {nome: 'Leitura para jovens', value: 'leituraJovens'},
+                {nome: 'Leitura para professores', value: 'leituraProfessores'},
+                {nome: 'Livro de imagem', value: 'livroImagem'},
+                {nome: 'Mapa', value: 'mapa'},
+                {nome: 'Novela', value: 'novela'},
+                {nome: 'Poema', value: 'poema'},
+                {nome: 'Romance', value: 'romance'},
+                {nome: 'Tragédia', value: 'tragedia'},
                 {nome: 'Todos', value: null}
             ],
             filtroSelecionado: null,

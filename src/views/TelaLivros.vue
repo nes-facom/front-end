@@ -24,8 +24,19 @@
                     </div>
                 </section>
             </div>
-            <ListaDeLivros :leitores="this.arrayResponse"></ListaDeLivros>
-            <AlertaInfo data-cy="alerta" v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+            <ListaDeLivros
+                :pesquisa="this.queryDeBusca"
+                :filtro="this.filtroSelecionado"
+                :leitores="this.arrayResponse"
+            >
+            </ListaDeLivros>
+            <AlertaInfo
+                data-cy="alerta"
+                v-if="alerta"
+                :mensagem="mensagemAlerta"
+                :fechar="fecharAlerta"
+            >
+            </AlertaInfo>
         </div>
     </div>
 </template>
@@ -54,13 +65,14 @@ export default {
     },
 
     components: {
-        AlertaInfo,
-        BarraDeNavegacao,
-        BarraDeBusca,
-        BotaoPadrao,
-        FiltroLivro,
-        ListaDeLivros
-    },
+    AlertaInfo,
+    BarraDeNavegacao,
+    BarraDeBusca,
+    BotaoPadrao,
+    FiltroLivro,
+    ListaDeLivros,
+    ListaDeLivros
+},
 
     methods: {
         salvarQueryDeBusca(query) {

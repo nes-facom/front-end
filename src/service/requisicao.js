@@ -30,8 +30,8 @@ export async function cadastrarLivro(jsonLivro) {
   };
   try {
     const requisicao = await axios.post(
-      BASE_URL + "/docente",
-      jsonDocente,
+      BASE_URL + "/livro",
+      jsonLivro,
       configHeader
     );
     return requisicao.status;
@@ -113,6 +113,50 @@ export async function getLeitor(idLeitor) {
   try {
     const requisicao = await axios.get(
       BASE_URL + "/leitores/detalhes/" + idLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLivros(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/livros?livro="+ jsonDeBusca.livro + "&tipo=" + jsonDeBusca.tipo, 
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLivro(idLivro) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/livros/detalhes/" + idLivro,
       configHeader
     );
 

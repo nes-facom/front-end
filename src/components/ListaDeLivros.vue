@@ -1,42 +1,53 @@
 <template>
-    <div id="lista-livros-wrapper">
-        <img v-if="livros.length === 0"
-            src="../assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
-        <div
-            id="head-wrapper"
+    <div id="lista-leitores-wrapper">
+        <img v-if="pesquisa === '' && filtro === null"
+            src="@/assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
+        <img v-else-if="livros.length === 0 && (pesquisa !== '' || filtro !== null)"
+            src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
+        <div 
+            id="wrapper-lista"
+            v-else
         >
-            <span class="span1"> Livro </span>
-            <span class="span2"> Quantidade disponível </span>
-            <span class="span3"> Quantidade total </span>
-            <span class="span4"> Prateleira </span>
+            <div
+                id="head-wrapper"
+            >
+                <span class="span1"> Nome </span>
+                <span class="span2"> Série/Disciplina </span>
+                <span class="span3"> Tipo </span>
+            </div>
+            <div
+                id="lista-card-wrapper"
+            >
+                <CardLivro
+                v-for="(leitor, index) in leitores"
+                :key="index"
+                :leitor="leitor"></CardLivro>
+            </div>
         </div>
-        <div
-        id="lista-card-wrapper"
-        v-if="livros.length > 0">
-            <!-- <CardLeitor 
-            v-for="(livro, index) in livros"
-            :key="index"
-            :livro="livro"></CardLeitor> -->
-        </div>
-        <img v-if="false"
-            src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um fantasma com diversos morcegos em volta dele, ambos voando numa noite iluminada por uma lua. Com o texto abaixo deles escrito `Nenhum resultado encontrado`. ">
     </div>
 </template>
 
 <script>
 
-import CardLeitor from '@/components/CardLeitor.vue';
+import CardLivro from '@/components/CardLivro.vue';
 
 export default {
+    components: {
+        CardLivro,
+    },
+
     props: {
         leitores: {
             type: Array,
             required: true
         },
-    },
-
-    components: {
-        CardLeitor,
+        pesquisa: {
+            type: String,
+            required: true
+        },
+        filtro: {
+            required: true
+        }
     },
 }
 
@@ -45,13 +56,11 @@ export default {
 
 <style scoped>
 
-#lista-livros-wrapper {
+#lista-leitores-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    gap: 3rem;
 
     width: 100%;
     max-width: 100.8rem;
@@ -60,6 +69,16 @@ export default {
 span {
     font: var(--title-medium);
     color: var(--black);
+}
+
+#wrapper-lista {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    gap: 3rem;
 }
 
 #head-wrapper {
