@@ -157,7 +157,7 @@ export async function getHistoricoEmprestimo(idLeitor) {
   }
 }
 
-export async function updateLeitor(idLeitor) {
+export async function updateLeitor(idLeitor, jsonLeitor) {
   const configHeader = {
     headers: {
         "x-access-token": localStorage.getItem("token_acesso"),
@@ -168,6 +168,7 @@ export async function updateLeitor(idLeitor) {
   try {
     const requisicao = await axios.put(
       BASE_URL + "/leitores/" + idLeitor,
+      jsonLeitor,
       configHeader
     );
 
