@@ -143,6 +143,17 @@
         </v-window-item>
       </v-window>
     </div>
+    <div
+      v-if="isLoading"
+      id="wrapper-loader"  
+    >
+      <CircleLoader :loading="isLoading">
+      </CircleLoader>
+      <div>
+        <span>Cadastrando Alunos</span>
+        <p>Por favor, não saia do site.</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -151,6 +162,7 @@
 import router from "@/router";
 import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
+import CircleLoader from '@/components/CircleLoader.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
 import { cadastrarDocente, cadastrarDiscente, uploadDiscentes} from "@/service/requisicao.js"
@@ -212,6 +224,7 @@ export default {
     BarraDeNavegacao,
     AlertaInfo,
     DropZone,
+    CircleLoader
   },
 
   mounted() {
@@ -362,7 +375,7 @@ export default {
           if (requisicao === 200) {
             this.formDesabilitado = false;
             this.isLoading = false;
-            this.tratarSucesso();
+            this.tratarSucessoImportacao();
           } else {
             this.tratarErroRequisicao(requisicao);
           }
@@ -394,6 +407,14 @@ export default {
           },
         });
       });
+    },
+
+    tratarSucessoImportacao() {
+      this.mensagemAlerta = 'Discentes cadastrado com sucesso!';
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
     },
   }
 }
@@ -535,5 +556,15 @@ span {
   justify-content: end;
   gap: 4.8rem;
 }
-    
+
+#wrapper-loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 2rem;
+
+  text-align: center;
+}
+
 </style>
