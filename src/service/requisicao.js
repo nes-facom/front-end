@@ -105,6 +105,34 @@ export async function getLeitor(idLeitor) {
   }
 }
 
+export async function uploadDiscentes(jsonData) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  console.log('aqui')
+
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "leitores/upload/",
+      jsonData,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      console.log(requisicao)
+      return requisicao
+    }
+
+  } catch (erro) {
+    console.log(erro)
+    return erro;
+  }
+}
+
 export async function getHistoricoEmprestimo(idLeitor) {
   const configHeader = {
     headers: {

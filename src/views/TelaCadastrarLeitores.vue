@@ -125,7 +125,7 @@
                   type="button"></BotaoPadrao>
               </router-link>
               <div 
-                @click="processarArquivoCSV"
+                @click="importarDiscentes"
               >
                 <BotaoPadrao
                   conteudo="Importar"
@@ -152,7 +152,7 @@ import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
-import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
+import { cadastrarDocente, cadastrarDiscente, uploadDiscentes} from "@/service/requisicao.js"
 import { validarTokenAcesso } from "@/service/autenticacao.js";
 import Papa from 'papaparse';
 
@@ -202,6 +202,7 @@ export default {
       turnoEscolhido: '',
       serieEscolhida: '',
       turmaEscolhida: '',
+      json: []
     }
   },
 
@@ -348,24 +349,40 @@ export default {
       }, 5000);
     },
 
+    importarDiscentes() {
+      this.processarArquivoCSV()
+        .then(() => {
+          return uploadDiscentes(this.json);
+        })
+        .catch((error) => {
+          console.error('Erro ao importar discentes:', error);
+        });
+    },
+
     processarArquivoCSV() {
-      const arquivo = this.$store.state.arquivo;
+      return new Promise((resolve, reject) => {
+        const arquivo = this.$store.state.arquivo;
 
-      Papa.parse(arquivo, {
-        header: true,
-        encoding: "ascii",
-        dynamicTyping: true,
-        complete: (result) => {
-          const jsonData = result.data.map((row) => {
-            const numalu = row.numalu;
-            const nomalu = row.nomalu;
-            const sigcla = row.sigcla;
+        Papa.parse(arquivo, {
+          header: true,
+          encoding: "ascii",
+          dynamicTyping: true,
+          complete: (result) => {
+            const jsonData = result.data.map((row) => {
+              const numalu = row.numalu;
+              const nomalu = row.nomalu;
+              const sigcla = row.sigcla;
 
-            return { numalu, nomalu, sigcla };
-          });
+              return { numalu, nomalu, sigcla };
+            });
 
-          console.log(jsonData)
-        },
+            this.json = jsonData;
+            resolve();
+          },
+            error: (error) => {
+            reject(error);
+          },
+        });
       });
     },
   }
