@@ -124,6 +124,30 @@ export async function getLeitor(idLeitor) {
   }
 }
 
+export async function uploadDiscentes(jsonData) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "/leitores/upload/",
+      jsonData,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao
+    }
+
+  } catch (erro) {
+    return erro;
+  }
+}
+
 export async function getHistoricoEmprestimo(idLeitor) {
   const configHeader = {
     headers: {
@@ -146,7 +170,7 @@ export async function getHistoricoEmprestimo(idLeitor) {
   }
 }
 
-export async function updateLeitor(idLeitor) {
+export async function updateLeitor(idLeitor, jsonLeitor) {
   const configHeader = {
     headers: {
         "x-access-token": localStorage.getItem("token_acesso"),
@@ -157,6 +181,7 @@ export async function updateLeitor(idLeitor) {
   try {
     const requisicao = await axios.put(
       BASE_URL + "/leitores/" + idLeitor,
+      jsonLeitor,
       configHeader
     );
 

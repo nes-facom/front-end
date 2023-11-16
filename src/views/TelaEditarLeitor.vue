@@ -83,7 +83,7 @@
                   ></BotaoPadrao>
                 </div>
                 <BotaoPadrao
-                conteudo="Cadastrar"
+                conteudo="Editar"
                 type="submit"
                 ></BotaoPadrao>
                 </section>
@@ -98,17 +98,20 @@
 </template>
 
 <script>
+
+import AlertaInfo from '@/components/AlertaInfo.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import { validarTokenAcesso } from "@/service/autenticacao.js";
-import { getLeitor } from '@/service/requisicao.js'
+import { getLeitor, updateLeitor } from '@/service/requisicao.js'
 
 export default {
     props: ['id'],
 
     components: {
         BarraDeNavegacao,
-        BotaoPadrao
+        BotaoPadrao,
+        AlertaInfo
     },
 
     data() {
@@ -163,6 +166,7 @@ export default {
     irParaDetalhes() {
       this.$router.push({ path: `/leitores/detalhes/${this.$route.params.id}`});
     },
+
     async buscarInfoLeitor(id) {
       const requisicao = await getLeitor(id)
       const leitor = requisicao.data
@@ -176,7 +180,141 @@ export default {
         this.turmaEscolhida = leitor.turma
       }
     },
+
+    async validate() {
+      const valid = await this.$refs.form.validate()
+      if (valid) {
+        if(this.radioGroup === 'Docente') {
+          if (this.disciplinaEscolhida === '') {
+            this.mensagemAlerta = "Selecione uma disciplina!";
+            this.alerta = true;
+
+            setTimeout(() => {
+              this.fecharAlerta();
+            }, 5000);
+
+          } else if (this.turnoEscolhido === '') {
+            this.mensagemAlerta = "Selecione um turno!";
+            this.alerta = true;
+
+            setTimeout(() => {
+              this.fecharAlerta();
+            }, 5000);
+
+          } else {
+            this.autenticarDocente()
+          }
+
+        } else {
+          if (this.serieEscolhida === '') {
+            this.mensagemAlerta = "Selecione uma série!";
+            this.alerta = true;
+
+            setTimeout(() => {
+              this.fecharAlerta();
+            }, 5000);
+
+          } else if (this.turmaEscolhida === '') {
+            this.mensagemAlerta = "Selecione uma turma!";
+            this.alerta = true;
+
+            setTimeout(() => {
+              this.fecharAlerta();
+            }, 5000);
+
+          } else {
+            this.autenticarDiscente()
+          }
+        }
+      }
+    },
+
+    fecharAlerta() {
+      this.alerta = false;
+    },
+
+    async autenticarDocente() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
+      const dadosEditarDocente = {
+        nome: this.nome,
+        tipo: this.radioGroup,
+        disciplina: this.disciplinaEscolhida,
+        turno: this.turnoEscolhido,
+      }
+      
+      const requisicao = await updateLeitor(this.$route.params.id, dadosEditarDocente);
+
+      if (requisicao === 200) {
+        this.formDesabilitado = false;
+        this.isLoading = false;
+        this.tratarSucessoDocente();
+      } else {
+        this.tratarErroRequisicao(requisicao);
+      }
+    },
+
+    async autenticarDiscente() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
+      const dadosEditarDiscente = {
+        nome: this.nome,
+        tipo: this.radioGroup,
+        serie: this.serieEscolhida,
+        turma: this.turmaEscolhida,
+      }
+      
+      const requisicao = await updateLeitor(this.$route.params.id, dadosEditarDiscente);
+
+      if (requisicao === 200) {
+        this.formDesabilitado = false;
+        this.isLoading = false;
+        this.tratarSucessoDiscente();
+      } else {
+        this.tratarErroRequisicao(requisicao);
+      }
+    },
+
+    tratarSucessoDocente() {
+      this.mensagemAlerta = 'Docente atualizado com sucesso!';
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
+    },
+
+    tratarSucessoDiscente() {
+      this.mensagemAlerta = 'Discente atualizado com sucesso!';
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
+    },
+
+    tratarErroRequisicao(requisicao) {
+      this.formDesabilitado = false;
+      this.isLoading = false;
+      const status = requisicao.request.status;
+      if (status === 400) {
+        this.mensagemAlerta = 'Falha ao efetuar requisição!';
+      } else if (status === 500) {
+        this.mensagemAlerta = 'Ops! Ocorreu algum problema interno no servidor!';
+      } else {
+        this.mensagemAlerta = 'Um erro inesperado aconteceu, busque suporte!';
+      }
+
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
+    },
   },
+
+
 
   mounted() {
     validarTokenAcesso().then((token) => {

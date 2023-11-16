@@ -17,6 +17,7 @@
     "escpos": "^3.0.0-alpha.6",
     "image-size": "^1.0.2",
     "jwt-decode": "^3.1.2",
+    "papaparse": "^5.4.1",
     "sjcl": "^1.0.8",
     "vite-plugin-mkcert": "^1.16.0",
     "vue": "^2.7.7",
