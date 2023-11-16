@@ -1,6 +1,7 @@
 <template>
   <div id="background" data-app>
-    <div 
+    <div
+    v-if="!isLoading"
     id="wrapper">
       <BarraDeNavegacao></BarraDeNavegacao>
       <span id="title-cadastrar-leitor">Cadastrar leitor</span>
@@ -36,7 +37,6 @@
                     required
                     :rules="regrasNome"
                 ></v-text-field>
-                <!-- Tipo de leitor -->
                 <span>Tipo de leitor</span>
                 <v-radio-group v-model="radioGroup" id="radioGroup">
                   <v-radio
@@ -110,7 +110,11 @@
           </v-form>
         </v-window-item>
         <v-window-item :value="1" id="csv">
-          <DropZone extensaoDoArquivo=".csv"></DropZone>
+          <DropZone
+            extensaoDoArquivo=".csv"
+            :isDisabled="isLoading"
+          >
+          </DropZone>
           <section
             id="wrapper-botoes"
             v-if="!isLoading">
@@ -121,11 +125,15 @@
                   :outlined="true"
                   type="button"></BotaoPadrao>
               </router-link>
-              <BotaoPadrao
-              conteudo="Importar"
-              type="button"
-              @click="importarCSV"
-              ></BotaoPadrao>
+              <div 
+                @click="importarDiscentes"
+              >
+                <BotaoPadrao
+                  conteudo="Importar"
+                  type="button"
+                >
+                </BotaoPadrao>
+              </div>
             </section>
             <section
             id="wrapper-loader"
@@ -135,6 +143,17 @@
         </v-window-item>
       </v-window>
     </div>
+    <div
+      v-if="isLoading"
+      id="wrapper-loader"  
+    >
+      <CircleLoader :loading="isLoading">
+      </CircleLoader>
+      <div>
+        <span>Cadastrando Alunos</span>
+        <p>Por favor, não saia do site.</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -143,10 +162,12 @@
 import router from "@/router";
 import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
+import CircleLoader from '@/components/CircleLoader.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
-import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
+import { cadastrarDocente, cadastrarDiscente, uploadDiscentes} from "@/service/requisicao.js"
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import Papa from 'papaparse';
 
 export default {
   data() {
@@ -154,26 +175,18 @@ export default {
       regrasNome: [
         (v) => !!v || "Insira um nome!",
         (v) => (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-z\s]+$/.test(v)|| "O nome deve conter apenas letras",
-        (v) => /^[A-Za-z]+\s[A-Za-z]+$/.test(v) || "Informe um nome completo (Nome Sobrenome)",
+        (v) => /^[A-Za-zÀ-ú\s]+$/.test(v)|| "O nome deve conter apenas letras e espaços",
+        (v) => (v.trim().includes(' ')) || "Informe um nome completo (Nome Sobrenome)"
       ],
-      disciplinas: ['Língua Portuguesa',
-      'Matemática', 
-      'Física',
-      'Química',
-      'Biologia',
-      'História',
-      'Geografia',
-      'Filosofia',
-      'Sociologia',
-      'Inglês',
-      'Espanhol',
-      'Educação Física',
-      'Artes',
-      'Ensino Religioso',
-      'Sociologia',
-      'Filosofia',
-      'Outra'],
+      disciplinas: ["Arte",
+      "Ciências Naturais",
+      "Educação Física",
+      "Geografia",
+      "História",
+      "Inglês",
+      "Matemática",
+      "Português",
+      "Regente"],
       turnos: ['Matutino',
       'Vespertino'],
       series: ['Grupo 4',
@@ -202,6 +215,7 @@ export default {
       turnoEscolhido: '',
       serieEscolhida: '',
       turmaEscolhida: '',
+      json: []
     }
   },
 
@@ -210,6 +224,7 @@ export default {
     BarraDeNavegacao,
     AlertaInfo,
     DropZone,
+    CircleLoader
   },
 
   mounted() {
@@ -348,9 +363,59 @@ export default {
       }, 5000);
     },
 
-    importarCSV(){
-      console.log('importando...')
-    }
+    async importarDiscentes() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
+      this.processarArquivoCSV()
+        .then(async () => {
+          const requisicao = await uploadDiscentes(this.json);
+
+          if (requisicao.status === 200) {
+            this.formDesabilitado = false;
+            this.isLoading = false;
+            this.tratarSucessoImportacao();
+          } else {
+            this.tratarErroRequisicao(requisicao);
+          }
+        })
+    },
+
+    processarArquivoCSV() {
+      return new Promise((resolve, reject) => {
+        const arquivo = this.$store.state.arquivo;
+
+        Papa.parse(arquivo, {
+          header: true,
+          encoding: "ascii",
+          dynamicTyping: true,
+          complete: (result) => {
+            const jsonData = result.data.map((row) => {
+              const numalu = row.numalu;
+              const nomalu = row.nomalu;
+              const sigcla = row.sigcla;
+
+              return { numalu, nomalu, sigcla };
+            });
+
+            this.json = jsonData;
+            resolve();
+          },
+            error: (error) => {
+            reject(error);
+          },
+        });
+      });
+    },
+
+    tratarSucessoImportacao() {
+      this.mensagemAlerta = 'Discentes cadastrado com sucesso!';
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
+    },
   }
 }
 
@@ -467,7 +532,7 @@ span {
   gap: 10rem;
 
   >>> .v-input__slot {
-    width: 90vw;
+    width: 100%;
     max-width: 35rem;
     
     gap: 1.5rem;
@@ -491,5 +556,15 @@ span {
   justify-content: end;
   gap: 4.8rem;
 }
-    
+
+#wrapper-loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 2rem;
+
+  text-align: center;
+}
+
 </style>

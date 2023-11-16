@@ -1,12 +1,12 @@
 <template>
     <div id="background">
         <div id="wrapper">
-            <div id="wrapper-cabecalho">
+            <div id="wrapper-cabecalho" v-if="!isLoading">
                 <BarraDeNavegacao></BarraDeNavegacao>
                 <section id="acoes">
                     <router-link to="/leitores">
                         <v-icon
-                            x-large
+                            medium
                             class="icon"
                         >
                             mdi-arrow-left
@@ -14,7 +14,7 @@
                     </router-link>
                     <span id="title-detalhes-leitor">Informações do leitor</span>
                         <v-icon
-                            x-large
+                            medium
                             class="icon"
                             @click="irParaEditar"
                         >
@@ -24,10 +24,11 @@
                 <section class="leitor-info">
                     <div
                         class="wrapper-leitor-info-esq a"
-                        v-if="tipoLeitor === 'docente'"
+                        v-if="isDocente()"
                     >
                         <div class="wrapper-img">
                             <img
+                                v-if="leitor.foto === null"
                                 src="@/components/icons/userPhotoDefault.png"
                                 alt="Icone de usuário, uma pessoa genérica."
                             >
@@ -37,7 +38,7 @@
                                 Nome
                             </span>
                             <span class="conteudo">
-                                Ana Carolina da Silva
+                                {{ leitor.nome }}
                             </span>
                         </div>
                         <div class="wrapper-info">
@@ -45,12 +46,12 @@
                                 Disciplina
                             </span>
                             <span class="conteudo">
-                                Geografia
+                                {{ leitor.disciplina }}
                             </span>
                         </div>
                         <div class="wrapper-info">
                             <span class="title">
-                                Tunro
+                                Turno
                             </span>
                             <span class="conteudo">
                                 Vespertino
@@ -67,7 +68,7 @@
                     </div>
                     <div
                         class="wrapper-leitor-info-esq a"
-                        v-if="tipoLeitor === 'discente'"
+                        v-if="!isDocente()"
                     > 
                         <div class="wrapper-img">
                             <img
@@ -80,14 +81,14 @@
                                 Nome
                             </span>
                             <span class="conteudo">
-                                Ana Gabrielle Oliveira                                </span>
+                                {{ leitor.nome }}                                </span>
                         </div>
                         <div class="wrapper-info">
                             <span class="title">
                                 Série
                             </span>
                             <span class="conteudo">
-                                3° B
+                                {{ serieTurma }}
                             </span>
                         </div>
                         <div class="wrapper-info">
@@ -95,7 +96,7 @@
                                 Tipo
                             </span>
                             <span class="conteudo">
-                                Discente
+                                {{ leitor.tipo }}
                             </span>
                         </div>
                     </div>
@@ -112,11 +113,9 @@
                             <span class="title"> Data de devolução </span>
                             <span class="title"> Estado </span>
                         </div>
-                        <!-- lista de empréstimos -->
-                            <!-- item empréstimo -->
                             <div id="historico-de-emprestimo">
                                 <CardHistoricoEmprestimo
-                                    v-for="(item, index) in listaEmprestimosRequisicao"
+                                    v-for="(item, index) in historicoEmprestimo"
                                     :key="index"
                                     :emprestimo="item"
                                 >
@@ -125,6 +124,8 @@
                     </section>
                 </section>
             </div>
+            <CircleLoader :loading="isLoading">
+            </CircleLoader>
         </div>
     </div>
 </template>
@@ -132,53 +133,65 @@
 <script>
 
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue'
+import CircleLoader from '@/components/CircleLoader.vue'
 import CardHistoricoEmprestimo from '@/components/CardHistoricoEmprestimo.vue';
+import { getLeitor, getHistoricoEmprestimo } from '@/service/requisicao.js'
+import { validarTokenAcesso } from "@/service/autenticacao.js";
 
 export default {
     components: {
         BarraDeNavegacao,
         CardHistoricoEmprestimo,
+        CircleLoader
     },
 
     data() {
         return {
-            idLeitor: 1,
-            tipoLeitor: 'discente',
-            listaEmprestimosRequisicao: [
-                {
-                    titulo: "Geografia Geral e do Brasil",
-                    dataEmprestimo: "03/03/2023",
-                    dataDevolucao: "Indeterminado",
-                    situacao: "Emprestado"
-                },
-                {
-                    titulo: "Por Uma Geografia dos Espaços Vividos",
-                    dataEmprestimo: "25/02/2022",
-                    dataDevolucao: "02/12/2022",
-                    situacao: "Devolvido"
-                },
-                {
-                    titulo: "Título do livro",
-                    dataEmprestimo: "Data",
-                    dataDevolucao: "Data",
-                    situacao: "Estado"
-                }
-            ]
+            leitor: null,
+            historicoEmprestimo: [],
+            isLoading: undefined
         }
-    },
-
-    props: {
-        leitor: {
-            type: Object,
-            required: true
-        },
     },
 
     methods: {
         irParaEditar() {
-            this.$router.push({ path: `/leitores/editar/${this.idLeitor}`});
+            this.$router.push({ path: `/leitores/editar/${this.$route.params.id}`});
+        },
+        async buscarInfoLeitor(id) {
+            const requisicao = await getLeitor(id)
+            this.leitor = requisicao.data
+        },
+        async buscarHistorico(id) {
+            const requisicao = await getHistoricoEmprestimo(id)
+            this.historicoEmprestimo = requisicao.data
+        },
+        isDocente() {
+            return this.leitor && this.leitor.tipo === 'Docente';
+        },
+    },
+
+    computed: {
+        serieTurma() {
+            return this.leitor.serie + ' ' + this.leitor.turma
         }
-    }
+    },
+
+    created() {
+        this.isLoading = true
+        this.buscarInfoLeitor(this.$route.params.id)
+        this.buscarHistorico(this.$route.params.id)
+        setTimeout(() => {
+            this.isLoading = false;
+        }, 1000);
+    },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+        if (!token) {
+            router.push('/login');
+        }
+        })
+    },
 }
 
 </script>

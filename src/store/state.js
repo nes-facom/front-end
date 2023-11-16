@@ -1,6 +1,6 @@
 let state = {
-    nomeArquivoSenhaBibliotecario: '',
-    arquivoSenhaBibliotecario: null,
+    nomeArquivo: '',
+    arquivo: null,
     usuarioLogado: true,
 }
 
