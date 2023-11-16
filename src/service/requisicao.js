@@ -113,8 +113,6 @@ export async function uploadDiscentes(jsonData) {
     }
   };
 
-  console.log('aqui')
-
   try {
     const requisicao = await axios.post(
       BASE_URL + "/leitores/upload/",
@@ -122,15 +120,11 @@ export async function uploadDiscentes(jsonData) {
       configHeader
     );
 
-    console.log(requisicao)
-
     if (requisicao.status === 200) {
-      console.log(requisicao)
       return requisicao
     }
 
   } catch (erro) {
-    console.log(erro)
     return erro;
   }
 }

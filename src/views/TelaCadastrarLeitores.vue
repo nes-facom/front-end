@@ -372,7 +372,7 @@ export default {
         .then(async () => {
           const requisicao = await uploadDiscentes(this.json);
 
-          if (requisicao === 200) {
+          if (requisicao.status === 200) {
             this.formDesabilitado = false;
             this.isLoading = false;
             this.tratarSucessoImportacao();
