@@ -1,6 +1,7 @@
 <template>
   <div id="background" data-app>
-    <div 
+    <div
+    v-if="!isLoading"
     id="wrapper">
       <BarraDeNavegacao></BarraDeNavegacao>
       <span id="title-cadastrar-leitor">Cadastrar leitor</span>
@@ -349,14 +350,23 @@ export default {
       }, 5000);
     },
 
-    importarDiscentes() {
+    async importarDiscentes() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
       this.processarArquivoCSV()
-        .then(() => {
-          return uploadDiscentes(this.json);
+        .then(async () => {
+          const requisicao = await uploadDiscentes(this.json);
+
+          if (requisicao === 200) {
+            this.formDesabilitado = false;
+            this.isLoading = false;
+            this.tratarSucesso();
+          } else {
+            this.tratarErroRequisicao(requisicao);
+          }
         })
-        .catch((error) => {
-          console.error('Erro ao importar discentes:', error);
-        });
     },
 
     processarArquivoCSV() {
