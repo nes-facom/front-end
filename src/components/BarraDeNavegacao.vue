@@ -6,9 +6,9 @@
 
     <div id="menu">
       <v-tabs slider-color="#00696C">
-        <v-tab class="item-menu" href="/emprestimos">Empréstimos</v-tab>
-        <v-tab class="item-menu" href="/livros">Livros</v-tab>
-        <v-tab class="item-menu" href="/leitores">Leitores</v-tab>
+        <v-tab class="item-menu" to="/emprestimos">Empréstimos</v-tab>
+        <v-tab class="item-menu" to="/livros">Livros</v-tab>
+        <v-tab class="item-menu" to="/leitores">Leitores</v-tab>
       </v-tabs>
     </div>
 

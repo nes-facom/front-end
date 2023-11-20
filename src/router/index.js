@@ -57,6 +57,16 @@ const router = new VueRouter({
       component: TelaCadastrarLivro,
     },
     {
+      path: '/livros/editar/id',
+      name: 'CadastrarLivros',
+      component: TelaCadastrarLivro,
+    },
+    {
+      path: '/livros/detalhes/id',
+      name: 'CadastrarLivros',
+      component: TelaCadastrarLivro,
+    },
+    {
       path: '/leitores/cadastrar',
       name: 'CadastrarLeitores',
       component: TelaCadastrarLeitores,

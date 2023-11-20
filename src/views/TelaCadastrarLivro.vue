@@ -62,11 +62,11 @@
             <div id="area-foto">
               <img src="../assets/images/area-foto.png" />
               <div class="botoes-camera">
-                <span class="link">Repetir</span>
-                <span class="link">
+                <v-btn id="camera-options">Repetir</v-btn>
+                <v-btn id="camera-options">
                   <v-icon>mdi-camera</v-icon>
                   Tirar Foto
-                </span>
+                </v-btn>
               </div>
             </div>
           </div>
@@ -411,6 +411,12 @@ span {
 
   width: 100%;
   max-width: 80rem;
+}
+
+#camera-options {
+  border: transparent;
+  background-color: transparent;
+  color: var(--primary);
 }
 
 .botoes-camera {

@@ -19,8 +19,8 @@ export default {
 
     methods: {
         toDetails(id) {
-            const idLeitor = id;
-            this.$router.push({ path: `leitores/detalhes/${idLeitor}`})
+            const idLivro = id;
+            this.$router.push({ path: `/livros/detalhes/${idLivro}`})
         }
     }
 }
@@ -36,7 +36,7 @@ span {
 
 .card-livro {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 
     width: 100%;
     max-width: 100.8rem;

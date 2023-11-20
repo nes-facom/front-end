@@ -1,29 +1,22 @@
 <template>
-    <div id="lista-leitores-wrapper">
-        <img v-if="pesquisa === '' && filtro === null"
-            src="@/assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
-        <img v-else-if="livros.length === 0 && (pesquisa !== '' || filtro !== null)"
-            src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
-        <div 
-            id="wrapper-lista"
-            v-else
-        >
-            <div
-                id="head-wrapper"
-            >
-                <span class="span1"> Livro </span>
-                <span class="span2"> Quantidade disponível </span>
-                <span class="span3"> Quantidade total </span>
-                <span class="span4"> Prateleira </span>
+    <div id="lista-exemplares-wrapper">
+        <div id="head-options">
+            <a>Imprimir código de barras</a>
+            <a>Excluir exemplar</a>
+            <a>Adicionar exemplar</a>
+        </div>
+        <div id="wrapper-lista">
+            <div id="list-head-wrapper">
+                <span class="span1"> Nº do tombo </span>
             </div>
-            <div
+            <!-- <div
                 id="lista-card-wrapper"
             >
                 <CardLivro
                 v-for="(leitor, index) in leitores"
                 :key="index"
                 :leitor="leitor"></CardLivro>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -34,7 +27,7 @@ import CardLivro from '@/components/CardLivro.vue';
 
 export default {
     components: {
-        CardLivro,
+        
     },
 
     props: {
@@ -57,14 +50,25 @@ export default {
 
 <style scoped>
 
-#lista-leitores-wrapper {
+#lista-exemplares-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    width: 100%;
+    width: 60%;
     max-width: 100.8rem;
+}
+
+#head-options {
+    display: flex;
+    flex-direction: row;
+
+}
+
+#head-options a {
+    font: var(--title-medium);
+    color: var(--primary);
 }
 
 span {
