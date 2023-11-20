@@ -12,10 +12,15 @@
             :placeholder="conteudo"
             @keydown.enter="busca"
         ></v-text-field>
-        <v-icon
-        @click="busca">
-            mdi-magnify
-        </v-icon>
+        <v-btn
+            fab
+            small
+            @click="busca"
+        >
+            <v-icon>
+                mdi-magnify
+            </v-icon>
+        </v-btn>
     </div>
 </template>
 

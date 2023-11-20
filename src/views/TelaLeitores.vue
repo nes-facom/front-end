@@ -6,7 +6,7 @@
                 <section id="acoes">
                     <BarraDeBusca
                         class="acoes-item1"
-                        conteudo="Pesquisar..."
+                        conteudo="Busque por um leitor"
                         @busca="salvarQueryDeBusca"
                     ></BarraDeBusca>
                     <div class="acoes-item2">
