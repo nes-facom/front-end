@@ -24,15 +24,30 @@
                     </div>
                 </section>
             </div>
+            <ListaDeEmprestimos
+                :pesquisa="this.queryDeBusca"
+                :filtro="this.filtroSelecionado"
+                :leitores="this.arrayResponse"
+            >
+            </ListaDeEmprestimos>
+            <AlertaInfo
+                data-cy="alerta"
+                v-if="alerta"
+                :mensagem="mensagemAlerta"
+                :fechar="fecharAlerta"
+            >
+            </AlertaInfo>
         </div>
     </div>
 </template>
 
 <script>
 
+import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroEmprestimo from '@/components/FiltroEmprestimo.vue';
+import ListaDeEmprestimos from '@/components/ListaDeLeitores.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import router from '@/router'
 
@@ -65,6 +80,10 @@ export default {
         salvarTipoDeFiltragem(filtro) {
             this.filtroSelecionado = filtro;
         },
+
+        fecharAlerta() {
+            this.alerta = false;
+        },
     },
 
     mounted() {
@@ -73,6 +92,47 @@ export default {
                 router.push('/login');
             }
         })
+    },
+
+    watch: {
+        async queryDeBusca(newValue) {
+            if(newValue === '' && this.filtroSelecionado === null) {
+                return
+            } else {
+                const json = {
+                    nome: newValue,
+                    tipo: this.filtroSelecionado
+                }
+    
+                const requisicao = await getEmprestimos(json)
+    
+                if (requisicao.status === 200) {
+                    this.arrayResponse = requisicao.data
+                } else {
+                    this.tratarErroRequisicao(requisicao)
+                }
+            }
+        },
+
+        async filtroSelecionado(newValue) {
+
+            if(this.queryDeBusca === '' && newValue === null) {
+                return
+            } else {
+                const json = {
+                    nome: this.queryDeBusca,
+                    tipo: newValue
+                }
+    
+                const requisicao = await getEmprestimos(json)
+    
+                if (requisicao.status === 200) {
+                    this.arrayResponse = requisicao.data
+                } else {
+                    this.tratarErroRequisicao(requisicao)
+                }
+            }
+        }
     },
 };
 
