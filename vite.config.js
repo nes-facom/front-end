@@ -36,7 +36,6 @@ export default defineConfig({
     }
   },
   server: {
-    host: localIp,
     https: true
   },
   module: {
