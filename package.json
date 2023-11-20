@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@types/sjcl": "^1.0.31",
-    "@vitejs/plugin-legacy": "^2.0.0",
+    "@vitejs/plugin-legacy": "^4.0.0",
     "@vitejs/plugin-vue2": "^1.1.2",
     "cypress": "^10.11.0",
     "cypress-file-upload": "^5.0.8",
