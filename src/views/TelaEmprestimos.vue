@@ -27,7 +27,7 @@
             <ListaDeEmprestimos
                 :pesquisa="this.queryDeBusca"
                 :filtro="this.filtroSelecionado"
-                :leitores="this.arrayResponse"
+                :emprestimos="this.arrayResponse"
             >
             </ListaDeEmprestimos>
             <AlertaInfo
@@ -47,11 +47,12 @@ import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroEmprestimo from '@/components/FiltroEmprestimo.vue';
-import ListaDeEmprestimos from '@/components/ListaDeLeitores.vue';
+import ListaDeEmprestimos from '@/components/ListaDeEmprestimos.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import router from '@/router'
-
+import { getEmprestimos } from '@/service/requisicao';
 import { validarTokenAcesso } from '@/service/autenticacao';
+import { getEmprestimosPorQuery } from '@/service/requisicao';
 
 
 export default {
@@ -60,6 +61,7 @@ export default {
         BarraDeBusca,
         BotaoPadrao,
         FiltroEmprestimo,
+        ListaDeEmprestimos
     },
 
     data() {
@@ -84,6 +86,16 @@ export default {
         fecharAlerta() {
             this.alerta = false;
         },
+
+        async primeiraBusca() {
+            const requisicao = await getEmprestimos()
+
+            if (requisicao.status === 200) {
+                this.arrayResponse = requisicao.data
+            } else {
+                this.tratarErroRequisicao(requisicao)
+            }
+        }
     },
 
     mounted() {
@@ -91,7 +103,9 @@ export default {
             if (!token) {
                 router.push('/login');
             }
-        })
+        }),
+
+        this.primeiraBusca()
     },
 
     watch: {
@@ -104,7 +118,7 @@ export default {
                     tipo: this.filtroSelecionado
                 }
     
-                const requisicao = await getEmprestimos(json)
+                const requisicao = await getEmprestimosPorQuery()
     
                 if (requisicao.status === 200) {
                     this.arrayResponse = requisicao.data
@@ -124,7 +138,7 @@ export default {
                     tipo: newValue
                 }
     
-                const requisicao = await getEmprestimos(json)
+                const requisicao = await getEmprestimosPorQuery()
     
                 if (requisicao.status === 200) {
                     this.arrayResponse = requisicao.data
@@ -132,7 +146,7 @@ export default {
                     this.tratarErroRequisicao(requisicao)
                 }
             }
-        }
+        },
     },
 };
 
