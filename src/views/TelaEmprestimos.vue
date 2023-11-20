@@ -1,22 +1,78 @@
 <template>
-    <div>
-        <BarraDeNavegacao />
+    <div id="background">
+        <div id="wrapper">
+            <div id="wrapper-cabecalho">
+                <BarraDeNavegacao></BarraDeNavegacao>
+                <section id="acoes">
+                    <BarraDeBusca
+                        class="acoes-item1"
+                        conteudo="Busque por um nome"
+                        @busca="salvarQueryDeBusca"
+                    ></BarraDeBusca>
+                    <div class="acoes-item2">
+                        <FiltroEmprestimo
+                            @filtragem="salvarTipoDeFiltragem"
+                        ></FiltroEmprestimo>
+                        <div>
+                            <BotaoPadrao
+                                conteudo="Ler código de barras"
+                                type="button"
+                                icon="mdi-barcode-scan"
+                            >
+                            </BotaoPadrao>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 
+import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
+import BarraDeBusca from '@/components/BarraDeBusca.vue';
+import FiltroEmprestimo from '@/components/FiltroEmprestimo.vue';
+import BotaoPadrao from '@/components/BotaoPadrao.vue';
+import router from '@/router'
+
+import { validarTokenAcesso } from '@/service/autenticacao';
 
 
 export default {
     components: {
-    BarraDeNavegacao
-},
+        BarraDeNavegacao,
+        BarraDeBusca,
+        BotaoPadrao,
+        FiltroEmprestimo,
+    },
+
     data() {
         return {
-            isLogado: true,
-        };
+            queryDeBusca: '',
+            filtroSelecionado: null,
+            arrayResponse: [],
+            alerta: false,
+            mensagemAlerta: '',
+        }
+    },
+
+    methods: {
+        salvarQueryDeBusca(query) {
+            this.queryDeBusca = query;
+        },
+
+        salvarTipoDeFiltragem(filtro) {
+            this.filtroSelecionado = filtro;
+        },
+    },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+            if (!token) {
+                router.push('/login');
+            }
+        })
     },
 };
 
@@ -24,4 +80,59 @@ export default {
 
 <style scoped>
     
+#background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 80%;
+    max-width: 144rem;
+
+    height: 100%;
+
+    gap: 4.4rem;
+}
+
+#wrapper-cabecalho {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 4rem;
+
+    width: 100%;
+}
+
+#acoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+    width: 100%;
+    max-width: 100.8rem;
+}
+
+.acoes-item1 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.acoes-item2 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 5rem;
+}
+
 </style>
