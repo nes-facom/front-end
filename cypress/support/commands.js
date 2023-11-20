@@ -1,25 +1,24 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import 'cypress-file-upload';
+
+Cypress.Commands.add('login', (cpf, senha) => {
+  cy.visit('/login')
+
+  cy.get('[data-cy="input-cpf"]').type(cpf)
+  cy.get('[data-cy="input-senha"]').type(`${senha}{enter}`)
+
+  cy.url().should('include', '/emprestimos')
+});
+
+Cypress.Commands.add('cadastrarBibliotecario', (nome, cpf, senha, arquivo) => {
+  cy.visit('/bibliotecario')
+
+  cy.get('[data-cy="input-nome"]').type(nome)
+  cy.get('[data-cy="input-cpf"]').type(cpf)
+  cy.get('[data-cy="input-senha"]').type(senha)
+  cy.get('[data-cy="input-confirmeSenha"]').type(senha)
+  cy.get('[data-cy="input-dropzone"]').selectFile(arquivo, {force: true})
+
+  cy.get('[data-cy="botao-continuar"]').click()
+  
+  cy.get('[data-cy="botao-fazerLogin"]').click()
+});
