@@ -21,7 +21,7 @@ export default {
     methods: {
         toDetails(id) {
             const idLeitor = id;
-            this.$router.push({ path: `leitores/detalhes/${idLeitor}`})
+            this.$router.push({ path: `/leitores/detalhes/${idLeitor}`})
         }
     }
 }

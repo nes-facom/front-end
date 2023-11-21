@@ -176,7 +176,7 @@ export default {
         this.disciplinaEscolhida = leitor.disciplina
         this.turnoEscolhido = leitor.turno
       } else {
-        this.serieEscolhida = leitor.serieEscolhida
+        this.serieEscolhida = leitor.serie
         this.turmaEscolhida = leitor.turma
       }
     },
