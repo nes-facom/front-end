@@ -13,14 +13,14 @@
                         <FiltroEmprestimo
                             @filtragem="salvarTipoDeFiltragem"
                         ></FiltroEmprestimo>
-                        <router-link to="/emprestimos/cadastrar">
+                        <div @click="toggleModal">
                             <BotaoPadrao
                                 conteudo="Ler código de barras"
                                 type="button"
                                 icon="mdi-barcode-scan"
                             >
                             </BotaoPadrao>
-                        </router-link>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -37,6 +37,28 @@
                 :fechar="fecharAlerta"
             >
             </AlertaInfo>
+        </div>
+        <div
+            class="overlay"
+            v-if="showModal"
+        >
+            <div
+                class="modal"
+                v-if="showModal"
+            >
+                <v-icon>
+                    mdi-barcode-scan
+                </v-icon>
+                <span>
+                    Leia o código de barras
+                </span>
+                <p>
+                    Esperando leitura do código de barras...
+                </p>
+                <span @click="toggleModal">
+                    Cancelar
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -72,6 +94,7 @@ export default {
             arrayResponse: [],
             alerta: false,
             mensagemAlerta: '',
+            showModal: true,
         }
     },
 
@@ -82,6 +105,10 @@ export default {
 
         salvarTipoDeFiltragem(filtro) {
             this.filtroSelecionado = filtro;
+        },
+
+        toggleModal() {
+            this.showModal = !this.showModal
         },
 
         fecharAlerta() {
@@ -222,6 +249,61 @@ export default {
     align-items: center;
 
     gap: 5rem;
+}
+
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #1a1c1e9d;;
+
+    z-index: 10;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+
+    position: fixed;
+
+    border-radius: 2.8rem;
+    padding: 2.4rem;
+
+    background-color: var(--background);
+    box-shadow: 0 4px 8px rgba(0, 0, 5, 0.5);;
+
+    z-index: 20;
+
+    width: 50vw;
+    max-width: 33.5rem;
+}
+
+.modal span {
+    font: var(--headline-small)
+}
+
+.modal p {
+    font: var(--body-medium)
+}
+
+.modal span:last-child {
+    display: flex;
+    justify-content: end;
+    margin-top: 3.4rem;
+
+    font: var(--label-large);
+    color: var(--primary);
+
+    cursor: pointer;
 }
 
 </style>
