@@ -58,7 +58,11 @@ export default {
 
     gap: 3rem;
     
-    >>> div.v-input {
+    >>> div .v-input {
+        display: none;
+    }
+
+    >>> div .v-input__control {
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -67,7 +71,7 @@ export default {
         max-width: 30rem;
     }
 
-    >>> input#barra-de-busca::placeholder {
+    >>> input #barra-de-busca::placeholder {
         color: var(--on-surface-variant);
         font: var(--body-large);
     }
