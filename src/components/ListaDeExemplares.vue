@@ -9,39 +9,26 @@
             <div id="list-head-wrapper">
                 <span class="span1"> Nº do tombo </span>
             </div>
-            <!-- <div
-                id="lista-card-wrapper"
+            <div
+                id="lista-card-wrapper" 
             >
-                <CardLivro
-                v-for="(leitor, index) in leitores"
-                :key="index"
-                :leitor="leitor"></CardLivro>
-            </div> -->
+                <CardExemplar></CardExemplar>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 
-import CardLivro from '@/components/CardLivro.vue';
+import CardExemplar from '@/components/CardExemplar.vue';
 
 export default {
     components: {
-        
+        CardExemplar,
     },
 
     props: {
-        leitores: {
-            type: Array,
-            required: true
-        },
-        pesquisa: {
-            type: String,
-            required: true
-        },
-        filtro: {
-            required: true
-        }
+        
     },
 }
 
@@ -56,24 +43,34 @@ export default {
     justify-content: center;
     align-items: center;
 
-    width: 60%;
+    background-color: var(--surface-variant);
+    border-radius: 12px;
+
+    width: 80%;
+    height: 43.6rem;
     max-width: 100.8rem;
+    
 }
 
 #head-options {
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
 
+    margin-top: 2.5rem;
+    width: 100%;
 }
 
 #head-options a {
-    font: var(--title-medium);
+    font: var(--body-medium);
     color: var(--primary);
 }
 
-span {
-    font: var(--title-medium);
+.span1 {
+    font: var(--title-small);
     color: var(--black);
+
+    margin-left: 8rem;
 }
 
 #wrapper-lista {
@@ -86,11 +83,11 @@ span {
     gap: 3rem;
 }
 
-#head-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+#list-head-wrapper {
+    display: flex;
+    justify-content: left;
 
-    width: 100%;
+    margin-top: 2.5rem;
 }
 
 #lista-card-wrapper {
@@ -109,16 +106,6 @@ span {
     justify-content: flex-start;
     align-items: center;
     padding-left: 1.6rem;
-}
-
-.span2, .span3 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-img:nth-child(2) {
-    width: 40rem;
 }
 
 </style>
