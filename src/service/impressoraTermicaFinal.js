@@ -1,5 +1,5 @@
-import ipp from 'ipp';
-import bwipjs from 'bwip-js';
+const ipp = require('ipp');
+const bwipjs = require('bwip-js');
 
 function gerarCodigoDeBarrasBase64(numero) {
     const options = {
@@ -26,8 +26,8 @@ function gerarCodigoDeBarrasBase64(numero) {
     });
 }
 
-export function imprimirEtiqueta(tombo) {
-    return gerarCodigoDeBarrasBase64(tombo)
+function imprimirEtiqueta(tombo) {
+    gerarCodigoDeBarrasBase64(tombo)
         .then(base64Image => {
             // Configurações da impressora
             const printerUri = 'http://localhost:631/printers/XP-365B';
@@ -46,19 +46,23 @@ export function imprimirEtiqueta(tombo) {
                 "job-attributes-tag": {
                     "media": mediaSize,
                 },
-                data: Buffer.from(base64Image, 'base64'),
+                data: Buffer.from(base64Image, 'base64'), // Usar base64Image aqui
             };
 
             // Enviar o job de impressão para a impressora
             const printer = ipp.Printer(printerUri);
-            return new Promise((resolve, reject) => {
-                printer.execute('Print-Job', printJob, (err, response) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(response);
-                    }
-                });
+            printer.execute('Print-Job', printJob, (err, response) => {
+                if (err) {
+                    console.error('Erro ao enviar job de impressão:', err);
+                } else {
+                    console.log('Job de impressão enviado com sucesso!');
+                    console.log('Resposta da impressora:', response);
+                }
             });
+        })
+        .catch(error => {
+            console.error('Erro ao gerar o código de barras:', error);
         });
 }
+
+imprimirEtiqueta(1234567890);

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import TelaLogin from '@/views/TelaLogin.vue'
 import TelaEmprestimos from '@/views/TelaEmprestimos.vue'
 import TelaCadastrarBibliotecario from '@/views/TelaCadastrarBibliotecario.vue'
+import TesteImpressao from "../views/TesteImpressao.vue";
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const router = new VueRouter({
       path: '/bibliotecario',
       name: 'Bibliotecario',
       component: TelaCadastrarBibliotecario,
+    },
+    {
+      path: '/impressora',
+      name: 'Impressora',
+      component: TesteImpressao
     }
   ]
 })
