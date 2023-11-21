@@ -41,6 +41,7 @@
         <div
             class="overlay"
             v-if="showModal"
+            @click="toggleModal"
         >
             <div
                 class="modal"
@@ -55,6 +56,9 @@
                 <p>
                     Esperando leitura do código de barras...
                 </p>
+                <input id="meuInput" type="text" class="hidden-input"
+                    @keyup.enter="capturarLeitorDeCodigo" v-model="codigoLivro"
+                >
                 <span @click="toggleModal">
                     Cancelar
                 </span>
@@ -74,8 +78,7 @@ import BotaoPadrao from '@/components/BotaoPadrao.vue';
 import router from '@/router';
 import { getEmprestimos } from '@/service/requisicao';
 import { validarTokenAcesso } from '@/service/autenticacao';
-import { getEmprestimosPorQuery } from '@/service/requisicao';
-
+import { getEmprestimosPorQuery, realizarTransacao } from '@/service/requisicao';
 
 export default {
     components: {
@@ -94,7 +97,8 @@ export default {
             arrayResponse: [],
             alerta: false,
             mensagemAlerta: '',
-            showModal: true,
+            showModal: false,
+            codigoLivro: '',
         }
     },
 
@@ -111,6 +115,13 @@ export default {
             this.showModal = !this.showModal
         },
 
+        darFocoAoInput() {
+            const meuInput = document.getElementById('meuInput');
+            if (meuInput) {
+                meuInput.focus();
+            }
+        },
+
         fecharAlerta() {
             this.alerta = false;
         },
@@ -123,6 +134,39 @@ export default {
             } else {
                 this.tratarErroRequisicao(requisicao)
             }
+        },
+
+        async capturarLeitorDeCodigo() {
+            const resposta = await realizarTransacao(this.codigoLivro);
+
+            if (requisicao === 200) {
+                this.formDesabilitado = false;
+                this.isLoading = false;
+                this.showModal = false;
+                this.tratarSucessoDevolucao();
+
+            } else if (requisicao === 503) {
+                this.formDesabilitado = false;
+                this.isLoading = false;
+                this.showModal = false;
+
+                this.redirecionarParaCadastro()
+            } else {
+                this.showModal = false;
+                this.tratarErroRequisicao(requisicao);
+            }
+        },
+
+        redirecionarParaCadastro() {
+            this.$router.push({ path: `/emprestimos/cadastrar/${this.codigoLivro}`})
+        },
+
+        tratarSucessoDevolucao() {
+            this.mensagemAlerta = 'Devolucao realizada com sucesso!';
+            this.alerta = true;
+            setTimeout(() => {
+                this.fecharAlerta();
+            }, 5000);
         },
 
         tratarErroRequisicao(requisicao) {
@@ -140,14 +184,6 @@ export default {
                 this.fecharAlerta();
             }, 5000);
         },
-    },
-
-    mounted() {
-        validarTokenAcesso().then((token) => {
-            if (!token) {
-                router.push('/login');
-            }
-        })
     },
 
     watch: {
@@ -190,6 +226,19 @@ export default {
             }
         },
     },
+
+    mounted() {
+        validarTokenAcesso().then((token) => {
+            if (!token) {
+                router.push('/login');
+            }
+        })
+    },
+
+    updated() {
+        this.darFocoAoInput()
+    }
+
 };
 
 </script>
@@ -305,5 +354,9 @@ export default {
 
     cursor: pointer;
 }
+
+/* .hidden-input {
+    display: none;
+} */
 
 </style>

@@ -33,7 +33,7 @@ const router = new VueRouter({
       component: TelaEmprestimos,
     },
     {
-      path: '/emprestimos/cadastrar',
+      path: '/emprestimos/cadastrar/:id',
       name: 'CadastrarEmprestimo',
       component: TelaCadastrarEmprestimo,
     },
