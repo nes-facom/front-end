@@ -13,14 +13,14 @@
                         <FiltroEmprestimo
                             @filtragem="salvarTipoDeFiltragem"
                         ></FiltroEmprestimo>
-                        <div>
+                        <router-link to="/emprestimos/cadastrar">
                             <BotaoPadrao
                                 conteudo="Ler código de barras"
                                 type="button"
                                 icon="mdi-barcode-scan"
                             >
                             </BotaoPadrao>
-                        </div>
+                        </router-link>
                     </div>
                 </section>
             </div>
@@ -49,7 +49,7 @@ import BarraDeBusca from '@/components/BarraDeBusca.vue';
 import FiltroEmprestimo from '@/components/FiltroEmprestimo.vue';
 import ListaDeEmprestimos from '@/components/ListaDeEmprestimos.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue';
-import router from '@/router'
+import router from '@/router';
 import { getEmprestimos } from '@/service/requisicao';
 import { validarTokenAcesso } from '@/service/autenticacao';
 import { getEmprestimosPorQuery } from '@/service/requisicao';
@@ -57,6 +57,7 @@ import { getEmprestimosPorQuery } from '@/service/requisicao';
 
 export default {
     components: {
+        AlertaInfo,
         BarraDeNavegacao,
         BarraDeBusca,
         BotaoPadrao,
@@ -95,7 +96,23 @@ export default {
             } else {
                 this.tratarErroRequisicao(requisicao)
             }
-        }
+        },
+
+        tratarErroRequisicao(requisicao) {
+            const status = requisicao.request.status;
+            if (status === 500) {
+                this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!";
+            }
+            else {
+                this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
+            }
+
+            this.alerta = true;
+
+            setTimeout(() => {
+                this.fecharAlerta();
+            }, 5000);
+        },
     },
 
     mounted() {
@@ -103,9 +120,7 @@ export default {
             if (!token) {
                 router.push('/login');
             }
-        }),
-
-        this.primeiraBusca()
+        })
     },
 
     watch: {
@@ -118,7 +133,7 @@ export default {
                     tipo: this.filtroSelecionado
                 }
     
-                const requisicao = await getEmprestimosPorQuery()
+                const requisicao = await getEmprestimosPorQuery(json)
     
                 if (requisicao.status === 200) {
                     this.arrayResponse = requisicao.data
@@ -138,7 +153,7 @@ export default {
                     tipo: newValue
                 }
     
-                const requisicao = await getEmprestimosPorQuery()
+                const requisicao = await getEmprestimosPorQuery(json)
     
                 if (requisicao.status === 200) {
                     this.arrayResponse = requisicao.data

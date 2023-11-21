@@ -1,6 +1,9 @@
 <template>
     <div class="card-emprestimo">
-        <span class="span1"> {{ emprestimo }} </span>
+        <span class="span1"> {{ emprestimo.nome }} </span>
+        <span class="span2" v-if="emprestimo.tipo === 'discente'"> {{ emprestimo.serie }} </span>
+        <span class="span2" v-if="emprestimo.tipo === 'docente'"> {{ emprestimo.disciplina }} </span>
+        <span class="span3"> {{ tempoDeAtrasoEmDias }} </span>
     </div>
 </template>
 
@@ -14,14 +17,25 @@ export default {
         }
     },
 
-    methods: {
-        
+    computed: {
+        tempoDeAtrasoEmDias() {
+            const hoje = new Date();
+
+            if (this.emprestimo.dataDevolucao === 'Indeterminado') {
+                return this.emprestimo.dataDevolucao
+            } else {
+                const diferenca = hoje - this.emprestimo.dataDevolucao
+                const diasPassados = Math.floor(diferenca / (1000*60*60*24))
+                return diasPassados
+            }
+
+        }
     }
 }
 
 </script>
 
-<style>
+<style scoped>
 
 span {
     font: var(--body-large);
@@ -51,6 +65,19 @@ span {
 .card-emprestimo:active {
     cursor: pointer;
     background-color: var(--surface-dim);
+}
+
+.span1 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 1.6rem;
+}
+
+.span2, .span3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 </style>

@@ -1,8 +1,6 @@
 <template>
     <div id="lista-emprestimos-wrapper">
-        <img v-if="pesquisa === '' && filtro === null"
-            src="@/assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
-        <img v-else-if="emprestimos.length === 0 && (pesquisa !== '' || filtro !== null)"
+        <img v-if="emprestimos.length === 0"
             src="@/assets/images/nenhum-resultado-encontrado.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
         <div 
             id="wrapper-lista"
