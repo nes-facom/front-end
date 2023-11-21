@@ -236,3 +236,28 @@ export async function updateLeitor(idLeitor, jsonLeitor) {
     return erro;
   }
 }
+
+export async function realizarTransacao (json) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "/emprestimo/transacao/",
+      json,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao
+    } else if (requisicao.status === 503 ) {
+      return requisicao
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
