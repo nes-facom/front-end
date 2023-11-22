@@ -146,6 +146,28 @@ export async function getEmprestimosPorQuery(jsonDeBusca) {
   }
 }
 
+export async function getLivro(id) {
+  const configHeader = {
+    headers: {
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/exemplares?id=" + id,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
 export async function getLeitor(idLeitor) {
   const configHeader = {
     headers: {
@@ -237,7 +259,7 @@ export async function updateLeitor(idLeitor, jsonLeitor) {
   }
 }
 
-export async function realizarTransacao (json) {
+export async function realizarTransacao(id) {
   const configHeader = {
     headers: {
         "x-access-token": localStorage.getItem("token_acesso"),
@@ -246,16 +268,13 @@ export async function realizarTransacao (json) {
   };
 
   try {
-    const requisicao = await axios.post(
-      BASE_URL + "/emprestimo/transacao/",
-      json,
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos/devolucao/" + id,
       configHeader
     );
 
     if (requisicao.status === 200) {
-      return requisicao
-    } else if (requisicao.status === 503 ) {
-      return requisicao
+      return requisicao;
     }
   } catch (erro) {
     return erro;

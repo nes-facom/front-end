@@ -13,6 +13,13 @@
                         <FiltroEmprestimo
                             @filtragem="salvarTipoDeFiltragem"
                         ></FiltroEmprestimo>
+                        <AlertaInfo
+                            data-cy="alerta"
+                            v-if="alerta"
+                            :mensagem="mensagemAlerta"
+                            :fechar="fecharAlerta"
+                        >
+                        </AlertaInfo>
                         <div @click="toggleModal">
                             <BotaoPadrao
                                 conteudo="Ler código de barras"
@@ -30,13 +37,6 @@
                 :emprestimos="this.arrayResponse"
             >
             </ListaDeEmprestimos>
-            <AlertaInfo
-                data-cy="alerta"
-                v-if="alerta"
-                :mensagem="mensagemAlerta"
-                :fechar="fecharAlerta"
-            >
-            </AlertaInfo>
         </div>
         <div
             class="overlay"
@@ -137,20 +137,21 @@ export default {
         },
 
         async capturarLeitorDeCodigo() {
-            const resposta = await realizarTransacao(this.codigoLivro);
+            const requisicao = await realizarTransacao(this.codigoLivro);
 
-            if (requisicao === 200) {
+            if (requisicao.status === 200) {
                 this.formDesabilitado = false;
                 this.isLoading = false;
                 this.showModal = false;
                 this.tratarSucessoDevolucao();
 
-            } else if (requisicao === 503) {
+            } else if (requisicao.response.status === 503) {
                 this.formDesabilitado = false;
                 this.isLoading = false;
                 this.showModal = false;
 
                 this.redirecionarParaCadastro()
+
             } else {
                 this.showModal = false;
                 this.tratarErroRequisicao(requisicao);
@@ -164,6 +165,7 @@ export default {
         tratarSucessoDevolucao() {
             this.mensagemAlerta = 'Devolucao realizada com sucesso!';
             this.alerta = true;
+            this.codigoLivro = ''
             setTimeout(() => {
                 this.fecharAlerta();
             }, 5000);
@@ -171,6 +173,7 @@ export default {
 
         tratarErroRequisicao(requisicao) {
             const status = requisicao.request.status;
+
             if (status === 500) {
                 this.mensagemAlerta = "Ops! Ocorreu algum problema interno no servidor!";
             }
