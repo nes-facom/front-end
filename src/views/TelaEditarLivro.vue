@@ -32,12 +32,12 @@
                 outlined
                 required
                 :rules="regrasAutor"
-              >
+              > 
               </v-text-field>
               <v-text-field
                 data-cy="input-tipologia"
                 label="Tipologia textual"
-                v-model="tipologia"
+                v-model="tipologiaTextual"
                 outlined
                 required
                 :rules="regrasTipologiaTextual"
