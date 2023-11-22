@@ -1,11 +1,11 @@
 <template>
     <div class="card-livro" @click="toDetails(livro.id)">
-        <span class="span1"> {{ livro.livro }} </span>
-        <span class="span2" v-if="livro.length === 1"> {{ livro[0].quantidadeDisponivel}} </span>
-        <span class="span2" v-if="livro.length === 1"> {{ livro[0].quantidadeTotal }} </span>
-        <span class="span3" v-if="livro.length === 1"> {{ livro[0].prateleira }} </span>
+      <span class="span1">{{ livro.titulo }}</span>
+      <span class="span2">{{ livro.quantidade_disponivel }}</span>
+      <span class="span2">{{ livro.quantidade_total }}</span>
+      <span class="span3">{{ livro.Exemplares[0].prateleira }}</span>
     </div>
-</template>
+  </template>
 
 <script>
 
@@ -18,9 +18,9 @@ export default {
     },
 
     methods: {
-        toDetails(id) {
+        toEdit(id) {
             const idLivro = id;
-            this.$router.push({ path: `/livros/detalhes/${idLivro}`})
+            this.$router.push({ path: `/livros/editar/${idLivro}`})
         }
     }
 }
@@ -66,7 +66,7 @@ span {
     padding-left: 1.6rem;
 }
 
-.span2, .span3 {
+.span2, .span3, .span4 {
     display: flex;
     justify-content: center;
     align-items: center;

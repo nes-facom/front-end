@@ -9,7 +9,7 @@
           data-cy="formulario"
           class="formulario"
           ref="form"
-          @submit.prevent="validate()"
+          @submit.prevent="autenticarLivro"
         >
           <div id="wrapper-conteudo">
             <div id="credenciais">
@@ -109,35 +109,45 @@ export default {
         (v) => !!v || "Insira um título!",
         (v) =>
           (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-z\s]+$/.test(v) || "O nome deve conter apenas letras",
         (v) =>
-          /^[A-Za-z]+\s[A-Za-z]+$/.test(v) ||
+          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
+          "O nome deve conter apenas letras e acentos",
+        (v) =>
+          /^[A-Za-zÀ-ü]+\s[A-Za-zÀ-ü]+$/.test(v) ||
           "Informe um nome completo (Nome Sobrenome)",
       ],
       regrasAutor: [
         (v) => !!v || "Insira um autor(a)!",
         (v) =>
-          (v && v.length >= 3) || "O nome do autor(a) deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-z\s]+$/.test(v) || "O nome do autor(a) deve conter apenas letras",
+          (v && v.length >= 3) ||
+          "O nome do autor(a) deve ter pelo menos 3 caracteres",
         (v) =>
-          /^[A-Za-z]+\s[A-Za-z]+$/.test(v) ||
+          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
+          "O nome do autor(a) deve conter apenas letras e acentos",
+        (v) =>
+          /^[A-Za-zÀ-ü]+\s[A-Za-zÀ-ü]+$/.test(v) ||
           "Informe um nome completo (Nome Sobrenome)",
       ],
       regrasTipologiaTextual: [
         (v) => !!v || "Insira uma tipologia textual!",
         (v) =>
-          (v && v.length >= 3) || "A tipologia textual deve ter pelo menos 3 caracteres",
-        (v) => /^[A-Za-z\s]+$/.test(v) || "A tipologia textual deve conter apenas letras",
+          (v && v.length >= 3) ||
+          "A tipologia textual deve ter pelo menos 3 caracteres",
+        (v) =>
+          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
+          "A tipologia textual deve conter apenas letras e acentos",
       ],
       regrasQuantidade: [
         (v) => !!v || "Insira uma quantidade!",
-        (v) => /^[0-9]+$/.test(v) || "A quantidade deve conter apenas números"
+        (v) => /^[0-9]+$/.test(v) || "A quantidade deve conter apenas números",
       ],
       regrasPrateleira: [
         (v) => !!v || "Insira uma prateleira!",
-        (v) => /^[A-D]-([1-9]|1[0-2])$/.test(v) || "Formato inválido de identificador de prateleira"
+        (v) =>
+          /^[A-D]-([1-9]|1[0-2])$/.test(v) ||
+          "Formato inválido de identificador de prateleira",
       ],
-      
+
       formDesabilitado: false,
       alerta: false,
       isLoading: false,
@@ -145,7 +155,7 @@ export default {
       tabSelecionado: "Manual",
       titulo: "",
       autor: "",
-      tipologiaTextual: "",
+      tipologia: "",
       quantidade: "",
       prateleira: "",
     };
@@ -166,49 +176,6 @@ export default {
   },
 
   methods: {
-    async validate() {
-      const valid = await this.$refs.form.validate();
-      if (valid) {
-        if (this.radioGroup === "Docente") {
-          if (this.disciplinaEscolhida === "") {
-            this.mensagemAlerta = "Selecione uma disciplina!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else if (this.turnoEscolhido === "") {
-            this.mensagemAlerta = "Selecione um turno!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else {
-            this.autenticarDocente();
-          }
-        } else {
-          if (this.serieEscolhida === "") {
-            this.mensagemAlerta = "Selecione uma série!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else if (this.turmaEscolhida === "") {
-            this.mensagemAlerta = "Selecione uma turma!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else {
-            this.autenticarDiscente();
-          }
-        }
-      }
-    },
-
     fecharAlerta() {
       this.alerta = false;
     },
@@ -221,10 +188,12 @@ export default {
       const dadosCadastrarLivro = {
         titulo: this.titulo,
         autor: this.autor,
-        tipologiaTextual: this.tipologiaTextual,
+        tipologia: this.tipologia,
         quantidade: this.quantidade,
         prateleira: this.prateleira,
       };
+
+      console.log(dadosCadastrarLivro);
 
       const requisicao = await cadastrarLivro(dadosCadastrarLivro);
 

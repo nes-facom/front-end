@@ -27,7 +27,7 @@
             <ListaDeLivros
                 :pesquisa="this.queryDeBusca"
                 :filtro="this.filtroSelecionado"
-                :leitores="this.arrayResponse"
+                :livros="this.arrayResponse"
             >
             </ListaDeLivros>
             <AlertaInfo
@@ -119,7 +119,7 @@ export default {
             }
             
             const requisicao = await getLivros(jsonLivros)
-
+            console.log(requisicao);
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
             } else {

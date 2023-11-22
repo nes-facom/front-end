@@ -1,5 +1,5 @@
 <template>
-    <div id="lista-leitores-wrapper">
+    <div id="lista-livros-wrapper">
         <img v-if="pesquisa === '' && filtro === null"
             src="@/assets/images/realize-uma-busca.png" alt="Um gato prendurado numa lupa com o texto `realize uma busca` ao lado dele">
         <img v-else-if="livros.length === 0 && (pesquisa !== '' || filtro !== null)"
@@ -20,9 +20,9 @@
                 id="lista-card-wrapper"
             >
                 <CardLivro
-                v-for="(leitor, index) in leitores"
+                v-for="(livro, index) in livros"
                 :key="index"
-                :leitor="leitor"></CardLivro>
+                :livro="livro"></CardLivro>
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@ export default {
     },
 
     props: {
-        leitores: {
+        livros: {
             type: Array,
             required: true
         },
@@ -57,7 +57,7 @@ export default {
 
 <style scoped>
 
-#lista-leitores-wrapper {
+#lista-livros-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -84,7 +84,7 @@ span {
 
 #head-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 
     width: 100%;
 }
@@ -107,7 +107,7 @@ span {
     padding-left: 1.6rem;
 }
 
-.span2, .span3 {
+.span2, .span3, .span4 {
     display: flex;
     justify-content: center;
     align-items: center;

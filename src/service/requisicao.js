@@ -30,7 +30,7 @@ export async function cadastrarLivro(jsonLivro) {
   };
   try {
     const requisicao = await axios.post(
-      BASE_URL + "/livro",
+      BASE_URL + "/livros",
       jsonLivro,
       configHeader
     );
