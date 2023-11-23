@@ -102,6 +102,72 @@ export async function getLeitores(jsonDeBusca) {
   }
 }
 
+export async function getEmprestimos() {
+  const configHeader = {
+    headers: {
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos",
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getEmprestimosPorQuery(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos?nome="+ jsonDeBusca.nome + "&tipo=" + jsonDeBusca.filtro, 
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLivro(id) {
+  const configHeader = {
+    headers: {
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/exemplares?id=" + id,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
 export async function getLeitor(idLeitor) {
   const configHeader = {
     headers: {
@@ -182,6 +248,28 @@ export async function updateLeitor(idLeitor, jsonLeitor) {
     const requisicao = await axios.put(
       BASE_URL + "/leitores/" + idLeitor,
       jsonLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function realizarTransacao(id) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos/devolucao/" + id,
       configHeader
     );
 
