@@ -2,75 +2,81 @@
     <div id="background">
         <div id="wrapper">
             <BarraDeNavegacao></BarraDeNavegacao>
-            <span id="title-editar-leitor">Editar leitor</span>
+            <span id="title-editar-leitor">Cadastrar empréstimo</span>
             <div>
                 <div
                     class="wrapper-camera"
                 >
-                    TESTE
                 </div>
-                <v-form
-                    :disabled="formDesabilitado"
-                    data-cy="formulario"
-                    class="formulario"
-                    ref="form"
-                    @submit.prevent="validate()"
-                >
-                    <section
-                        id="wrapper-formulario"
+                    <v-form
+                        :disabled="formDesabilitado"
+                        data-cy="formulario"
+                        class="formulario"
+                        ref="form"
+                        @submit.prevent="validate()"
                     >
-                        <v-text-field
-                            data-cy="input-livro"
-                            disabled
-                            label="Livro"
-                            v-model="titulo"
-                            outlined
-                        ></v-text-field>
-                        <v-text-field
-                            data-cy="input-nome"
-                            label="Nome"
-                            v-model="nome"
-                            outlined
-                            required
-                        ></v-text-field>
-                        <v-text-field
-                            data-cy="input-serie-disciplina"
-                            disabled
-                            label="Série/Disciplina"
-                            v-model="serieDisciplina"
-                            outlined
-                        ></v-text-field>
-                        <v-text-field
-                            data-cy="input-dataDevolucao"
-                            disabled
-                            label="Data de Devolução"
-                            v-model="dataDevolucao"
-                            outlined
-                        ></v-text-field>
-                    </section>
-                    <section
-                    id="wrapper-botoes"
-                    v-if="!isLoading">
-                    <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                    <div
-                    @click="irParaEmprestimos">
+                        <section
+                            id="wrapper-formulario"
+                        >
+                            <v-text-field
+                                data-cy="input-livro"
+                                disabled
+                                label="Livro"
+                                v-model="titulo"
+                                outlined
+                            ></v-text-field>
+                            <v-autocomplete
+                                v-model="select"
+                                :loading="loadingAutocomplete"
+                                :items="items"
+                                :search-input.sync="search"
+                                cache-items
+                                flat
+                                hide-no-data
+                                hide-details
+                                label="Nome"
+                                @change="buscarAtributos"
+                            ></v-autocomplete>
+                            <v-text-field
+                                data-cy="input-serie-disciplina"
+                                disabled
+                                hide-details
+                                label="Série/Disciplina"
+                                v-model="serieDisciplina"
+                                outlined
+                            ></v-text-field>
+                            <v-text-field
+                                data-cy="input-dataDevolucao"
+                                disabled
+                                hide-details
+                                label="Data de Devolução"
+                                v-model="dataDevolucao"
+                                outlined
+                            ></v-text-field>
+                        </section>
+                        <section
+                        id="wrapper-botoes"
+                        v-if="!isLoading">
+                        <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+                        <div
+                        @click="irParaEmprestimos">
+                            <BotaoPadrao
+                            conteudo="Cancelar"
+                            :outlined="true"
+                            type="button"
+                            ></BotaoPadrao>
+                        </div>
                         <BotaoPadrao
-                        conteudo="Cancelar"
-                        :outlined="true"
-                        type="button"
+                            conteudo="Emprestar"
+                            type="submit"
                         ></BotaoPadrao>
-                    </div>
-                    <BotaoPadrao
-                        conteudo="Emprestar"
-                        type="submit"
-                    ></BotaoPadrao>
-                    </section>
-                    <section
-                    id="wrapper-loader"
-                    v-if="isLoading">
-                        <v-progress-circular indeterminate></v-progress-circular>
-                    </section>
-                </v-form>
+                        </section>
+                        <section
+                        id="wrapper-loader"
+                        v-if="isLoading">
+                            <v-progress-circular indeterminate></v-progress-circular>
+                        </section>
+                    </v-form>
             </div>
         </div>
     </div>
@@ -82,7 +88,7 @@ import AlertaInfo from '@/components/AlertaInfo.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
 import { validarTokenAcesso } from "@/service/autenticacao.js";
-import { getLivro, cadastrarLivro } from '@/service/requisicao.js'
+import { getLivro, cadastrarLivro, getLeitorPorNome, getLeitorInteiro, cadastrarEmprestimo } from '@/service/requisicao.js'
 
 
 export default {
@@ -94,15 +100,32 @@ export default {
 
     data() {
         return {
-            titulo: 'Diário de Anne Frank',
-            nome: '',
+            titulo: '',
             serieDisciplina: '',
-            dataDevolucao: null,
+            select: '',
+            loadingAutocomplete: false,
+            items: [],
+            itemsObject: [],
+            search: '',
+            idLeitor: null,
+            foto: null,
 
             formDesabilitado: false,
             alerta: false,
             isLoading: false,
             mensagemAlerta: '',
+        }
+    },
+
+    computed: {
+        dataDevolucao() {
+            const dataDevolucao = new Date()
+            dataDevolucao.setDate(dataDevolucao.getDate() + 15)
+            const dia = String(dataDevolucao.getDate()).padStart(2, '0');
+            const mes = String(dataDevolucao.getMonth() + 1).padStart(2, '0');
+            const ano = dataDevolucao.getFullYear();
+
+            return `${dia} ${mes} ${ano}`;
         }
     },
 
@@ -114,14 +137,73 @@ export default {
         async buscarLivro(id) {
             const requisicao = await getLivro(id)
 
-            const livro = requisicao.data
+            this.titulo = requisicao.data.titulo
+        },
 
-            this.livro = livro.titulo
+        async querySelection (v) {
+            this.loading = true
+
+            const jsonLeitor = {
+                input: v
+            }
+
+            const requisicao = await getLeitorPorNome(jsonLeitor);
+
+            requisicao.data.map((v) => this.items.push(v.nome))
+            requisicao.data.map((v) => this.itemsObject.push(v))
+        },
+
+        async buscarAtributos(e) {
+
+            const jsonNome = {
+                nome: e
+            }
+
+            for (let i = 0; i < this.itemsObject.length; i++) {
+                const leitor = this.itemsObject[i];
+
+                if (leitor.nome === this.select) {
+                    this.idLeitor = leitor.id;
+                    break;
+                }
+            }
+
+            const requisicao = await getLeitorInteiro(jsonNome);
+
+            this.foto = requisicao.data.foto
+
+            if (requisicao.data.tipo === 'Discente') {
+                this.serieDisciplina = requisicao.data.serie + ' ' + requisicao.data.turma
+            } else if (requisicao.data.tipo === 'Docente') {
+                this.serieDisciplina = requisicao.data.disciplina
+            }
         },
 
         async validate() {
-            const valid = await this.$refs.form.validate()
-            console.log(valid)
+            if (this.select === '' || this.id === null) {
+                this.mensagemAlerta = 'Escolha um leitor válido!';
+
+                this.alerta = true;
+                setTimeout(() => {
+                    this.fecharAlerta();
+                }, 5000);
+            } else {
+
+                const jsonEmprestimo = {
+                    leitor_id: this.idLeitor,
+                    exemplar_id: this.$route.params.id
+                }
+
+                const requisicao = await cadastrarEmprestimo()
+
+                if (requisicao === 200) {
+                    this.formDesabilitado = false;
+                    this.isLoading = false;
+                    this.tratarSucessoDiscente();
+                } else {
+                    this.tratarErroRequisicao(requisicao);
+                }
+            }
         },
 
         fecharAlerta() {
@@ -179,6 +261,12 @@ export default {
         },
     },
 
+    watch: {
+      search (val) {
+        val && val !== this.select && this.querySelection(val)
+      },
+    },
+
     mounted() {
         validarTokenAcesso().then((token) => {
             if (!token) {
@@ -232,6 +320,13 @@ export default {
   width: 100%;
 
   gap: 4.8rem;
+}
+
+#wrapper-formulario{
+    display: flex;
+    flex-direction: column;
+
+    gap: 4.8rem;
 }
 
 span {
