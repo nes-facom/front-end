@@ -3,80 +3,80 @@
         <div id="wrapper">
             <BarraDeNavegacao></BarraDeNavegacao>
             <span id="title-editar-leitor">Cadastrar empréstimo</span>
-            <div>
-                <div
-                    class="wrapper-camera"
+            <div
+                class="wrapper-tela-cadastro"
+            >
+                <Webcam />
+                <v-form
+                    :disabled="formDesabilitado"
+                    data-cy="formulario"
+                    class="formulario"
+                    ref="form"
+                    @submit.prevent="validate()"
                 >
-                </div>
-                    <v-form
-                        :disabled="formDesabilitado"
-                        data-cy="formulario"
-                        class="formulario"
-                        ref="form"
-                        @submit.prevent="validate()"
+                    <section
+                        id="wrapper-formulario"
                     >
-                        <section
-                            id="wrapper-formulario"
-                        >
-                            <v-text-field
-                                data-cy="input-livro"
-                                disabled
-                                label="Livro"
-                                v-model="titulo"
-                                outlined
-                            ></v-text-field>
-                            <v-autocomplete
-                                v-model="select"
-                                :loading="loadingAutocomplete"
-                                :items="items"
-                                :search-input.sync="search"
-                                cache-items
-                                flat
-                                hide-no-data
-                                hide-details
-                                label="Nome"
-                                @change="buscarAtributos"
-                            ></v-autocomplete>
-                            <v-text-field
-                                data-cy="input-serie-disciplina"
-                                disabled
-                                hide-details
-                                label="Série/Disciplina"
-                                v-model="serieDisciplina"
-                                outlined
-                            ></v-text-field>
-                            <v-text-field
-                                data-cy="input-dataDevolucao"
-                                disabled
-                                hide-details
-                                label="Data de Devolução"
-                                v-model="dataDevolucao"
-                                outlined
-                            ></v-text-field>
-                        </section>
-                        <section
-                        id="wrapper-botoes"
-                        v-if="!isLoading">
-                        <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
-                        <div
-                        @click="irParaEmprestimos">
-                            <BotaoPadrao
-                            conteudo="Cancelar"
-                            :outlined="true"
-                            type="button"
-                            ></BotaoPadrao>
-                        </div>
+                        <v-text-field
+                            data-cy="input-livro"
+                            disabled
+                            hide-details
+                            label="Livro"
+                            v-model="titulo"
+                            outlined
+                        ></v-text-field>
+                        <v-autocomplete
+                            v-model="select"
+                            :loading="loadingAutocomplete"
+                            :items="items"
+                            :search-input.sync="search"
+                            cache-items
+                            flat
+                            hide-no-data
+                            hide-details
+                            label="Nome"
+                            @change="buscarAtributos"
+                        ></v-autocomplete>
+                        <v-text-field
+                            data-cy="input-serie-disciplina"
+                            disabled
+                            hide-details
+                            label="Série/Disciplina"
+                            v-model="serieDisciplina"
+                            outlined
+                        ></v-text-field>
+                        <v-text-field
+                            data-cy="input-dataDevolucao"
+                            disabled
+                            hide-details
+                            label="Data de Devolução"
+                            v-model="dataDevolucao"
+                            outlined
+                        ></v-text-field>
+                    </section>
+                    <section
+                    id="wrapper-botoes"
+                    v-if="!isLoading">
+                    <AlertaInfo v-if="alerta" :mensagem="mensagemAlerta" :fechar="fecharAlerta"></AlertaInfo>
+                    <div
+                    @click="irParaEmprestimos">
                         <BotaoPadrao
-                            conteudo="Emprestar"
-                            type="submit"
+                        conteudo="Cancelar"
+                        :outlined="true"
+                        type="button"
                         ></BotaoPadrao>
-                        </section>
-                        <section
-                        id="wrapper-loader"
-                        v-if="isLoading">
-                            <v-progress-circular indeterminate></v-progress-circular>
-                        </section>
-                    </v-form>
+                    </div>
+                    <BotaoPadrao
+                        conteudo="Emprestar"
+                        type="submit"
+                    ></BotaoPadrao>
+                    </section>
+                    <section
+                    id="wrapper-loader"
+                    v-if="isLoading">
+                        <v-progress-circular indeterminate></v-progress-circular>
+                    </section>
+                </v-form>
             </div>
         </div>
     </div>
@@ -87,6 +87,7 @@
 import AlertaInfo from '@/components/AlertaInfo.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
+import Webcam from '@/components/Webcam.vue'
 import { validarTokenAcesso } from "@/service/autenticacao.js";
 import { getLivro, cadastrarLivro, getLeitorPorNome, getLeitorInteiro, cadastrarEmprestimo } from '@/service/requisicao.js'
 
@@ -95,7 +96,8 @@ export default {
     components: {
         BarraDeNavegacao,
         BotaoPadrao,
-        AlertaInfo
+        AlertaInfo,
+        Webcam,
     },
 
     data() {
@@ -315,7 +317,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 
   width: 100%;
 
@@ -323,10 +325,21 @@ export default {
 }
 
 #wrapper-formulario{
-    display: flex;
+    width: 80%;
+
+    display: flex;    
     flex-direction: column;
 
     gap: 4.8rem;
+}
+
+.wrapper-tela-cadastro{
+    width: 100%;
+    
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 span {

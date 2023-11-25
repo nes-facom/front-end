@@ -1,45 +1,46 @@
 <template>
-  <div id="pgWebcam"
-       :style="'width: ' + this.width + 'px; height: ' + this.height + 'px;'">
-    <div v-if="foto64Bits == null">
-      <v-row justify="center">
-        <WebCam ref="webcamInstanciada"
-                width="500"
-                height="390"
-                @cameras="listarCameras">
-        </WebCam>
-      </v-row>
+  <div id="wrapper-component-webcam">
+    <div v-if="foto64Bits === null" id="wrapper-section-camera">
+      <div id="wrapper-camera">
+        <div id="camera">
+          <WebCam ref="webcamInstanciada"
+            @cameras="listarCameras">
+          </WebCam>
+        </div>
+      </div>
 
-      <v-row>
-        <v-col>
+      <div id="wrapper-camera-buttons">
+        <div>
           <v-select v-model="cameraSelecionada"
-                    :items="cameras"
-                    item-value="id"
-                    item-text="nome"
-                    label="Câmeras"
-                    @change="trocarCamera"
-                    outlined
+            :items="cameras"
+            item-value="id"
+            item-text="nome"
+            label="Câmeras"
+            hide-details
+            @change="trocarCamera"
+            outlined
+            dense
           ></v-select>
-        </v-col>
-        <v-col cols="auto">
+        </div>
+        <div v-if="fotoBtnVisivel"
+          cols="auto">
           <v-btn class=""
-                 @click="baterFoto"
-                 size="30"
-                 color="blue">
-            <v-icon class="mr-1">
+            @click="baterFoto"
+          >
+            <v-icon>
               mdi-camera
             </v-icon>
-            Bater Foto
+            Foto
           </v-btn>
-        </v-col>
-      </v-row>
+        </div>
+      </div>
     </div>
 
     <div v-if="foto64Bits != null && fotoBlob == null">
       <v-row justify="center"
-             class="mt-5">
+        class="mt-5">
         <vueCropper ref="cropperInstanciado"
-                    :src="foto64Bits">
+          :src="foto64Bits">
         </vueCropper>
       </v-row>
 
@@ -78,10 +79,21 @@ import 'cropperjs/dist/cropper.css'
 
 export default {
   name: "pgWebcamIndex",
+
   components: {
     WebCam,
     VueCropper
   },
+
+  props: {
+    fotoBtnVisivel: {
+      default: true
+    },
+    solicitarImagem: {
+      default: false
+    }
+  },
+
   data() {
     return {
       foto64Bits: null,
@@ -93,10 +105,13 @@ export default {
       imageHeight: 100
     }
   },
+
   methods: {
+
     trocarCamera() {
       this.$refs.webcamInstanciada.changeCamera(this.cameraSelecionada)
     },
+
     listarCameras(camerasList) {
       for (let index = 0; index < camerasList.length; index++) {
         this.cameras.push({
@@ -105,14 +120,17 @@ export default {
         })
       }
     },
+
     cancelarCrop() {
       this.foto64Bits = null
     },
+
     async baterFoto() {
       await this.$refs.webcamInstanciada.capture().then((fotoBase64) => {
         this.foto64Bits = fotoBase64
       })
     },
+
     async croparFoto() {
       await this.$refs.cropperInstanciado.getCroppedCanvas().toBlob((blob) => {
         this.fotoBlob = blob
@@ -121,10 +139,13 @@ export default {
         this.enviarFoto()
       });
     },
+
     enviarFoto() {
       this.$emit('imagem64', this.foto64Bits)
     }
+
   },
+
   computed: {
     imageStyle() {
       // Calcula a proporção da imagem
@@ -150,17 +171,59 @@ export default {
       };
     }
   },
-  props: {
-    width: {
-      default: 500
-    },
-    height: {
-      default: 520
+
+  watch: {
+    solicitarImagem(antigo, novo) {
+      if (antigo == false && novo == true) {
+        this.baterFoto()
+        this.croparFoto()
+        this.enviarFoto()
+      }
     }
-  }
+  },
+
 }
 </script>
 
 <style scoped>
+
+#wrapper-component-webcam {
+  width: 100%;
+
+  display: flex;
+}
+
+#wrapper-section-camera {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#wrapper-camera {
+  width: 100%;
+  height: 100%;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#camera {
+  width: 25rem;
+  height: 25rem;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#wrapper-camera-buttons{
+  display: flex;
+  width: 100%;
+  
+  justify-content: space-around;
+}
 
 </style>
