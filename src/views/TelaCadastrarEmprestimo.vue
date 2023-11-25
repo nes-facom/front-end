@@ -193,10 +193,11 @@ export default {
 
                 const jsonEmprestimo = {
                     leitor_id: this.idLeitor,
-                    exemplar_id: this.$route.params.id
+                    exemplar_id: this.$route.params.id,
+                    foto: this.foto
                 }
 
-                const requisicao = await cadastrarEmprestimo()
+                const requisicao = await cadastrarEmprestimo(jsonEmprestimo)
 
                 if (requisicao === 200) {
                     this.formDesabilitado = false;
