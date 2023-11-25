@@ -103,6 +103,7 @@ export default {
     data() {
         return {
             titulo: '',
+            exemplar_di: null,
             serieDisciplina: '',
             select: '',
             loadingAutocomplete: false,
@@ -140,6 +141,7 @@ export default {
             const requisicao = await getLivro(id)
 
             this.titulo = requisicao.data.titulo
+            this.exemplar_id = requisicao.data.id
         },
 
         async querySelection (v) {
@@ -191,9 +193,12 @@ export default {
                 }, 5000);
             } else {
 
+                const id = parseInt(this.idLeitor)
+                console.log(typeof id)
+
                 const jsonEmprestimo = {
                     leitor_id: this.idLeitor,
-                    exemplar_id: this.$route.params.id,
+                    exemplar_id: this.exemplar_id,
                     foto: this.foto
                 }
 

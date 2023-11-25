@@ -156,7 +156,7 @@ export async function cadastrarEmprestimo(jsonEmprestimo) {
 
   try {
     const requisicao = await axios.post(
-      BASE_URL + "/emprestimo",
+      BASE_URL + "/emprestimos",
       jsonEmprestimo,
       configHeader
     );
@@ -248,8 +248,6 @@ export async function getLeitorInteiro(jsonNome) {
       { params: jsonNome },
       configHeader
     );
-
-    console.log(requisicao)
     
     if (requisicao.status === 200) {
       return requisicao;
