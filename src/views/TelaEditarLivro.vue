@@ -75,7 +75,9 @@
           <!-- LISTAGEM DE EXEMPLARES -->
 
           <span id="title-listar-exemplar">Lista de exemplares</span>
-          <ListaDeExemplares></ListaDeExemplares>
+          <ListaDeExemplares
+            :exemplares="this.exemplaresArrayResponse"
+          ></ListaDeExemplares>
 
           <section id="wrapper-botoes" v-if="!isLoading">
             <div class="botao-excluir">
@@ -117,7 +119,7 @@ import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import ListaDeExemplares from "@/components/ListaDeExemplares.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
-import { updateLivro, getLivro } from "../service/requisicao";
+import { updateLivro, getLivro, getExemplarByLivroId } from "../service/requisicao";
 
 export default {
   props: ["id"],
@@ -176,12 +178,23 @@ export default {
       tipologiaTextual: "",
       quantidade: "",
       prateleira: "",
+      exemplaresArrayResponse: [],
     };
   },
 
   methods: {
     fecharAlerta() {
       this.alerta = false;
+    },
+
+    async buscarExemplares(livroId) {
+      const requisicao = await getExemplarByLivroId(livroId);
+      if (requisicao.status === 200) {
+        this.exemplaresArrayResponse = requisicao.data;
+        console.log(this.exemplaresArrayResponse);
+      } else {
+        this.tratarErroRequisicao(requisicao);
+      }
     },
 
     async autenticarLivro() {
@@ -257,6 +270,7 @@ export default {
 
   created() {
     console.log(this.$route.params.id);
+    this.buscarExemplares(this.$route.params.id);
     this.buscarInfoLivro(this.$route.params.id);
   },
 };

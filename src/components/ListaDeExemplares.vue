@@ -12,7 +12,10 @@
             <div
                 id="lista-card-wrapper" 
             >
-                <CardExemplar></CardExemplar>
+                <CardExemplar
+                v-for="(exemplar, index) in exemplares"
+                :key="index"
+                :exemplar="exemplar"></CardExemplar>
             </div>
         </div>
         <div class="overlay" v-if="showModal">
@@ -44,6 +47,13 @@ export default {
         AdicionarNumeroDeExemplares,
     },
 
+    props: {
+        exemplares: {
+            type: Array,
+            required: true
+        },
+    },
+
     data() {
         return {
             showModal: false,
@@ -56,7 +66,6 @@ export default {
       }  
     },
 }
-
 </script>
 
 
