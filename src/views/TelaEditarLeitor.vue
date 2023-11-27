@@ -247,7 +247,7 @@ export default {
       
       const requisicao = await updateLeitor(this.$route.params.id, dadosEditarDocente);
 
-      if (requisicao === 200) {
+      if (requisicao.status === 200) {
         this.formDesabilitado = false;
         this.isLoading = false;
         this.tratarSucessoDocente();
@@ -270,7 +270,7 @@ export default {
       
       const requisicao = await updateLeitor(this.$route.params.id, dadosEditarDiscente);
 
-      if (requisicao === 200) {
+      if (requisicao.status === 200) {
         this.formDesabilitado = false;
         this.isLoading = false;
         this.tratarSucessoDiscente();
