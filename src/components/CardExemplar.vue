@@ -1,7 +1,7 @@
 <template>
     <div class="card-exemplar">
-        <span class="span1">1000000852</span>
-        <span class="span2">Disponível</span>
+        <span class="span1">{{ exemplar.tombo }}</span>
+        <span class="span2">{{ exemplar.situacao }}</span>
         <v-icon>mdi-autorenew</v-icon>
     </div>
 </template>
@@ -10,11 +10,14 @@
 
 export default {
     props: {
-        
+        exemplar: {
+            type: Object,
+            required: true
+        }
     },
 
     methods: {
-        
+
     }
 }
 

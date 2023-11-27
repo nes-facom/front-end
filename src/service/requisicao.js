@@ -392,6 +392,27 @@ export async function getExemplares(jsonDeBusca) {
   }
 }
 
+export async function getExemplarByLivroId(idLivro) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/exemplares/livro/" + idLivro,
+      configHeader
+    );
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
 export async function updateLivro(idLivro, jsonLivro) {
   const configHeader = {
     headers: {
