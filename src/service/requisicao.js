@@ -146,6 +146,26 @@ export async function getEmprestimosPorQuery(jsonDeBusca) {
   }
 }
 
+export async function cadastrarEmprestimo(jsonEmprestimo) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "/emprestimos",
+      jsonEmprestimo,
+      configHeader
+    );
+    return requisicao.status;
+  } catch (erro) {
+    return erro;
+  }
+}
+
 export async function getLivro(id) {
   const configHeader = {
     headers: {
@@ -156,7 +176,7 @@ export async function getLivro(id) {
 
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/exemplares?id=" + id,
+      BASE_URL + "/exemplares/emprestimo/" + id,
       configHeader
     );
 
@@ -189,6 +209,55 @@ export async function getLeitor(idLeitor) {
     return erro;
   }
 }
+
+export async function getLeitorPorNome(jsonLeitor) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/autocomplete",
+      jsonLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLeitorInteiro(jsonNome) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/detalhesComplete/",
+      { params: jsonNome },
+      configHeader
+    );
+    
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+
+  } catch (erro) {
+    return erro;
+  }
+}
+
 
 export async function uploadDiscentes(jsonData) {
   const configHeader = {
