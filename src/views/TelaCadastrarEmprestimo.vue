@@ -139,8 +139,6 @@ export default {
         async buscarLivro(id) {
             const requisicao = await getLivro(id)
 
-            console.log(requisicao.data)
-
             this.titulo = requisicao.data.titulo
         },
 
