@@ -188,20 +188,19 @@ export async function getLivros(jsonDeBusca) {
   }
 }
 
-export async function getLivro(id) {
+export async function getLivro(idLivro) {
   const configHeader = {
     headers: {
-      "x-access-token": localStorage.getItem("token_acesso"),
-      "content-type": "application/json"
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
     }
   };
 
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/exemplares/emprestimo/" + id,
+      BASE_URL + "/livros/" + idLivro,
       configHeader
     );
-
     if (requisicao.status === 200) {
       return requisicao;
     }
