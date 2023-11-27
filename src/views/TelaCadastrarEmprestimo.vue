@@ -103,7 +103,6 @@ export default {
     data() {
         return {
             titulo: '',
-            exemplar_di: null,
             serieDisciplina: '',
             select: '',
             loadingAutocomplete: false,
@@ -140,8 +139,9 @@ export default {
         async buscarLivro(id) {
             const requisicao = await getLivro(id)
 
+            console.log(requisicao.data)
+
             this.titulo = requisicao.data.titulo
-            this.exemplar_id = requisicao.data.id
         },
 
         async querySelection (v) {
@@ -194,11 +194,10 @@ export default {
             } else {
 
                 const id = parseInt(this.idLeitor)
-                console.log(typeof id)
 
                 const jsonEmprestimo = {
                     leitor_id: this.idLeitor,
-                    exemplar_id: this.exemplar_id,
+                    tombo: this.$route.params.id,
                     foto: this.foto
                 }
 
@@ -207,7 +206,7 @@ export default {
                 if (requisicao === 200) {
                     this.formDesabilitado = false;
                     this.isLoading = false;
-                    this.tratarSucessoDiscente();
+                    this.tratarSucessoCadastro();
                 } else {
                     this.tratarErroRequisicao(requisicao);
                 }
@@ -216,28 +215,6 @@ export default {
 
         fecharAlerta() {
             this.alerta = false;
-        },
-
-        async cadastrarLivro() {
-            this.formDesabilitado = true;
-            this.isLoading = true;
-            this.alerta = false;
-
-            const dadosCadastrarEmprestimo = {
-                idLivro: this.$route.params.id,
-                idLeitor: this.idLeitor,
-                dataDevolucao: this.dataDevolucao,
-            }
-        
-            const requisicao = await cadastrarLivro(dadosCadastrarEmprestimo);
-
-            if (requisicao === 200) {
-                this.formDesabilitado = false;
-                this.isLoading = false;
-                this.tratarSucessoCadastro();
-            } else {
-                this.tratarErroRequisicao(requisicao);
-            }
         },
 
         tratarSucessoCadastro() {
