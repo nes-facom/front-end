@@ -1,6 +1,7 @@
 <template>
   <div id="background" data-app>
-    <div 
+    <div
+    v-if="!isLoading"
     id="wrapper">
       <BarraDeNavegacao></BarraDeNavegacao>
       <span id="title-cadastrar-leitor">Cadastrar leitor</span>
@@ -109,7 +110,11 @@
           </v-form>
         </v-window-item>
         <v-window-item :value="1" id="csv">
-          <DropZone extensaoDoArquivo=".csv"></DropZone>
+          <DropZone
+            extensaoDoArquivo=".csv"
+            :isDisabled="isLoading"
+          >
+          </DropZone>
           <section
             id="wrapper-botoes"
             v-if="!isLoading">
@@ -120,11 +125,15 @@
                   :outlined="true"
                   type="button"></BotaoPadrao>
               </router-link>
-              <BotaoPadrao
-              conteudo="Importar"
-              type="button"
-              @click="importarCSV"
-              ></BotaoPadrao>
+              <div 
+                @click="importarDiscentes"
+              >
+                <BotaoPadrao
+                  conteudo="Importar"
+                  type="button"
+                >
+                </BotaoPadrao>
+              </div>
             </section>
             <section
             id="wrapper-loader"
@@ -134,6 +143,17 @@
         </v-window-item>
       </v-window>
     </div>
+    <div
+      v-if="isLoading"
+      id="wrapper-loader"  
+    >
+      <CircleLoader :loading="isLoading">
+      </CircleLoader>
+      <div>
+        <span>Cadastrando Alunos</span>
+        <p>Por favor, não saia do site.</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -142,10 +162,12 @@
 import router from "@/router";
 import AlertaInfo from '@/components/AlertaInfo.vue'
 import BarraDeNavegacao from '@/components/BarraDeNavegacao.vue';
+import CircleLoader from '@/components/CircleLoader.vue'
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import DropZone from '@/components/DropZone.vue'
-import { cadastrarDocente, cadastrarDiscente } from "@/service/requisicao.js"
+import { cadastrarDocente, cadastrarDiscente, uploadDiscentes} from "@/service/requisicao.js"
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import Papa from 'papaparse';
 
 export default {
   data() {
@@ -193,6 +215,7 @@ export default {
       turnoEscolhido: '',
       serieEscolhida: '',
       turmaEscolhida: '',
+      json: []
     }
   },
 
@@ -201,6 +224,7 @@ export default {
     BarraDeNavegacao,
     AlertaInfo,
     DropZone,
+    CircleLoader
   },
 
   mounted() {
@@ -339,9 +363,59 @@ export default {
       }, 5000);
     },
 
-    importarCSV(){
-      console.log('importando...')
-    }
+    async importarDiscentes() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
+      this.processarArquivoCSV()
+        .then(async () => {
+          const requisicao = await uploadDiscentes(this.json);
+
+          if (requisicao.status === 200) {
+            this.formDesabilitado = false;
+            this.isLoading = false;
+            this.tratarSucessoImportacao();
+          } else {
+            this.tratarErroRequisicao(requisicao);
+          }
+        })
+    },
+
+    processarArquivoCSV() {
+      return new Promise((resolve, reject) => {
+        const arquivo = this.$store.state.arquivo;
+
+        Papa.parse(arquivo, {
+          header: true,
+          encoding: "ascii",
+          dynamicTyping: true,
+          complete: (result) => {
+            const jsonData = result.data.map((row) => {
+              const numalu = row.numalu;
+              const nomalu = row.nomalu;
+              const sigcla = row.sigcla;
+
+              return { numalu, nomalu, sigcla };
+            });
+
+            this.json = jsonData;
+            resolve();
+          },
+            error: (error) => {
+            reject(error);
+          },
+        });
+      });
+    },
+
+    tratarSucessoImportacao() {
+      this.mensagemAlerta = 'Discentes cadastrado com sucesso!';
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
+    },
   }
 }
 
@@ -482,5 +556,15 @@ span {
   justify-content: end;
   gap: 4.8rem;
 }
-    
+
+#wrapper-loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  gap: 2rem;
+
+  text-align: center;
+}
+
 </style>

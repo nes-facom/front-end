@@ -1,10 +1,9 @@
 <template>
-    <div class="card-leitor" @click="toDetails(leitor.id)">
-        <span class="span1"> {{ leitor.nome }} </span>
-        <span class="span2" v-if="leitor.discente.length === 1"> {{ leitor.discente[0].serie + ' ' + leitor.discente[0].turma }} </span>
-        <span class="span2" v-if="leitor.docente.length === 1"> {{ leitor.docente[0].disciplina }} </span>
-        <span class="span3" v-if="leitor.discente.length === 1"> Discente </span>
-        <span class="span3" v-if="leitor.docente.length === 1"> Docente </span>
+    <div class="card-emprestimo">
+        <span class="span1"> {{ emprestimo.nome }} </span>
+        <span class="span2" v-if="emprestimo.tipo === 'discente'"> {{ emprestimo.serie }} </span>
+        <span class="span2" v-if="emprestimo.tipo === 'docente'"> {{ emprestimo.disciplina }} </span>
+        <span class="span3"> {{ tempoDeAtrasoEmDias }} </span>
     </div>
 </template>
 
@@ -12,16 +11,24 @@
 
 export default {
     props: {
-        leitor: {
+        emprestimo: {
             type: Object,
             required: true
         }
     },
 
-    methods: {
-        toDetails(id) {
-            const idLeitor = id;
-            this.$router.push({ path: `/leitores/detalhes/${idLeitor}`})
+    computed: {
+        tempoDeAtrasoEmDias() {
+            const hoje = new Date();
+
+            if (this.emprestimo.dataDevolucao === 'Indeterminado') {
+                return this.emprestimo.dataDevolucao
+            } else {
+                const diferenca = hoje - this.emprestimo.dataDevolucao
+                const diasPassados = Math.floor(diferenca / (1000*60*60*24))
+                return diasPassados
+            }
+
         }
     }
 }
@@ -35,7 +42,7 @@ span {
     color: var(--on-surface);
 }
 
-.card-leitor {
+.card-emprestimo {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 
@@ -50,12 +57,12 @@ span {
     transition: background-color 0.1s;
 }
 
-.card-leitor:hover {
+.card-emprestimo:hover {
     cursor: pointer;
     background-color: var(--surface-variant);
 }
 
-.card-leitor:active {
+.card-emprestimo:active {
     cursor: pointer;
     background-color: var(--surface-dim);
 }
@@ -72,6 +79,5 @@ span {
     justify-content: center;
     align-items: center;
 }
-
 
 </style>

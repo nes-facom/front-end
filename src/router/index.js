@@ -11,6 +11,7 @@ import TelaDetalhesLeitor from '@/views/TelaDetalhesLeitor.vue'
 import TelaCadastrarLivro from '@/views/TelaCadastrarLivro.vue'
 import TelaEditarLeitor from '@/views/TelaEditarLeitor.vue'
 import TelaEditarLivro from '@/views/TelaEditarLivro.vue'
+import TelaCadastrarEmprestimo from '@/views/TelaCadastrarEmprestimo.vue'
 
 Vue.use(VueRouter)
 
@@ -31,6 +32,11 @@ const router = new VueRouter({
       path: '/emprestimos',
       name: 'Emprestimos',
       component: TelaEmprestimos,
+    },
+    {
+      path: '/emprestimos/cadastrar/:id',
+      name: 'CadastrarEmprestimo',
+      component: TelaCadastrarEmprestimo,
     },
     {
       path: '/bibliotecario',

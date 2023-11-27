@@ -1,6 +1,6 @@
 <template>
     <div class="item">
-        <span>{{ emprestimo.livro.titulo }}</span>
+        <span>{{ emprestimo.titulo }}</span>
         <span>{{ dataEmprestimo }}</span>
         <span>{{ dataDevolucao }}</span>
         <span>{{ situacaoCapitalized }}</span>

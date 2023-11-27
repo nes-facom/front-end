@@ -1,7 +1,6 @@
 <template>
     <div id="wrapper-barra-de-busca">
         <v-text-field
-            append-icon="mdi-magnify"
             data-cy="barra-de-busca"
             dense
             flat
@@ -11,8 +10,17 @@
             outlined
             v-model="stringBusca"
             :placeholder="conteudo"
-            @input="busca"
+            @keydown.enter="busca"
         ></v-text-field>
+        <v-btn
+            fab
+            small
+            @click="busca"
+        >
+            <v-icon>
+                mdi-magnify
+            </v-icon>
+        </v-btn>
     </div>
 </template>
 
@@ -47,17 +55,23 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    gap: 3rem;
     
-    >>> div.v-input__control {
+    >>> div .v-input {
+        display: none;
+    }
+
+    >>> div .v-input__control {
         display: flex;
         justify-content: space-around;
         align-items: center;
         
-        width: 80vw;
-        max-width: 36rem;
+        width: 30vw;
+        max-width: 30rem;
     }
 
-    >>> input#barra-de-busca::placeholder {
+    >>> input #barra-de-busca::placeholder {
         color: var(--on-surface-variant);
         font: var(--body-large);
     }

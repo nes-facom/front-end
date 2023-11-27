@@ -23,6 +23,7 @@
 
 <script>
     import { ref } from 'vue';
+    import { mapActions } from 'vuex';
 
     export default {
         data() {
@@ -68,12 +69,14 @@
                 this.validarArquivo(file);
             },
 
+            ...mapActions(['salvarArquivo', 'salvarNomeArquivo']),
+
             validarArquivo(arquivo) {
                 if (arquivo) {
                     this.info = true;
                         this.descricao = arquivo.name;
-                        this.$store.commit("nomeArquivoSenhaBibliotecario", arquivo.name);
-                        this.$store.commit("salvarArquivoSenhaBibliotecario", arquivo);
+                        this.salvarNomeArquivo(arquivo.name);
+                        this.salvarArquivo(arquivo);
                         this.arquivoImportado = true;
                 }
             }

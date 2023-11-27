@@ -102,7 +102,51 @@ export async function getLeitores(jsonDeBusca) {
   }
 }
 
-export async function getLeitor(idLeitor) {
+export async function getEmprestimos() {
+  const configHeader = {
+    headers: {
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos",
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getEmprestimosPorQuery(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos?nome="+ jsonDeBusca.nome + "&tipo=" + jsonDeBusca.filtro, 
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function cadastrarEmprestimo(jsonEmprestimo) {
   const configHeader = {
     headers: {
         "x-access-token": localStorage.getItem("token_acesso"),
@@ -111,14 +155,12 @@ export async function getLeitor(idLeitor) {
   };
 
   try {
-    const requisicao = await axios.get(
-      BASE_URL + "/leitores/detalhes/" + idLeitor,
+    const requisicao = await axios.post(
+      BASE_URL + "/emprestimos",
+      jsonEmprestimo,
       configHeader
     );
-
-    if (requisicao.status === 200) {
-      return requisicao;
-    }
+    return requisicao.status;
   } catch (erro) {
     return erro;
   }
@@ -146,19 +188,20 @@ export async function getLivros(jsonDeBusca) {
   }
 }
 
-export async function getLivro(idLivro) {
+export async function getLivro(id) {
   const configHeader = {
     headers: {
-        "x-access-token": localStorage.getItem("token_acesso"),
-        "content-type": "application/json"
+      "x-access-token": localStorage.getItem("token_acesso"),
+      "content-type": "application/json"
     }
   };
 
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/livros/" + idLivro,
+      BASE_URL + "/exemplares/emprestimo/" + id,
       configHeader
     );
+
     if (requisicao.status === 200) {
       return requisicao;
     }
@@ -167,22 +210,96 @@ export async function getLivro(idLivro) {
   }
 }
 
-export async function getExemplares(jsonDeBusca) {
+export async function getLeitor(idLeitor) {
   const configHeader = {
     headers: {
         "x-access-token": localStorage.getItem("token_acesso"),
         "content-type": "application/json"
     }
   };
+
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/exemplares?titulo=" + jsonDeBusca.titulo + "&tipologia=" + jsonDeBusca.tipologia, 
+      BASE_URL + "/leitores/detalhes/" + idLeitor,
       configHeader
-    );  
+    );
 
     if (requisicao.status === 200) {
       return requisicao;
     }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLeitorPorNome(jsonLeitor) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/autocomplete",
+      jsonLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getLeitorInteiro(jsonNome) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/leitores/detalhesComplete/",
+      { params: jsonNome },
+      configHeader
+    );
+    
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+
+  } catch (erro) {
+    return erro;
+  }
+}
+
+
+export async function uploadDiscentes(jsonData) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "/leitores/upload/",
+      jsonData,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao
+    }
+
   } catch (erro) {
     return erro;
   }
@@ -210,7 +327,7 @@ export async function getHistoricoEmprestimo(idLeitor) {
   }
 }
 
-export async function updateLeitor(idLeitor) {
+export async function updateLeitor(idLeitor, jsonLeitor) {
   const configHeader = {
     headers: {
         "x-access-token": localStorage.getItem("token_acesso"),
@@ -221,8 +338,52 @@ export async function updateLeitor(idLeitor) {
   try {
     const requisicao = await axios.put(
       BASE_URL + "/leitores/" + idLeitor,
+      jsonLeitor,
       configHeader
     );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function realizarTransacao(id) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/emprestimos/devolucao/" + id,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getExemplares(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/exemplares?titulo=" + jsonDeBusca.titulo + "&tipologia=" + jsonDeBusca.tipologia, 
+      configHeader
+    );  
 
     if (requisicao.status === 200) {
       return requisicao;
