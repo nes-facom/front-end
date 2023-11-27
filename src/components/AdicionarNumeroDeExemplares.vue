@@ -1,7 +1,7 @@
 <template>
   <div class="counter-wraper">
     <v-btn @click="decrement">-</v-btn>
-    <v-text-field class="input-counter" solo type="number" v-model="counter" @input="handleChange"></v-text-field>
+    <v-text-field class="input-counter" outlined type="number" v-model="counter" @input="handleChange"></v-text-field>
     <v-btn @click="increment">+</v-btn>
   </div>
 </template>
@@ -39,8 +39,10 @@ export default {
     align-items: center;
 }
 
-.input-counter {
-    width: calc(50% - 0.5rem);
-    margin-right: 0.5rem;
+.input-counter::v-deep .v-input__control {
+  height: 8rem;
+  border: 1px;
+  border-radius: 6px;
+  padding: 1.5rem;
 }
 </style>

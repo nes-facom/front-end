@@ -50,7 +50,7 @@ import FiltroLivro from '@/components/FiltroLivro.vue';
 import BotaoPadrao from '@/components/BotaoPadrao.vue'
 import ListaDeLivros from '@/components/ListaDeLivros.vue';
 import { validarTokenAcesso } from '@/service/autenticacao';
-import { getLivros } from '@/service/requisicao.js';
+import { getExemplares } from '@/service/requisicao.js';
 import router from '@/router'
 
 export default {
@@ -114,11 +114,11 @@ export default {
     watch: {
         async queryDeBusca(newValue) {
             const jsonLivros = {
-                nome: newValue,
-                tipo: this.filtroSelecionado
+                titulo: newValue,
+                tipologia: this.filtroSelecionado
             }
             
-            const requisicao = await getLivros(jsonLivros)
+            const requisicao = await getExemplares(jsonLivros)
             console.log(requisicao);
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
@@ -129,11 +129,11 @@ export default {
 
         async filtroSelecionado(newValue) {
             const jsonLivros = {
-                nome: this.queryDeBusca,
-                tipo: newValue
+                titulo: this.queryDeBusca,
+                tipologia: newValue
             }
 
-            const requisicao = await getLivros(jsonLivros)
+            const requisicao = await getExemplares(jsonLivros)
 
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data

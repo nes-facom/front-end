@@ -156,9 +156,29 @@ export async function getLivro(idLivro) {
 
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/livros/detalhes/" + idLivro,
+      BASE_URL + "/livros/" + idLivro,
       configHeader
     );
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function getExemplares(jsonDeBusca) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+  try {
+    const requisicao = await axios.get(
+      BASE_URL + "/exemplares?titulo=" + jsonDeBusca.titulo + "&tipologia=" + jsonDeBusca.tipologia, 
+      configHeader
+    );  
 
     if (requisicao.status === 200) {
       return requisicao;
@@ -201,6 +221,28 @@ export async function updateLeitor(idLeitor) {
   try {
     const requisicao = await axios.put(
       BASE_URL + "/leitores/" + idLeitor,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function updateLivro(idLivro, jsonLivro) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.put(
+      BASE_URL + "/livros/" + idLivro, jsonLivro,
       configHeader
     );
 

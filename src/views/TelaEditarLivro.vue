@@ -12,7 +12,7 @@
           data-cy="formulario"
           class="formulario"
           ref="form"
-          @submit.prevent="validate()"
+          @submit.prevent="autenticarLivro()"
         >
           <div id="wrapper-conteudo">
             <div id="credenciais">
@@ -32,7 +32,7 @@
                 outlined
                 required
                 :rules="regrasAutor"
-              > 
+              >
               </v-text-field>
               <v-text-field
                 data-cy="input-tipologia"
@@ -49,8 +49,6 @@
                 v-model="quantidade"
                 disabled
                 outlined
-                required
-                :rules="regrasQuantidade"
               >
               </v-text-field>
               <v-text-field
@@ -80,19 +78,28 @@
           <ListaDeExemplares></ListaDeExemplares>
 
           <section id="wrapper-botoes" v-if="!isLoading">
-            <AlertaInfo
-              v-if="alerta"
-              :mensagem="mensagemAlerta"
-              :fechar="fecharAlerta"
-            ></AlertaInfo>
-            <router-link to="/livros">
+            <div class="botao-excluir">
               <BotaoPadrao
-                conteudo="Cancelar"
-                :outlined="true"
+                conteudo="Excluir livro"
+                icon="mdi-trash-can"
                 type="button"
-              ></BotaoPadrao>
-            </router-link>
-            <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
+              />
+            </div>
+            <div class="botoes-cadastro">
+              <AlertaInfo
+                v-if="alerta"
+                :mensagem="mensagemAlerta"
+                :fechar="fecharAlerta"
+              ></AlertaInfo>
+              <router-link to="/livros">
+                <BotaoPadrao
+                  conteudo="Cancelar"
+                  :outlined="true"
+                  type="button"
+                ></BotaoPadrao>
+              </router-link>
+              <BotaoPadrao conteudo="Salvar" type="submit"></BotaoPadrao>
+            </div>
           </section>
           <section id="wrapper-loader" v-if="isLoading">
             <v-progress-circular indeterminate></v-progress-circular>
@@ -109,24 +116,11 @@ import AlertaInfo from "@/components/AlertaInfo.vue";
 import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import ListaDeExemplares from "@/components/ListaDeExemplares.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
-import { cadastrarLivro } from "@/service/requisicao.js";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import { updateLivro, getLivro } from "../service/requisicao";
 
 export default {
-  data() {
-    return {
-      formDesabilitado: false,
-      alerta: false,
-      isLoading: false,
-      mensagemAlerta: "",
-      tabSelecionado: "Manual",
-      titulo: "Diário de Anne Frank",
-      autor: "Anne Frank",
-      tipologiaTextual: "Autobiografia",
-      quantidade: "8",
-      prateleira: "B12",
-    };
-  },
+  props: ["id"],
 
   components: {
     BotaoPadrao,
@@ -135,58 +129,57 @@ export default {
     ListaDeExemplares,
   },
 
-  mounted() {
-    validarTokenAcesso().then((token) => {
-      if (!token) {
-        router.push("/login");
-      }
-    });
+  data() {
+    return {
+      regrasTitulo: [
+        (v) => !!v || "Insira um título!",
+        (v) =>
+          (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
+        (v) =>
+          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
+          "O nome deve conter apenas letras e acentos",
+      ],
+      regrasAutor: [
+        (v) => !!v || "Insira um autor(a)!",
+        (v) =>
+          (v && v.length >= 3) ||
+          "O nome do autor(a) deve ter pelo menos 3 caracteres",
+        (v) =>
+          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
+          "O nome do autor(a) deve conter apenas letras e acentos",
+        (v) =>
+          /^[A-Za-zÀ-ü]+\s[A-Za-zÀ-ü]+$/.test(v) ||
+          "Informe um nome completo (Nome Sobrenome)",
+      ],
+      regrasTipologiaTextual: [
+        (v) => !!v || "Insira uma tipologia textual!",
+        (v) =>
+          (v && v.length >= 3) ||
+          "A tipologia textual deve ter pelo menos 3 caracteres",
+        (v) =>
+          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
+          "A tipologia textual deve conter apenas letras e acentos",
+      ],
+      regrasPrateleira: [
+        (v) => !!v || "Insira uma prateleira!",
+        (v) =>
+          /^[A-D]-([1-9]|1[0-2])$/.test(v) ||
+          "Formato inválido de identificador de prateleira",
+      ],
+      formDesabilitado: false,
+      alerta: false,
+      isLoading: false,
+      mensagemAlerta: "",
+      tabSelecionado: "Manual",
+      titulo: "",
+      autor: "",
+      tipologiaTextual: "",
+      quantidade: "",
+      prateleira: "",
+    };
   },
 
   methods: {
-    async validate() {
-      const valid = await this.$refs.form.validate();
-      if (valid) {
-        if (this.radioGroup === "Docente") {
-          if (this.disciplinaEscolhida === "") {
-            this.mensagemAlerta = "Selecione uma disciplina!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else if (this.turnoEscolhido === "") {
-            this.mensagemAlerta = "Selecione um turno!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else {
-            this.autenticarDocente();
-          }
-        } else {
-          if (this.serieEscolhida === "") {
-            this.mensagemAlerta = "Selecione uma série!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else if (this.turmaEscolhida === "") {
-            this.mensagemAlerta = "Selecione uma turma!";
-            this.alerta = true;
-
-            setTimeout(() => {
-              this.fecharAlerta();
-            }, 5000);
-          } else {
-            this.autenticarDiscente();
-          }
-        }
-      }
-    },
-
     fecharAlerta() {
       this.alerta = false;
     },
@@ -196,17 +189,18 @@ export default {
       this.isLoading = true;
       this.alerta = false;
 
-      const dadosCadastrarLivro = {
+      const dadosEditarLivro = {
         titulo: this.titulo,
         autor: this.autor,
-        tipologiaTextual: this.tipologiaTextual,
-        quantidade: this.quantidade,
+        tipologia: this.tipologiaTextual,
+        quantidade: this.quantidade_total,
         prateleira: this.prateleira,
       };
-
-      const requisicao = await cadastrarLivro(dadosCadastrarLivro);
-
-      if (requisicao === 200) {
+      const requisicao = await updateLivro(
+        this.$route.params.id,
+        dadosEditarLivro
+      );
+      if (requisicao.status === 200) {
         this.formDesabilitado = false;
         this.isLoading = false;
         this.tratarSucessoLivro();
@@ -216,7 +210,7 @@ export default {
     },
 
     tratarSucessoLivro() {
-      this.mensagemAlerta = "Livro cadastrado com sucesso!";
+      this.mensagemAlerta = "Livro atualizado com sucesso!";
       this.alerta = true;
       setTimeout(() => {
         this.fecharAlerta();
@@ -241,6 +235,29 @@ export default {
         this.fecharAlerta();
       }, 5000);
     },
+
+    async buscarInfoLivro(id) {
+      const requisicao = await getLivro(id);
+      const livro = requisicao.data;
+      this.titulo = livro.titulo;
+      this.autor = livro.autor;
+      this.tipologiaTextual = livro.tipologia;
+      this.quantidade = livro.quantidade_total;
+      this.prateleira = livro.Exemplares[0].prateleira;
+    },
+  },
+
+  mounted() {
+    validarTokenAcesso().then((token) => {
+      if (!token) {
+        router.push("/login");
+      }
+    });
+  },
+
+  created() {
+    console.log(this.$route.params.id);
+    this.buscarInfoLivro(this.$route.params.id);
   },
 };
 </script>
@@ -370,8 +387,14 @@ span {
   width: 100%;
   max-width: 144rem;
 
-  justify-content: end;
+  justify-content: space-between;
   gap: 4.8rem;
+}
+
+.botoes-cadastro {
+  display: flex;
+  flex-direction: row;
+  gap: 2.5rem;
 }
 
 #area-foto {

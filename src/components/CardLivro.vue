@@ -1,9 +1,9 @@
 <template>
-    <div class="card-livro" @click="toDetails(livro.id)">
-      <span class="span1">{{ livro.titulo }}</span>
+    <div class="card-livro" @click="toEdit(livro.livro_id)">
+      <span class="span1">{{ livro.livro.titulo }}</span>
       <span class="span2">{{ livro.quantidade_disponivel }}</span>
       <span class="span2">{{ livro.quantidade_total }}</span>
-      <span class="span3">{{ livro.Exemplares[0].prateleira }}</span>
+      <span class="span3">{{ livro.prateleira }}</span>
     </div>
   </template>
 

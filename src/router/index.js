@@ -58,7 +58,7 @@ const router = new VueRouter({
       component: TelaCadastrarLivro,
     },
     {
-      path: '/livros/editar/id',
+      path: '/livros/editar/:id',
       name: 'EditarLivro',
       component: TelaEditarLivro,
     },
