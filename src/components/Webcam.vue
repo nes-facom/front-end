@@ -155,7 +155,11 @@ export default {
     },
 
     enviarFoto() {
-      this.$emit('imagem64', this.foto64Bits)
+      if(this.emprestimo == true) {
+        this.$emit('imagem64', this.foto64Bits)
+      } else {
+        this.$emit('imagem64', this.fotoBlob)
+      }
     }
 
   },

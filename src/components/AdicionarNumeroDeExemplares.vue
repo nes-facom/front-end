@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { createExemplar, getLivro } from "@/service/requisicao.js";
+
 export default {
   data() {
     return {
@@ -14,17 +16,48 @@ export default {
     };
   },
   methods: {
+    emitirAtualizacao(counter) {
+      this.$emit("atualizacao", counter)
+    },
+
     increment() {
       this.counter++;
+      this.emitirAtualizacao(this.counter)
     },
     decrement() {
       if (this.counter > 0) {
         this.counter--;
+        this.emitirAtualizacao(this.counter)
       }
     },
     handleChange(value) {
       if (!isNaN(value)) {
         this.counter = parseInt(value);
+      }
+    },
+
+    async createExemplar() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
+      const requisicaoDoLivro = await getLivro(this.$route.params.id)
+      const dadosCadastrarLivro = {
+        titulo: requisicaoDoLivro.titulo,
+        autor: requisicaoDoLivro.autor,
+        tipologia: requisicaoDoLivro.tipologia,
+        quantidade: counter,
+        prateleira: requisicaoDoLivro.prateleira,
+      };
+
+      const requisicao = await createExemplar(dadosCadastrarLivro);
+
+      if (requisicao === 200) {
+        this.formDesabilitado = false;
+        this.isLoading = false;
+        this.tratarSucessoLivro();
+      } else {
+        this.tratarErroRequisicao(requisicao);
       }
     },
   },

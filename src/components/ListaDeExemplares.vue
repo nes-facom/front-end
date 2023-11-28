@@ -25,10 +25,10 @@
                 <span>
                     Você quer cadastrar quantos exemplares?
                 </span>
-                <AdicionarNumeroDeExemplares />
+                <AdicionarNumeroDeExemplares  @atualizacao="atualizacaoExemplares"/>
                 <section class="overlay-buttons">
                     <span @click="toggleModalAdicionar">Cancelar</span>
-                    <span>Cadastrar e Imprimir</span>
+                    <span @click="createExemplar">Cadastrar e Imprimir</span>
                 </section>
             </div>
         </div>
@@ -52,6 +52,7 @@
 
 import CardExemplar from '@/components/CardExemplar.vue';
 import AdicionarNumeroDeExemplares from '@/components/AdicionarNumeroDeExemplares.vue';
+import { createExemplar } from "@/service/requisicao.js";
 
 export default {
     components: {
@@ -71,10 +72,16 @@ export default {
             showModalAdicionar: false,
             showModalExcluirExemplar: false,
             showModalImprimirCodigo: false,
+            exemplares: 0,
         }
     },
 
     methods: {
+        atualizacaoExemplares(exemplares) {
+            this.exemplares = exemplares
+            console.log(this.exemplares);
+        },
+
       toggleModalAdicionar() {
         this.showModalAdicionar = !this.showModalAdicionar
       },

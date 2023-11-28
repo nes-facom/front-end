@@ -62,13 +62,7 @@
               </v-text-field>
             </div>
             <div id="area-foto">
-              <img src="../assets/images/area-foto.png" />
-              <div class="botoes-camera">
-                <v-btn id="camera-options">
-                  <v-icon>mdi-camera</v-icon>
-                  Tirar nova Foto
-                </v-btn>
-              </div>
+              <v-img src=""></v-img>
             </div>
           </div>
 
@@ -136,6 +130,7 @@ import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import ListaDeExemplares from "@/components/ListaDeExemplares.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import Webcam from '@/components/Webcam.vue';
 import {
   updateLivro,
   getLivro,
@@ -151,6 +146,7 @@ export default {
     BarraDeNavegacao,
     AlertaInfo,
     ListaDeExemplares,
+    Webcam,
   },
 
   data() {
