@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div v-if="foto64Bits != null && fotoBlob == null">
+    <div v-if="foto64Bits != null && fotoBlob == null && emprestimo == false">
       <v-row justify="center"
         class="mt-5">
         <vueCropper ref="cropperInstanciado"
@@ -63,9 +63,20 @@
     <div ref="container"
          style="width: 500px; height: 500px; overflow: hidden"
          class="d-flex justify-center align-center"
-         v-if="fotoBlob != null">
+         v-if="fotoBlob != null && emprestimo === false">
       <v-img :src="blobToURL"
              :style="imageStyle"
+              height="500">
+      </v-img>
+    </div>
+
+    <div ref="container"
+        id="exibicao-emprestimo"
+         style="width: 500px; height: 500px; overflow: hidden"
+         class="d-flex justify-center align-center"
+         v-if="foto64Bits != null && emprestimo === true">
+      <v-img :src="foto64Bits"
+             
               height="500">
       </v-img>
     </div>
@@ -90,6 +101,9 @@ export default {
       default: true
     },
     solicitarImagem: {
+      default: false
+    },
+    emprestimo: {
       default: false
     }
   },
@@ -173,12 +187,15 @@ export default {
   },
 
   watch: {
-    solicitarImagem(antigo, novo) {
-      if (antigo == false && novo == true) {
-        this.baterFoto()
-        this.croparFoto()
+    async solicitarImagem(novo, antigo) {
+      if (antigo == false && novo == true && this.emprestimo == false) {
+        await this.baterFoto()
+        await this.croparFoto()
         this.enviarFoto()
-      }
+      } else if (antigo == false && novo == true && this.emprestimo == true) {
+        await this.baterFoto()
+        this.enviarFoto()
+      } 
     }
   },
 

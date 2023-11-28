@@ -82,6 +82,8 @@
           <section id="wrapper-botoes" v-if="!isLoading">
             <div class="botao-excluir">
               <BotaoPadrao
+                txtColor="#351000"
+                btnColor="#FFDBCC"
                 @click="toggleModalExcluirLivro"
                 conteudo="Excluir livro"
                 icon="mdi-trash-can"
@@ -110,20 +112,19 @@
         </v-form>
       </div>
       <div class="overlay-excluir-livro" v-if="showModalExcluirLivro">
-            <div class="modal-excluir-livro" v-if="showModalExcluirLivro">
-                <v-icon>
-                    mdi-trash-can
-                </v-icon>
-                <span>
-                    Você tem certeza que deseja excluir esse exemplar?
-                </span>
-                <p>As informações deste exemplar serão excluídas e não poderão ser recuperadas.</p>
-                <section class="overlay-buttons">
-                    <span @click="toggleModalExcluirLivro">Cancelar</span>
-                    <span>Excluir</span>
-                </section>
-            </div>
+        <div class="modal-excluir-livro" v-if="showModalExcluirLivro">
+          <v-icon> mdi-trash-can </v-icon>
+          <span> Você tem certeza que deseja excluir este livro? </span>
+          <p>
+            Caso exclua o livro, todos os seus exemplares também serão
+            excluídos.
+          </p>
+          <section class="overlay-buttons">
+            <span @click="toggleModalExcluirLivro">Cancelar</span>
+            <span @click="deleteLivro">Excluir</span>
+          </section>
         </div>
+      </div>
     </div>
   </div>
 </template>
@@ -135,7 +136,12 @@ import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import ListaDeExemplares from "@/components/ListaDeExemplares.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
-import { updateLivro, getLivro, getExemplarByLivroId } from "../service/requisicao";
+import {
+  updateLivro,
+  getLivro,
+  getExemplarByLivroId,
+  deleteLivro,
+} from "../service/requisicao";
 
 export default {
   props: ["id"],
@@ -201,11 +207,26 @@ export default {
 
   methods: {
     toggleModalExcluirLivro() {
-      this.showModalExcluirLivro = !this.showModalExcluirLivro
+      this.showModalExcluirLivro = !this.showModalExcluirLivro;
     },
 
     fecharAlerta() {
       this.alerta = false;
+    },
+
+    async deleteLivro() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;
+
+      const requisicao = await deleteLivro(this.$route.params.id);
+      if (requisicao.status === 200) {
+        this.formDesabilitado = false;
+        this.isLoading = false;
+        this.tratarSucessoLivro();
+      } else {
+        this.tratarErroRequisicao(requisicao);
+      }
     },
 
     async buscarExemplares(livroId) {
@@ -538,5 +559,71 @@ span {
 
 img:nth-child(2) {
   width: 40rem;
+}
+
+.overlay-excluir-livro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: #1a1c1e9d;
+
+  z-index: 10;
+}
+
+.modal-excluir-livro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+
+  justify-content: center;
+  align-items: center;
+
+  position: fixed;
+
+  border-radius: 2.8rem;
+  padding: 2.4rem;
+
+  background-color: var(--background);
+  box-shadow: 0 4px 8px rgba(0, 0, 5, 0.5);
+
+  z-index: 20;
+
+  width: 30vw;
+}
+
+.modal-excluir-livro span {
+  font: var(--headline-small);
+}
+
+.modal-excluir-livro p {
+  font: var(--body-medium);
+}
+
+.modal-excluir-livro span:last-child,
+.modal-excluir-livro span:nth-last-child(2) {
+  display: flex;
+  justify-content: end;
+  margin-top: 3.4rem;
+  font: var(--label-large);
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.overlay-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+
+  width: 100%;
+
+  gap: 2.5rem;
 }
 </style>

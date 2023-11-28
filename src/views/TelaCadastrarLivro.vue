@@ -84,7 +84,7 @@
               ></BotaoPadrao>
             </router-link>
             <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
-          </section>
+          </section>  
           <section id="wrapper-loader" v-if="isLoading">
             <v-progress-circular indeterminate></v-progress-circular>
           </section>
@@ -112,9 +112,7 @@ export default {
         (v) =>
           /^[A-Za-zÀ-ü\s]+$/.test(v) ||
           "O nome deve conter apenas letras e acentos",
-        (v) =>
-          /^[A-Za-zÀ-ü]+\s[A-Za-zÀ-ü]+$/.test(v) ||
-          "Informe um nome completo (Nome Sobrenome)",
+
       ],
       regrasAutor: [
         (v) => !!v || "Insira um autor(a)!",
@@ -124,9 +122,6 @@ export default {
         (v) =>
           /^[A-Za-zÀ-ü\s]+$/.test(v) ||
           "O nome do autor(a) deve conter apenas letras e acentos",
-        (v) =>
-          /^[A-Za-zÀ-ü]+\s[A-Za-zÀ-ü]+$/.test(v) ||
-          "Informe um nome completo (Nome Sobrenome)",
       ],
       regrasTipologiaTextual: [
         (v) => !!v || "Insira uma tipologia textual!",

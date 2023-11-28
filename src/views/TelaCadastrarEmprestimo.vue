@@ -7,6 +7,7 @@
                 class="wrapper-tela-cadastro"
             >
                 <Webcam :fotoBtnVisivel="false" @imagem64="salvarFoto" :solicitarImagem="pedirFoto" :emprestimo="true"/>
+
                 <v-form
                     :disabled="formDesabilitado"
                     data-cy="formulario"
@@ -112,6 +113,8 @@ export default {
             idLeitor: null,
             foto: null,
 
+            pedirFoto: false,
+
             formDesabilitado: false,
             alerta: false,
             isLoading: false,
@@ -185,6 +188,10 @@ export default {
             }
         },
 
+        tirarFoto() {
+            this.pedirFoto = true
+        },
+
         async validate() {
             if (this.select === '' || this.id === null) {
                 this.mensagemAlerta = 'Escolha um leitor válido!';
@@ -194,6 +201,8 @@ export default {
                     this.fecharAlerta();
                 }, 5000);
             } else {
+
+                await this.tirarFoto()
 
                 const id = parseInt(this.idLeitor)
 

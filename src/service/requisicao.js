@@ -434,3 +434,69 @@ export async function updateLivro(idLivro, jsonLivro) {
     return erro;
   }
 }
+
+export async function updateExemplar(id, jsonLivro) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.put(
+      BASE_URL + "/exemplares/" + id, jsonLivro,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function deleteExemplar(id) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.delete(
+      BASE_URL + "/exemplares/" + id,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
+
+export async function deleteLivro(id) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.delete(
+      BASE_URL + "/livros/" + id,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}
