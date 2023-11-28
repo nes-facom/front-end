@@ -1,9 +1,9 @@
 <template>
     <div id="lista-exemplares-wrapper">
         <div id="head-options">
-            <span>Imprimir código de barras</span>
-            <span>Excluir exemplar</span>
-            <span @click="toggleModal">Adicionar exemplar</span>
+            <span @click="toggleModalImprimirCodigo">Imprimir código de barras</span>
+            <span @click="toggleModalExcluirExemplar">Excluir exemplar</span>
+            <span @click="toggleModalAdicionar">Adicionar exemplar</span>
         </div>
         <div id="wrapper-lista">
             <div id="list-head-wrapper">
@@ -18,8 +18,8 @@
                 :exemplar="exemplar"></CardExemplar>
             </div>
         </div>
-        <div class="overlay" v-if="showModal">
-            <div class="modal" v-if="showModal">
+        <div class="overlay" v-if="showModalAdicionar">
+            <div class="modal" v-if="showModalAdicionar">
                 <v-icon>
                     mdi-book-open-blank-variant
                 </v-icon>
@@ -27,9 +27,37 @@
                     Você quer cadastrar quantos exemplares?
                 </span>
                 <AdicionarNumeroDeExemplares />
-                <section>
-                    <span @click="toggleModal">Cancelar</span>
+                <section class="overlay-buttons">
+                    <span @click="toggleModalAdicionar">Cancelar</span>
                     <span>Cadastrar e Imprimir</span>
+                </section>
+            </div>
+        </div>
+        <div class="overlay-excluir-exemplar" v-if="showModalExcluirExemplar">
+            <div class="modal-excluir-exemplar" v-if="showModalExcluirExemplar">
+                <v-icon>
+                    mdi-trash-can
+                </v-icon>
+                <span>
+                    Você tem certeza que deseja excluir esse exemplar?
+                </span>
+                <p>As informações deste exemplar serão excluídas e não poderão ser recuperadas.</p>
+                <section class="overlay-buttons">
+                    <span @click="toggleModalExcluirExemplar">Cancelar</span>
+                    <span>Excluir</span>
+                </section>
+            </div>
+        </div>
+        <div class="overlay-imprimir-codigo" v-if="showModalImprimirCodigo">
+            <div class="modal-imprimir-codigo" v-if="showModalImprimirCodigo">
+                <img id="icone-logo" src="./icons/Logo.png" />
+                <span>
+                    Livro cadastrado com sucesso!
+                </span>
+                <p>Clique em continuar para seguir para a tela de impressão de etiquetas, mas se você prefere imprimir as etiquetas mais tarde, clique em cancelar</p>
+                <section class="overlay-buttons">
+                    <span @click="toggleModalImprimirCodigo">Cancelar</span>
+                    <span>Continuar</span>
                 </section>
             </div>
         </div>
@@ -56,14 +84,22 @@ export default {
 
     data() {
         return {
-            showModal: false,
+            showModalAdicionar: false,
+            showModalExcluirExemplar: false,
+            showModalImprimirCodigo: false,
         }
     },
 
     methods: {
-      toggleModal() {
-        this.showModal = !this.showModal
-      }  
+      toggleModalAdicionar() {
+        this.showModalAdicionar = !this.showModalAdicionar
+      },
+      toggleModalExcluirExemplar() {
+        this.showModalExcluirExemplar = !this.showModalExcluirExemplar
+      },
+      toggleModalImprimirCodigo() {
+        this.showModalImprimirCodigo = !this.showModalImprimirCodigo
+      },
     },
 }
 </script>
@@ -98,6 +134,7 @@ export default {
 #head-options span {
     font: var(--body-medium);
     color: var(--primary);
+    cursor: pointer;
 }
 
 .span1 {
@@ -142,6 +179,7 @@ export default {
     padding-left: 1.6rem;
 }
 
+/* PRIMEIRO MODAL */
 .overlay {
 display: flex;
 justify-content: center;
@@ -196,4 +234,136 @@ font: var(--body-medium)
   cursor: pointer;
 }
 
+/* SEGUNDO MODAL */
+
+.overlay-excluir-exemplar {
+display: flex;
+justify-content: center;
+align-items: center;
+
+position: fixed;
+top: 0;
+left: 0;
+
+width: 100%;
+height: 100%;
+
+background-color: #1a1c1e9d;;
+
+z-index: 10;
+}
+
+.modal-excluir-exemplar {
+display: flex;
+flex-direction: column;
+gap: 1.6rem;
+
+position: fixed;
+
+border-radius: 2.8rem;
+padding: 2.4rem;
+
+background-color: var(--background);
+box-shadow: 0 4px 8px rgba(0, 0, 5, 0.5);;
+
+z-index: 20;
+
+width: 50vw;
+max-width: 33.5rem;
+}
+
+.modal-excluir-exemplar span {
+font: var(--headline-small)
+}
+
+.modal-excluir-exemplar p {
+font: var(--body-medium)
+}
+
+.modal-excluir-exemplar span:last-child,
+.modal-excluir-exemplar span:nth-last-child(2) {
+  display: flex;
+  justify-content: end;
+  margin-top: 3.4rem;
+  font: var(--label-large);
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.overlay-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 2.5rem;
+}
+
+/* TERCEIRO MODAL */
+
+.overlay-imprimir-codigo {
+display: flex;
+justify-content: center;
+align-items: center;
+
+position: fixed;
+top: 0;
+left: 0;
+
+width: 100%;
+height: 100%;
+
+background-color: #1a1c1e9d;;
+
+z-index: 10;
+}
+
+.modal-imprimir-codigo {
+display: flex;
+flex-direction: column;
+gap: 1.6rem;
+
+justify-content: center;
+align-items: center;
+
+position: fixed;
+
+border-radius: 2.8rem;
+padding: 2.4rem;
+
+background-color: var(--background);
+box-shadow: 0 4px 8px rgba(0, 0, 5, 0.5);;
+
+z-index: 20;
+
+width: 50vw;
+height: 65vh;
+}
+
+.modal-imprimir-codigo span {
+font: var(--headline-small)
+}
+
+.modal-imprimir-codigo p {
+font: var(--body-medium)
+}
+
+.modal-imprimir-codigo span:last-child,
+.modal-imprimir-codigo span:nth-last-child(2) {
+  display: flex;
+  justify-content: end;
+  margin-top: 3.4rem;
+  font: var(--label-large);
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.overlay-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+
+    margin-top: 10rem;
+    width: 100%;
+
+    gap: 2.5rem;
+}
 </style>

@@ -82,6 +82,7 @@
           <section id="wrapper-botoes" v-if="!isLoading">
             <div class="botao-excluir">
               <BotaoPadrao
+                @click="toggleModalExcluirLivro"
                 conteudo="Excluir livro"
                 icon="mdi-trash-can"
                 type="button"
@@ -108,6 +109,21 @@
           </section>
         </v-form>
       </div>
+      <div class="overlay-excluir-livro" v-if="showModalExcluirLivro">
+            <div class="modal-excluir-livro" v-if="showModalExcluirLivro">
+                <v-icon>
+                    mdi-trash-can
+                </v-icon>
+                <span>
+                    Você tem certeza que deseja excluir esse exemplar?
+                </span>
+                <p>As informações deste exemplar serão excluídas e não poderão ser recuperadas.</p>
+                <section class="overlay-buttons">
+                    <span @click="toggleModalExcluirLivro">Cancelar</span>
+                    <span>Excluir</span>
+                </section>
+            </div>
+        </div>
     </div>
   </div>
 </template>
@@ -179,10 +195,15 @@ export default {
       quantidade: "",
       prateleira: "",
       exemplaresArrayResponse: [],
+      showModalExcluirLivro: false,
     };
   },
 
   methods: {
+    toggleModalExcluirLivro() {
+      this.showModalExcluirLivro = !this.showModalExcluirLivro
+    },
+
     fecharAlerta() {
       this.alerta = false;
     },
