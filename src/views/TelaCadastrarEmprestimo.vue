@@ -6,7 +6,8 @@
             <div
                 class="wrapper-tela-cadastro"
             >
-                <Webcam :fotoBtnVisivel="false" @imagem64="teste" :solicitarImagem="pedirFoto" :emprestimo="true"/>
+                <Webcam :fotoBtnVisivel="false" @imagem64="salvarFoto" :solicitarImagem="pedirFoto" :emprestimo="true"/>
+
                 <v-form
                     :disabled="formDesabilitado"
                     data-cy="formulario"
@@ -134,8 +135,8 @@ export default {
     },
 
     methods: {
-        teste(imagem64) {
-            console.log(imagem64)
+        salvarFoto(imagem64) {
+            this.foto = imagem64
         },
         
         irParaEmprestimos() {
@@ -205,21 +206,23 @@ export default {
 
                 const id = parseInt(this.idLeitor)
 
-                const jsonEmprestimo = {
-                    leitor_id: this.idLeitor,
-                    tombo: this.$route.params.id,
-                    foto: this.foto
-                }
+                setTimeout( async () => {
+                    const jsonEmprestimo = {
+                        leitor_id: this.idLeitor,
+                        tombo: this.$route.params.id,
+                        foto: this.foto
+                    }
+                    const requisicao = await cadastrarEmprestimo(jsonEmprestimo)
+    
+                    if (requisicao === 200) {
+                        this.formDesabilitado = false;
+                        this.isLoading = false;
+                        this.tratarSucessoCadastro();
+                    } else {
+                        this.tratarErroRequisicao(requisicao);
+                    }
+                }, 2000);
 
-                const requisicao = await cadastrarEmprestimo(jsonEmprestimo)
-
-                if (requisicao === 200) {
-                    this.formDesabilitado = false;
-                    this.isLoading = false;
-                    this.tratarSucessoCadastro();
-                } else {
-                    this.tratarErroRequisicao(requisicao);
-                }
             }
         },
 

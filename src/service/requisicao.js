@@ -198,7 +198,7 @@ export async function getLivro(idLivro) {
 
   try {
     const requisicao = await axios.get(
-      BASE_URL + "/livros/" + idLivro,
+      BASE_URL + "/livros/nome/" + idLivro,
       configHeader
     );
     if (requisicao.status === 200) {
