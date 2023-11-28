@@ -1,10 +1,20 @@
-# Regula.sun - front
+# Librix - Gerenciador de Biblioteca - Front-end
+
+## Descrição do projeto
+
+### Contexto:
+No contexto de uma escola municipal, a biblioteca enfrenta desafios significativos devido ao grande volume de alunos e à gestão manual da entrada e saída de livros. Atualmente, a administração desses processos é realizada por uma única pessoa, o que torna a gestão de empréstimos, devoluções e atrasos precária e suscetível a erros.
+
+### Problema:
+O principal problema identificado é a ineficiência do sistema de gerenciamento da biblioteca, que depende exclusivamente de registros manuais em cadernos. A sobrecarga de trabalho para a pessoa responsável resulta em atrasos, extravios de livros e dificuldades na comunicação com os alunos. A falta de automação também impacta a capacidade de realizar análises eficientes sobre o uso da biblioteca e o comportamento de empréstimos.
+
+### Solução Proposta:
+Para superar esses desafios, a proposta é desenvolver um software que automatize todo o processo de gestão da biblioteca. O software irá permitir o cadastro de alunos, registro de empréstimos, controle de devoluções e alertas automáticos para atrasos. A introdução dessa solução não apenas aumentará a eficiência operacional, mas também proporcionará uma gestão mais transparente e eficaz dos recursos da biblioteca, melhorando a experiência dos alunos e facilitando a vida do pessoal responsável pela administração.
 
 ## Requisitos
 
-- Instalar [NodeJS](https://nodejs.org/en) 18.15.0 ou superior.
-- Instalar [Docker](https://docs.docker.com/desktop/install/windows-install/) 4.17.1 ou superior.
-- Instalar [Git](https://git-scm.com/downloads) 2.40.0 ou superior.
+- Instalar [NodeJS](https://nodejs.org/en) 20.9.0 ou superior.
+- Instalar [Git](https://git-scm.com/downloads) 2.42.0 ou superior.
 
 ## Ambiente de Desenvolvimento
 
@@ -20,7 +30,7 @@
   git config --global user.email seu_email_do_git
 ```
 
-4. Clone o repositório **2023_1_front-end**. No terminal _Git Bash_ execute:
+4. Clone o repositório **front-end**. No terminal _Git Bash_ execute:
 
 ```sh
 git clone https://github.com/PDS-1-P05/2023_1_front-end.git
@@ -29,7 +39,7 @@ git clone https://github.com/PDS-1-P05/2023_1_front-end.git
 5. No terminal, entre no diretório do projeto clonado executando:
 
 ```sh
-  cd 2023_1_front-end/
+  cd front-end
 ```
 
 6. Após a finalização da clonagem, ainda no _Git Bash_, migre para a branch _develop_ executando o comando:
@@ -45,8 +55,8 @@ git pull origin develop
 ```
 
 8. Ao terminar de atualizar o projeto, abra o repositório local no editor escolhido.
-9. Na pasta "**_Regula.sun - front_**" existe uma pasta chamada _"configExample"_ contendo um arquivo _"configExample.js"_, crie (ou apenas renomeie) a pasta e o arquivo com nomes _"config"_ e _"config.js"_ e altere o link do _"BASE_URL"_ do arquivo _"config.js"_ para o link da variável de ambiente de desenvolvimento localizado na seção abaixo.
-10. Abra o terminal de sua preferência (CMD, Powershell ou do próprio editor) e acesse o diretório _“2023_1_front-end\Regula.sun - front”_.
+9. Na pasta "**front-end**" existe uma pasta chamada _"config"_ contendo um arquivo _"config.js"_, crie (ou apenas renomeie) a pasta e o arquivo com nomes _"config"_ e _"config.js"_ e altere o link do _"BASE_URL"_ do arquivo _"config.js"_ para o link da variável de ambiente de desenvolvimento localizado na seção abaixo.
+10. Abra o terminal de sua preferência (CMD, Powershell ou do próprio editor) e acesse o diretório _“front-end”_.
 11. Para instalar as dependências do projeto, no terminal, execute o seguinte comando:
 
 ```sh
@@ -60,7 +70,7 @@ npm run dev
 ```
 
 13. Vai ser exibido uma mensagem pop-up que gera um certificado digital com uma chave SSL para que o link gerado pelo _"npm run dev"_, seja HTTPS, basta clicar em SIM.
-14. Abra o localhost em qualquer navegador (https://localhost:5173/2023_1_front-end).
+14. Abra o localhost em qualquer navegador (https://localhost:5173).
 
 ## Variaveis de Ambiente de Desenvolvimento
 
@@ -71,7 +81,7 @@ npm run dev
 ## Recomendações
 
 - Editor: VSCode.
-- Programas: Postman, GitHub CLI.
+- Programas: Postman.
 - Extensões VSCode: Git Graph, Postman, Thunder Client, GitHub Pull Requests and Issues, Vue VSCode Snippets e JavaScript (ES6) code snippets.
 
 <br>
@@ -79,163 +89,98 @@ npm run dev
 ## Estrutura do Sistema
 
 ```
-2023.1_front-end
-├─ docs
-│  ├─ amarelo.svg
-│  ├─ assets
-│  │  ├─ AGEMS-0e574ee1.svg
-│  │  ├─ agemsSVG-7d1d6b44.svg
-│  │  ├─ amarelo-768ccc9d.svg
-│  │  ├─ azul-0d87521e.svg
-│  │  ├─ BOLETIM-25d567cd.png
-│  │  ├─ CHARTS-bb4d40b5.png
-│  │  ├─ html2canvas-f100033d.js
-│  │  ├─ imagem_login-9709b35c.svg
-│  │  ├─ imagem_upload-83831933.svg
-│  │  ├─ index-41b6ead0.js
-│  │  ├─ index-c181fd9b.css
-│  │  ├─ index.es-1262900a.js
-│  │  ├─ laranja-e5bc1ed7.svg
-│  │  ├─ materialdesignicons-webfont-67d24abe.eot
-│  │  ├─ materialdesignicons-webfont-80bb28b3.woff
-│  │  ├─ materialdesignicons-webfont-a58ecb54.ttf
-│  │  ├─ materialdesignicons-webfont-c1c004a9.woff2
-│  │  ├─ MEDALHA-DE-BRONZE-48f1cecd.svg
-│  │  ├─ MEDALHA-DE-OURO-5383d6f1.svg
-│  │  ├─ MEDALHA-DE-PRATA-905b0299.svg
-│  │  ├─ NES-e5f33cbe.svg
-│  │  ├─ preto-adcb06be.svg
-│  │  ├─ purify.es-f47f2ec0.js
-│  │  ├─ REGULASUN-88e715be.svg
-│  │  ├─ UFMS-LOGO-47918312.svg
-│  │  ├─ verde-9aeaf379.svg
-│  │  └─ vermelho-4a8bd8e7.svg
-│  ├─ azul.svg
-│  ├─ favicon.ico
-│  ├─ index.html
-│  ├─ laranja.svg
-│  ├─ preto.svg
-│  ├─ verde.svg
-│  └─ vermelho.svg
-├─ README.md
-└─ Regula.sun - front
-   ├─ .envExample
-   ├─ .eslintrc.json
-   ├─ .vscode
-   │  └─ extensions.json
-   ├─ config
-   │  └─ config.js
-   ├─ configExample
-   │  └─ configExample.js
-   ├─ cypress
-   │  ├─ downloads
-   │  ├─ e2e
-   │  │  ├─ H006.cy.js
-   │  │  ├─ H007.cy.js
-   │  │  ├─ H008.cy.js
-   │  │  └─ H010.cy.js
-   │  ├─ fixtures
-   │  │  ├─ example.json
-   │  │  ├─ Indicador - Agua ClarO.csv
-   │  │  ├─ Indicador - Alcinopolis e Amambai trocados.csv
-   │  │  ├─ Indicador - Campo Vazio.csv
-   │  │  ├─ Indicador - Cidade Guilherme, Miranda removido.csv
-   │  │  ├─ Indicador - Indicador Guilherme e Sem Reservação e Hidrometração.csv
-   │  │  ├─ Indicador - PASSA.csv
-   │  │  ├─ Indicador - População UrbanO.csv
-   │  │  ├─ Indicador - Reservação e Extensao de Rede trocados.csv
-   │  │  ├─ Indicador - Sem Alcinopolis e Amambai.csv
-   │  │  ├─ Indicador - Sem Habitantes por domicílio e Renda per capita.csv
-   │  │  ├─ Meta - Agua ClarO.csv
-   │  │  ├─ Meta - Alcinopolis e Amambai trocados.csv
-   │  │  ├─ Meta - Campo Vazio.csv
-   │  │  ├─ Meta - Cidade Guilherme, Miranda removido.csv
-   │  │  ├─ Meta - Indicador Guilherme e Sem Reservação e Hidrometração.csv
-   │  │  ├─ Meta - PASSA.csv
-   │  │  ├─ Meta - População UrbanO.csv
-   │  │  ├─ Meta - Reservação e Extensao de Rede trocados.csv
-   │  │  ├─ Meta - Sem Alcinopolis e Amambai.csv
-   │  │  ├─ Meta - Sem Ano.csv
-   │  │  ├─ Meta - Sem Habitantes por domicílio e Renda per capita.csv
-   │  │  └─ teste.pdf
-   │  └─ support
-   │     ├─ commands.js
-   │     └─ e2e.js
-   ├─ cypress.config.js
-   ├─ index.html
-   ├─ package-lock.json
-   ├─ package.json
-   ├─ public
-   │  ├─ amarelo.svg
-   │  ├─ azul.svg
-   │  ├─ favicon.ico
-   │  ├─ laranja.svg
-   │  ├─ preto.svg
-   │  ├─ verde.svg
-   │  └─ vermelho.svg
-   ├─ src
-   │  ├─ App.vue
-   │  ├─ assets
-   │  │  ├─ AGEMS.svg
-   │  │  ├─ agemsSVG.svg
-   │  │  ├─ amarelo.svg
-   │  │  ├─ azul.svg
-   │  │  ├─ BOLETIM.png
-   │  │  ├─ CHARTS.png
-   │  │  ├─ imagem_login.svg
-   │  │  ├─ imagem_upload.svg
-   │  │  ├─ laranja.svg
-   │  │  ├─ MEDALHA-DE-BRONZE.svg
-   │  │  ├─ MEDALHA-DE-OURO.svg
-   │  │  ├─ MEDALHA-DE-PRATA.svg
-   │  │  ├─ NES.svg
-   │  │  ├─ preto.svg
-   │  │  ├─ REGULASUN.svg
-   │  │  ├─ UFMS-LOGO.svg
-   │  │  ├─ verde.svg
-   │  │  └─ vermelho.svg
-   │  ├─ components
-   │  │  ├─ AdminNavTab.vue
-   │  │  ├─ AlertaInfo.vue
-   │  │  ├─ DefaultButton.vue
-   │  │  ├─ DragNDrop.vue
-   │  │  ├─ FiltroIndicador.vue
-   │  │  ├─ FiltroMunicipio.vue
-   │  │  ├─ GraficoComponent.vue
-   │  │  ├─ HomeButton.vue
-   │  │  ├─ HomeFooter.vue
-   │  │  ├─ ModeloBoletim.vue
-   │  │  ├─ NavBar.vue
-   │  │  ├─ RankingMunicipios.vue
-   │  │  ├─ Select.vue
-   │  │  ├─ SelectBoletim.vue
-   │  │  ├─ VisualizacaoIndicadores.vue
-   │  │  └─ VisualizacaoMetas.vue
-   │  ├─ main.js
-   │  ├─ router
-   │  │  └─ index.js
-   │  ├─ service
-   │  │  ├─ autenticacao.js
-   │  │  └─ requisicao.js
-   │  ├─ store
-   │  │  └─ index.js
-   │  ├─ utils
-   │  │  └─ funcoes.js
-   │  └─ views
-   │     ├─ AdminView.vue
-   │     ├─ BoletimView.vue
-   │     ├─ GraficoView.vue
-   │     ├─ HomeView.vue
-   │     └─ LoginView.vue
-   ├─ vite.config.js
-   └─ __tests__
-      ├─ AdminNavTab.test.js
-      ├─ DragNDrop.test.js
-      ├─ HomeButton.test.js
-      ├─ HomeFooter.test.js
-      ├─ HomeView.test.js
-      ├─ ImportButton.test.js
-      ├─ LoginView.test.js
-      └─ Navbar.test.js
-
+.
+├── config
+│   └── config.js
+├── cypress
+│   ├── e2e
+│   │   ├── jsconfig.json
+│   │   └── login.cy.js
+│   ├── fixtures
+│   │   ├── example.json
+│   │   └── senha_admin.txt
+│   └── support
+│       ├── commands.js
+│       ├── component-index.html
+│       ├── component.js
+│       └── e2e.js
+├── cypress.config.js
+├── index.html
+├── package.json
+├── package-lock.json
+├── public
+│   └── favicon.ico
+├── README.md
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   ├── base.css
+│   │   ├── images
+│   │   │   ├── area-foto.png
+│   │   │   ├── nenhum-resultado-encontrado.png
+│   │   │   └── realize-uma-busca.png
+│   │   └── main.css
+│   ├── components
+│   │   ├── AlertaInfo.vue
+│   │   ├── BarraDeBusca.vue
+│   │   ├── BarraDeNavegacao.vue
+│   │   ├── BotaoPadrao.vue
+│   │   ├── CardEmprestimo.vue
+│   │   ├── CardHistoricoEmprestimo.vue
+│   │   ├── CardLeitor.vue
+│   │   ├── CircleLoader.vue
+│   │   ├── DropZone.vue
+│   │   ├── FiltroEmprestimo.vue
+│   │   ├── FiltroLeitor.vue
+│   │   ├── FiltroLivro.vue
+│   │   ├── icons
+│   │   │   ├── BackgroundLogin.png
+│   │   │   ├── DragAndDropIcon.png
+│   │   │   ├── Logo.png
+│   │   │   └── userPhotoDefault.png
+│   │   ├── ListaDeEmprestimos.vue
+│   │   ├── ListaDeLeitores.vue
+│   │   ├── ListaDeLivros.vue
+│   │   └── Webcam.vue
+│   ├── main.js
+│   ├── plugins
+│   │   └── vuetify.js
+│   ├── router
+│   │   └── index.js
+│   ├── service
+│   │   ├── autenticacao.js
+│   │   ├── impressoraTermica.js
+│   │   └── requisicao.js
+│   ├── store
+│   │   ├── actions.js
+│   │   ├── getters.js
+│   │   ├── index.js
+│   │   ├── mutations.js
+│   │   └── state.js
+│   └── views
+│       ├── TelaCadastrarBibliotecario.vue
+│       ├── TelaCadastrarEmprestimo.vue
+│       ├── TelaCadastrarLeitores.vue
+│       ├── TelaCadastrarLivro.vue
+│       ├── TelaDetalhesLeitor.vue
+│       ├── TelaEditarLeitor.vue
+│       ├── TelaEmprestimos.vue
+│       ├── TelaLeitores.vue
+│       ├── TelaLivros.vue
+│       ├── TelaLogin.vue
+│       └── WebcamTest.vue
+└── vite.config.js
 ```
+
+## Autores e histórico
+
+Este sistema foi desenvolvido pela seguinte equipe:
+
+- João Lucas Silva Machado: (joao_machado@ufms.br)
+- Matheus Silva Oliveira: (matheus_oliveira@ufms.br)
+- Lucas Borth: (lucas_borth@ufms.br)
+- Isadora Picoli: (isadora.picoli@ufms.br)
+- Vítor Hugo Cassol: (vitor.cassol@ufms.br)
+- Henrique Yule: (henrique.y@ufms.br)
+
+Orientado pelo professor Rodrigo Funabashi Jorge e proposto por Alesandra  e Aldivina S E Martinez.
