@@ -2,7 +2,6 @@
     <div id="lista-exemplares-wrapper">
         <div id="head-options">
             <span @click="toggleModalImprimirCodigo">Imprimir código de barras</span>
-            <span @click="toggleModalExcluirExemplar">Excluir exemplar</span>
             <span @click="toggleModalAdicionar">Adicionar exemplar</span>
         </div>
         <div id="wrapper-lista">
@@ -30,21 +29,6 @@
                 <section class="overlay-buttons">
                     <span @click="toggleModalAdicionar">Cancelar</span>
                     <span>Cadastrar e Imprimir</span>
-                </section>
-            </div>
-        </div>
-        <div class="overlay-excluir-exemplar" v-if="showModalExcluirExemplar">
-            <div class="modal-excluir-exemplar" v-if="showModalExcluirExemplar">
-                <v-icon>
-                    mdi-trash-can
-                </v-icon>
-                <span>
-                    Você tem certeza que deseja excluir esse exemplar?
-                </span>
-                <p>As informações deste exemplar serão excluídas e não poderão ser recuperadas.</p>
-                <section class="overlay-buttons">
-                    <span @click="toggleModalExcluirExemplar">Cancelar</span>
-                    <span>Excluir</span>
                 </section>
             </div>
         </div>
@@ -235,69 +219,6 @@ font: var(--body-medium)
 }
 
 /* SEGUNDO MODAL */
-
-.overlay-excluir-exemplar {
-display: flex;
-justify-content: center;
-align-items: center;
-
-position: fixed;
-top: 0;
-left: 0;
-
-width: 100%;
-height: 100%;
-
-background-color: #1a1c1e9d;;
-
-z-index: 10;
-}
-
-.modal-excluir-exemplar {
-display: flex;
-flex-direction: column;
-gap: 1.6rem;
-
-position: fixed;
-
-border-radius: 2.8rem;
-padding: 2.4rem;
-
-background-color: var(--background);
-box-shadow: 0 4px 8px rgba(0, 0, 5, 0.5);;
-
-z-index: 20;
-
-width: 50vw;
-max-width: 33.5rem;
-}
-
-.modal-excluir-exemplar span {
-font: var(--headline-small)
-}
-
-.modal-excluir-exemplar p {
-font: var(--body-medium)
-}
-
-.modal-excluir-exemplar span:last-child,
-.modal-excluir-exemplar span:nth-last-child(2) {
-  display: flex;
-  justify-content: end;
-  margin-top: 3.4rem;
-  font: var(--label-large);
-  color: var(--primary);
-  cursor: pointer;
-}
-
-.overlay-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    gap: 2.5rem;
-}
-
-/* TERCEIRO MODAL */
 
 .overlay-imprimir-codigo {
 display: flex;

@@ -9,6 +9,8 @@
             elevation="0"
             :type="type"
             v-if="!outlined"
+            @click="emitirEventoClick"
+            :style="{ backgroundColor: btnColor, color: txtColor }"
         >
             <v-icon
                 v-if="icon"
@@ -61,6 +63,13 @@ export default {
         icon: String,
         isDisabled: false,
         outlined: Boolean,
+        btnColor: String,
+        txtColor: String,
+    },
+    methods: {
+        emitirEventoClick() {
+            this.$emit('click');
+    }
     },
     watch: {
         isDisabled: function(newValue, oldValue) {
