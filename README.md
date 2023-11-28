@@ -1,5 +1,16 @@
 # Librix - Gerenciador de Biblioteca - Front-end
 
+## Descrição do projeto
+
+### Contexto:
+No contexto de uma escola municipal, a biblioteca enfrenta desafios significativos devido ao grande volume de alunos e à gestão manual da entrada e saída de livros. Atualmente, a administração desses processos é realizada por uma única pessoa, o que torna a gestão de empréstimos, devoluções e atrasos precária e suscetível a erros.
+
+### Problema:
+O principal problema identificado é a ineficiência do sistema de gerenciamento da biblioteca, que depende exclusivamente de registros manuais em cadernos. A sobrecarga de trabalho para a pessoa responsável resulta em atrasos, extravios de livros e dificuldades na comunicação com os alunos. A falta de automação também impacta a capacidade de realizar análises eficientes sobre o uso da biblioteca e o comportamento de empréstimos.
+
+### Solução Proposta:
+Para superar esses desafios, a proposta é desenvolver um software que automatize todo o processo de gestão da biblioteca. O software irá permitir o cadastro de alunos, registro de empréstimos, controle de devoluções e alertas automáticos para atrasos. A introdução dessa solução não apenas aumentará a eficiência operacional, mas também proporcionará uma gestão mais transparente e eficaz dos recursos da biblioteca, melhorando a experiência dos alunos e facilitando a vida do pessoal responsável pela administração.
+
 ## Requisitos
 
 - Instalar [NodeJS](https://nodejs.org/en) 20.9.0 ou superior.
@@ -59,7 +70,7 @@ npm run dev
 ```
 
 13. Vai ser exibido uma mensagem pop-up que gera um certificado digital com uma chave SSL para que o link gerado pelo _"npm run dev"_, seja HTTPS, basta clicar em SIM.
-14. Abra o localhost em qualquer navegador (https://localhost:5173/2023_1_front-end).
+14. Abra o localhost em qualquer navegador (https://localhost:5173).
 
 ## Variaveis de Ambiente de Desenvolvimento
 
@@ -81,3 +92,16 @@ npm run dev
 // Gerar Estrutura
 
 ```
+
+## Autores e histórico
+
+Este sistema foi desenvolvido pela seguinte equipe:
+
+- João Lucas Silva Machado: (joao_machado@ufms.br)
+- Matheus Silva Oliveira: (matheus_oliveira@ufms.br)
+- Lucas Borth: (lucas_borth@ufms.br)
+- Isadora Picoli: (isadora.picoli@ufms.br)
+- Vítor Hugo Cassol: (vitor.cassol@ufms.br)
+- Henrique Yule: (henrique.y@ufms.br)
+
+Orientado pelo professor Rodrigo Funabashi Jorge e proposto por Alesandra  e Aldivina S E Martinez.
