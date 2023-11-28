@@ -89,8 +89,87 @@ npm run dev
 ## Estrutura do Sistema
 
 ```
-// Gerar Estrutura
-
+.
+├── config
+│   └── config.js
+├── cypress
+│   ├── e2e
+│   │   ├── jsconfig.json
+│   │   └── login.cy.js
+│   ├── fixtures
+│   │   ├── example.json
+│   │   └── senha_admin.txt
+│   └── support
+│       ├── commands.js
+│       ├── component-index.html
+│       ├── component.js
+│       └── e2e.js
+├── cypress.config.js
+├── index.html
+├── package.json
+├── package-lock.json
+├── public
+│   └── favicon.ico
+├── README.md
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   ├── base.css
+│   │   ├── images
+│   │   │   ├── area-foto.png
+│   │   │   ├── nenhum-resultado-encontrado.png
+│   │   │   └── realize-uma-busca.png
+│   │   └── main.css
+│   ├── components
+│   │   ├── AlertaInfo.vue
+│   │   ├── BarraDeBusca.vue
+│   │   ├── BarraDeNavegacao.vue
+│   │   ├── BotaoPadrao.vue
+│   │   ├── CardEmprestimo.vue
+│   │   ├── CardHistoricoEmprestimo.vue
+│   │   ├── CardLeitor.vue
+│   │   ├── CircleLoader.vue
+│   │   ├── DropZone.vue
+│   │   ├── FiltroEmprestimo.vue
+│   │   ├── FiltroLeitor.vue
+│   │   ├── FiltroLivro.vue
+│   │   ├── icons
+│   │   │   ├── BackgroundLogin.png
+│   │   │   ├── DragAndDropIcon.png
+│   │   │   ├── Logo.png
+│   │   │   └── userPhotoDefault.png
+│   │   ├── ListaDeEmprestimos.vue
+│   │   ├── ListaDeLeitores.vue
+│   │   ├── ListaDeLivros.vue
+│   │   └── Webcam.vue
+│   ├── main.js
+│   ├── plugins
+│   │   └── vuetify.js
+│   ├── router
+│   │   └── index.js
+│   ├── service
+│   │   ├── autenticacao.js
+│   │   ├── impressoraTermica.js
+│   │   └── requisicao.js
+│   ├── store
+│   │   ├── actions.js
+│   │   ├── getters.js
+│   │   ├── index.js
+│   │   ├── mutations.js
+│   │   └── state.js
+│   └── views
+│       ├── TelaCadastrarBibliotecario.vue
+│       ├── TelaCadastrarEmprestimo.vue
+│       ├── TelaCadastrarLeitores.vue
+│       ├── TelaCadastrarLivro.vue
+│       ├── TelaDetalhesLeitor.vue
+│       ├── TelaEditarLeitor.vue
+│       ├── TelaEmprestimos.vue
+│       ├── TelaLeitores.vue
+│       ├── TelaLivros.vue
+│       ├── TelaLogin.vue
+│       └── WebcamTest.vue
+└── vite.config.js
 ```
 
 ## Autores e histórico
