@@ -149,6 +149,7 @@ export default {
       tipologia: "",
       quantidade: "",
       prateleira: "",
+      foto64: null,
     };
   },
 
@@ -168,6 +169,7 @@ export default {
   },
 
   methods: {
+
     fecharAlerta() {
       this.alerta = false;
     },
@@ -187,6 +189,7 @@ export default {
         tipologia: this.tipologia,
         quantidade: this.quantidade,
         prateleira: this.prateleira,
+        foto: this.foto,
       };
 
       console.log(dadosCadastrarLivro);

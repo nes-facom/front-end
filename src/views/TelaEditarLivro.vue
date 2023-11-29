@@ -307,7 +307,6 @@ export default {
   },
 
   created() {
-    console.log(this.$route.params.id);
     this.buscarExemplares(this.$route.params.id);
     this.buscarInfoLivro(this.$route.params.id);
   },
