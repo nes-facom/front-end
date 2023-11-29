@@ -71,6 +71,7 @@
           <span id="title-listar-exemplar">Lista de exemplares</span>
           <ListaDeExemplares
             :exemplares="this.exemplaresArrayResponse"
+            @atualizacaoExemplar="atualizacaoExemplar"
           ></ListaDeExemplares>
 
           <section id="wrapper-botoes" v-if="!isLoading">
@@ -207,6 +208,10 @@ export default {
 
     fecharAlerta() {
       this.alerta = false;
+    },
+
+    atualizacaoExemplar(exemplar) {
+
     },
 
     async deleteLivro() {

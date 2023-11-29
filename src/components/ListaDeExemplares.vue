@@ -23,7 +23,7 @@
         <AdicionarNumeroDeExemplares @atualizacao="atualizacaoExemplares" />
         <section class="overlay-buttons">
           <span @click="toggleModalAdicionar">Cancelar</span>
-          <span @click="">Cadastrar e Imprimir</span>
+          <span @click="createExemplar">Cadastrar e Imprimir</span>
         </section>
       </div>
     </div>
@@ -33,7 +33,7 @@
 <script>
 import CardExemplar from "@/components/CardExemplar.vue";
 import AdicionarNumeroDeExemplares from "@/components/AdicionarNumeroDeExemplares.vue";
-// import { createExemplar } from "@/service/requisicao.js";
+import { createExemplar } from "../service/requisicao";
 
 export default {
   components: {
@@ -60,7 +60,7 @@ export default {
   methods: {
     atualizacaoExemplares(contagem) {
       this.exemplaresCounter = contagem;
-      console.log(this.exemplaresCounter);
+      this.$emit("atualizacaoExemplar", contagem);
     },
 
     toggleModalAdicionar() {
@@ -71,6 +71,50 @@ export default {
     },
     toggleModalImprimirCodigo() {
       this.showModalImprimirCodigo = !this.showModalImprimirCodigo;
+    },
+
+    async createExemplar() {
+      this.formDesabilitado = true;
+      this.isLoading = true;
+      this.alerta = false;  
+
+      const dadosEditarLivro = {
+        livro_id: this.$route.params.id,
+        quantidade: this.exemplaresCounter,
+        prateleira: this.exemplares[0].prateleira,
+      };  
+      console.log(dadosEditarLivro);
+      const requisicao = await createExemplar(dadosEditarLivro);
+      if (requisicao.status === 200) {
+        this.formDesabilitado = false;
+        this.isLoading = false;
+        this.tratarSucessoLivro();
+        location.reload();
+      } else {
+        this.tratarErroRequisicao(requisicao);
+      }
+    },
+
+    tratarSucessoLivro(tipo) {
+      this.mensagemAlerta = "Exemplar criado com sucesso!";
+      this.alerta = true;
+      setTimeout(() => {
+        this.fecharAlerta();
+      }, 5000);
+    },
+
+    tratarErroRequisicao(requisicao) {
+      this.formDesabilitado = false;
+      this.isLoading = false;
+      const status = requisicao.request.status;
+      if (status === 400) {
+        this.mensagemAlerta = "Falha ao efetuar requisição!";
+      } else if (status === 500) {
+        this.mensagemAlerta =
+          "Ops! Ocorreu algum problema interno no servidor!";
+      } else {
+        this.mensagemAlerta = "Um erro inesperado aconteceu, busque suporte!";
+      }
     },
   },
 };
@@ -85,6 +129,7 @@ export default {
 
   background-color: var(--surface-variant);
   border-radius: 12px;
+  overflow: auto;
 
   width: 80%;
   height: 43.6rem;
