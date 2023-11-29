@@ -117,9 +117,7 @@ export default {
                 titulo: newValue,
                 tipologia: this.filtroSelecionado
             }
-            
             const requisicao = await getExemplares(jsonLivros)
-            console.log(requisicao);
             if (requisicao.status === 200) {
                 this.arrayResponse = requisicao.data
             } else {
