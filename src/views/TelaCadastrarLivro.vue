@@ -60,7 +60,11 @@
               </v-text-field>
             </div>
             <div id="area-foto">
-              <Webcam :fotoBtnVisivel="true" @imagem64="receberImagem" :solicitarImagem="pedirFoto"/>
+              <Webcam
+                :fotoBtnVisivel="true"
+                @imagem64="receberImagem"
+                :solicitarImagem="pedirFoto"
+              />
             </div>
           </div>
           <section id="wrapper-botoes" v-if="!isLoading">
@@ -94,7 +98,7 @@ import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
 import { cadastrarLivro } from "@/service/requisicao.js";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
-import Webcam from '@/components/Webcam.vue';
+import Webcam from "@/components/Webcam.vue";
 
 export default {
   data() {
@@ -169,19 +173,30 @@ export default {
   },
 
   methods: {
-
     fecharAlerta() {
       this.alerta = false;
     },
 
     receberImagem(imagem) {
-      this.foto = imagem
+      this.foto = imagem;
+      console.log(imagem.length)
     },
 
     async autenticarLivro() {
       this.formDesabilitado = true;
       this.isLoading = true;
       this.alerta = false;
+
+      if (!this.foto) {
+        this.isLoading = false;
+        this.alerta = true;
+        this.mensagemAlerta =
+          "Por favor, capture uma imagem antes de cadastrar o livro.";
+        setTimeout(() => {
+          this.fecharAlerta();
+        }, 5000);
+        return;
+      }
 
       const dadosCadastrarLivro = {
         titulo: this.titulo,
@@ -191,8 +206,6 @@ export default {
         prateleira: this.prateleira,
         foto: this.foto,
       };
-
-      console.log(dadosCadastrarLivro);
 
       const requisicao = await cadastrarLivro(dadosCadastrarLivro);
 
