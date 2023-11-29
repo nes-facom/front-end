@@ -500,3 +500,25 @@ export async function deleteLivro(id) {
     return erro;
   }
 }
+
+export async function createExemplar(jsonLivro) {
+  const configHeader = {
+    headers: {
+        "x-access-token": localStorage.getItem("token_acesso"),
+        "content-type": "application/json"
+    }
+  };
+
+  try {
+    const requisicao = await axios.post(
+      BASE_URL + "/exemplares/", jsonLivro,
+      configHeader
+    );
+
+    if (requisicao.status === 200) {
+      return requisicao;
+    }
+  } catch (erro) {
+    return erro;
+  }
+}

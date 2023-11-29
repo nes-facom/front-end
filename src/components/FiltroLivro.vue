@@ -49,6 +49,7 @@ export default {
                 {nome: 'Aventura', value: 'Aventura'},
                 {nome: 'Arte', value: 'Arte'},
                 {nome: 'Atlas', value: 'Atlas'},
+                {nome: 'Biografia', value: 'Biografia'},
                 {nome: 'Comédia', value: 'Comedia'},
                 {nome: 'Conto', value: 'Conto'},
                 {nome: 'Cordel', value: 'Cordel'},
@@ -68,6 +69,7 @@ export default {
                 {nome: 'Novela', value: 'Novela'},
                 {nome: 'Poema', value: 'Poema'},
                 {nome: 'Romance', value: 'Romance'},
+                {nome: 'Terror', value: 'Terror'},
                 {nome: 'Tragédia', value: 'Tragedia'},
                 {nome: 'Todos', value: null}
             ],

@@ -62,13 +62,7 @@
               </v-text-field>
             </div>
             <div id="area-foto">
-              <img src="../assets/images/area-foto.png" />
-              <div class="botoes-camera">
-                <v-btn id="camera-options">
-                  <v-icon>mdi-camera</v-icon>
-                  Tirar nova Foto
-                </v-btn>
-              </div>
+              <v-img v-if="imageBlobUrl != null" :src="imageBlobUrl"></v-img>
             </div>
           </div>
 
@@ -136,6 +130,7 @@ import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import ListaDeExemplares from "@/components/ListaDeExemplares.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import Webcam from "@/components/Webcam.vue";
 import {
   updateLivro,
   getLivro,
@@ -151,6 +146,7 @@ export default {
     BarraDeNavegacao,
     AlertaInfo,
     ListaDeExemplares,
+    Webcam,
   },
 
   data() {
@@ -171,9 +167,6 @@ export default {
         (v) =>
           /^[A-Za-zÀ-ü\s]+$/.test(v) ||
           "O nome do autor(a) deve conter apenas letras e acentos",
-        (v) =>
-          /^[A-Za-zÀ-ü]+\s[A-Za-zÀ-ü]+$/.test(v) ||
-          "Informe um nome completo (Nome Sobrenome)",
       ],
       regrasTipologiaTextual: [
         (v) => !!v || "Insira uma tipologia textual!",
@@ -202,6 +195,8 @@ export default {
       prateleira: "",
       exemplaresArrayResponse: [],
       showModalExcluirLivro: false,
+      imagemLivro: '',
+      imageBlobUrl: null,
     };
   },
 
@@ -223,7 +218,7 @@ export default {
       if (requisicao.status === 200) {
         this.formDesabilitado = false;
         this.isLoading = false;
-        this.tratarSucessoLivro();
+        this.tratarSucessoLivro("excluir"); // Passando 'excluir' como parâmetro
       } else {
         this.tratarErroRequisicao(requisicao);
       }
@@ -264,8 +259,12 @@ export default {
       }
     },
 
-    tratarSucessoLivro() {
-      this.mensagemAlerta = "Livro atualizado com sucesso!";
+    tratarSucessoLivro(tipo) {
+      if (tipo === "excluir") {
+        this.mensagemAlerta = "Livro excluído com sucesso!";
+      } else {
+        this.mensagemAlerta = "Livro atualizado com sucesso!";
+      }
       this.alerta = true;
       setTimeout(() => {
         this.fecharAlerta();
@@ -294,12 +293,31 @@ export default {
     async buscarInfoLivro(id) {
       const requisicao = await getLivro(id);
       const livro = requisicao.data;
+      console.log(livro);
       this.titulo = livro.titulo;
       this.autor = livro.autor;
       this.tipologiaTextual = livro.tipologia;
       this.quantidade = livro.quantidade_total;
       this.prateleira = livro.Exemplares[0].prateleira;
+      this.imagemLivro = livro.foto;
+
+      this.convertBase64ToBlob()
     },
+
+    convertBase64ToBlob() {
+      const byteString = atob(this.imagemLivro.split(",")[1]);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+
+      const blob = new Blob([ab], { type: "image/png" });
+
+      // Criar uma URL do Blob
+      this.imageBlobUrl = URL.createObjectURL(blob);
+    }
   },
 
   mounted() {
@@ -311,7 +329,6 @@ export default {
   },
 
   created() {
-    console.log(this.$route.params.id);
     this.buscarExemplares(this.$route.params.id);
     this.buscarInfoLivro(this.$route.params.id);
   },

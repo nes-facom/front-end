@@ -88,8 +88,13 @@
             this.isLoading = true;
             this.alerta = false;
 
-            const requisicao = await deleteExemplar(
+            const dadosEstadoLivro = {
+                situacao: "excluido",
+            };
+
+            const requisicao = await updateExemplar(
             this.exemplarId,
+            dadosEstadoLivro
         );
         console.log(requisicao);
         if (requisicao.status === 200) {

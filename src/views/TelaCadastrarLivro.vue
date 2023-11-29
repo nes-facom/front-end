@@ -60,14 +60,11 @@
               </v-text-field>
             </div>
             <div id="area-foto">
-              <img src="../assets/images/area-foto.png" />
-              <div class="botoes-camera">
-                <v-btn id="camera-options">Repetir</v-btn>
-                <v-btn id="camera-options">
-                  <v-icon>mdi-camera</v-icon>
-                  Tirar Foto
-                </v-btn>
-              </div>
+              <Webcam
+                :fotoBtnVisivel="true"
+                @imagem64="receberImagem"
+                :solicitarImagem="pedirFoto"
+              />
             </div>
           </div>
           <section id="wrapper-botoes" v-if="!isLoading">
@@ -84,7 +81,7 @@
               ></BotaoPadrao>
             </router-link>
             <BotaoPadrao conteudo="Cadastrar" type="submit"></BotaoPadrao>
-          </section>  
+          </section>
           <section id="wrapper-loader" v-if="isLoading">
             <v-progress-circular indeterminate></v-progress-circular>
           </section>
@@ -101,19 +98,22 @@ import BarraDeNavegacao from "@/components/BarraDeNavegacao.vue";
 import BotaoPadrao from "@/components/BotaoPadrao.vue";
 import { cadastrarLivro } from "@/service/requisicao.js";
 import { validarTokenAcesso } from "@/service/autenticacao.js";
+import Webcam from "@/components/Webcam.vue";
 
 export default {
   data() {
     return {
+      pedirFoto: false,
+      foto: null,
       regrasTitulo: [
         (v) => !!v || "Insira um título!",
         (v) =>
           (v && v.length >= 3) || "O nome deve ter pelo menos 3 caracteres",
         (v) =>
-          /^[A-Za-zÀ-ü\s]+$/.test(v) ||
-          "O nome deve conter apenas letras e acentos",
-
+          /^[A-Za-zÀ-ü0-9\s]+$/.test(v) ||
+          "O nome deve conter apenas letras, números e acentos",
       ],
+
       regrasAutor: [
         (v) => !!v || "Insira um autor(a)!",
         (v) =>
@@ -153,6 +153,7 @@ export default {
       tipologia: "",
       quantidade: "",
       prateleira: "",
+      foto64: null,
     };
   },
 
@@ -160,6 +161,7 @@ export default {
     BotaoPadrao,
     BarraDeNavegacao,
     AlertaInfo,
+    Webcam,
   },
 
   mounted() {
@@ -175,10 +177,26 @@ export default {
       this.alerta = false;
     },
 
+    receberImagem(imagem) {
+      this.foto = imagem;
+      console.log(imagem.length)
+    },
+
     async autenticarLivro() {
       this.formDesabilitado = true;
       this.isLoading = true;
       this.alerta = false;
+
+      if (!this.foto) {
+        this.isLoading = false;
+        this.alerta = true;
+        this.mensagemAlerta =
+          "Por favor, capture uma imagem antes de cadastrar o livro.";
+        setTimeout(() => {
+          this.fecharAlerta();
+        }, 5000);
+        return;
+      }
 
       const dadosCadastrarLivro = {
         titulo: this.titulo,
@@ -186,9 +204,8 @@ export default {
         tipologia: this.tipologia,
         quantidade: this.quantidade,
         prateleira: this.prateleira,
+        foto: this.foto,
       };
-
-      console.log(dadosCadastrarLivro);
 
       const requisicao = await cadastrarLivro(dadosCadastrarLivro);
 
