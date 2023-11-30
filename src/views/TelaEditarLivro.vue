@@ -134,7 +134,7 @@ import { validarTokenAcesso } from "@/service/autenticacao.js";
 import Webcam from "@/components/Webcam.vue";
 import {
   updateLivro,
-  getLivro,
+  getLivroById,
   getExemplarByLivroId,
   deleteLivro,
 } from "../service/requisicao";
@@ -248,7 +248,7 @@ export default {
         titulo: this.titulo,
         autor: this.autor,
         tipologia: this.tipologiaTextual,
-        quantidade: this.quantidade_total,
+        quantidade: this.quantidade_disponivel,
         prateleira: this.prateleira,
       };
       const requisicao = await updateLivro(
@@ -296,13 +296,13 @@ export default {
     },
 
     async buscarInfoLivro(id) {
-      const requisicao = await getLivro(id);
+      const requisicao = await getLivroById(id);
       const livro = requisicao.data;
       console.log(livro);
       this.titulo = livro.titulo;
       this.autor = livro.autor;
       this.tipologiaTextual = livro.tipologia;
-      this.quantidade = livro.quantidade_total;
+      this.quantidade = livro.quantidade_disponivel;
       this.prateleira = livro.Exemplares[0].prateleira;
       this.imagemLivro = livro.foto;
 
