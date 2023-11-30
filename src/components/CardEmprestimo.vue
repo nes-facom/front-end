@@ -1,8 +1,8 @@
 <template>
     <div class="card-emprestimo">
         <span class="span1"> {{ emprestimo.leitor.nome }} </span>
-        <span class="span2" v-if="emprestimo.leitor.tipo === 'discente'"> {{ emprestimo.serie }} </span>
-        <span class="span2" v-if="emprestimo.leitor.tipo === 'docente'"> {{ emprestimo.disciplina }} </span>
+        <span class="span2" v-if="emprestimo.leitor.tipo === 'Discente'"> {{ emprestimo.leitor.discente[0].serie }} </span>
+        <span class="span2" v-if="emprestimo.leitor.tipo === 'Docente'"> {{ emprestimo.leitor.docente[0].disciplina }} </span>
         <span class="span3"> {{ tempoDeAtrasoEmDias }} </span>
     </div>
 </template>
